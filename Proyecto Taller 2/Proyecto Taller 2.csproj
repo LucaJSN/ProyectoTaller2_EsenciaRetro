@@ -33,8 +33,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
+    <Reference Include="System">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,6 +57,33 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UC_Balance.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Balance.Designer.cs">
+      <DependentUpon>UC_Balance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Dashboard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Dashboard.Designer.cs">
+      <DependentUpon>UC_Dashboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Productos.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Productos.Designer.cs">
+      <DependentUpon>UC_Productos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Ventas.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Ventas.Designer.cs">
+      <DependentUpon>UC_Ventas.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -62,7 +92,20 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UC_Balance.resx">
+      <DependentUpon>UC_Balance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Dashboard.resx">
+      <DependentUpon>UC_Dashboard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Productos.resx">
+      <DependentUpon>UC_Productos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Ventas.resx">
+      <DependentUpon>UC_Ventas.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -75,6 +118,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Museo_Camisetas.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
