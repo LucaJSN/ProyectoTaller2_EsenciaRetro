@@ -21,5 +21,35 @@ namespace Proyecto_Taller_2
         {
 
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void numericUpDown2_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void numericUpDown3_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LResultadoBalance_Click(object sender, EventArgs e)
+        {
+            LResultadoBalance.Text = "$" + (NUDIngreso.Value - NUDGasto.Value).ToString();
+        }
     }
 }
