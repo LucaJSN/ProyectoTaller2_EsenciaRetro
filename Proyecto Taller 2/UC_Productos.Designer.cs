@@ -270,6 +270,7 @@
             this.CBTalle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CBTalle.FormattingEnabled = true;
             this.CBTalle.Items.AddRange(new object[] {
+            "S",
             "M",
             "L",
             "XL",

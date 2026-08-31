@@ -46,9 +46,9 @@ namespace Proyecto_Taller_2
 
         private void BtnAgregar_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(TBNombre.Text))
+            if (string.IsNullOrWhiteSpace(TBNombre.Text) || string.IsNullOrWhiteSpace(TBDescripcion.Text) && string.IsNullOrWhiteSpace(CBTalle.Text) || string.IsNullOrWhiteSpace(CBCategoria.Text))
             {
-                MessageBox.Show("Por favor, ingrese el nombre del producto.", "Campo requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor, complete todos los campos.", "Campos requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 TBNombre.Focus();
                 return;
             }
@@ -88,7 +88,7 @@ namespace Proyecto_Taller_2
                 {
                     productoSeleccionado.Activo = false;
                     productoSeleccionado.FechaBaja = DateTime.Now;
-                    DGVProductos.Refresh(); 
+                    DGVProductos.Refresh();
                 }
             }
         }
