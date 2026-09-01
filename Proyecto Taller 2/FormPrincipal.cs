@@ -11,13 +11,21 @@ using System.Xml.Linq;
 
 namespace Proyecto_Taller_2
 {
-    public partial class Form1 : Form
+    public partial class FormPrincipal : Form
     {
+        public FormPrincipal(Usuario usuario)
+        {
+            InitializeComponent();
+            Usuario usuarioActual = usuario;
+
+            // Podés mostrar el usuario actual en el título o en un Label
+            this.Text = $"Sistema de Gestión - Usuario: {usuarioActual.Nombre} {usuarioActual.Apellido} ({usuarioActual.Rol.Tipo})";
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
             // Código a ejecutar cuando la ventana termine de cargar
         }
-        public Form1()
+        public FormPrincipal()
         {
             InitializeComponent();
             // Carga la pantalla de inicio al abrir el programa

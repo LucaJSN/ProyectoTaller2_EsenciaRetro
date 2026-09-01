@@ -1,6 +1,6 @@
 ﻿namespace Proyecto_Taller_2
 {
-    partial class Form1
+    partial class FormPrincipal
     {
         /// <summary>
         /// Variable del diseñador necesaria.
