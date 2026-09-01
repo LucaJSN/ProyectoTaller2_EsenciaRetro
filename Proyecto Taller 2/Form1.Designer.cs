@@ -117,7 +117,7 @@
             // 
             this.LTitulo.AutoSize = true;
             this.LTitulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LTitulo.Location = new System.Drawing.Point(805, 9);
+            this.LTitulo.Location = new System.Drawing.Point(545, 18);
             this.LTitulo.Name = "LTitulo";
             this.LTitulo.Size = new System.Drawing.Size(187, 29);
             this.LTitulo.TabIndex = 0;
