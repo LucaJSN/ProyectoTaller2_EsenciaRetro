@@ -73,24 +73,24 @@ namespace Proyecto_Taller_2
 
         private void DGVProductos_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0 && DGVProductos.Columns[e.RowIndex].Name == "btnColumnaEliminar")
-            {
-                Producto productoSeleccionado = (Producto)DGVProductos.Rows[e.RowIndex].DataBoundItem;
-
-                DialogResult confirmacion = MessageBox.Show(
-                    $"¿Estás seguro de que querés eliminar el producto '{productoSeleccionado.Nombre}'?",
-                    "Confirmar eliminación",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                );
-
-                if (confirmacion == DialogResult.Yes)
+                if (e.RowIndex >= 0 && DGVProductos.Columns[e.RowIndex].Name == "btnColumnaEliminar")
                 {
-                    productoSeleccionado.Activo = false;
-                    productoSeleccionado.FechaBaja = DateTime.Now;
-                    DGVProductos.Refresh();
+                    Producto productoSeleccionado = (Producto)DGVProductos.Rows[e.RowIndex].DataBoundItem;
+
+                    DialogResult confirmacion = MessageBox.Show(
+                        $"¿Estás seguro de que querés eliminar el producto '{productoSeleccionado.Nombre}'?",
+                        "Confirmar eliminación",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question
+                    );
+
+                    if (confirmacion == DialogResult.Yes)
+                    {
+                        productoSeleccionado.Activo = false;
+                        productoSeleccionado.FechaBaja = DateTime.Now;
+                        DGVProductos.Refresh();
+                    }
                 }
-            }
         }
 
 

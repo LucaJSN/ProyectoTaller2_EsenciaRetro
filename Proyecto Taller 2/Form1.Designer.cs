@@ -44,7 +44,7 @@
             this.panelContenedor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContenedor.Location = new System.Drawing.Point(200, 0);
             this.panelContenedor.Name = "panelContenedor";
-            this.panelContenedor.Size = new System.Drawing.Size(1053, 853);
+            this.panelContenedor.Size = new System.Drawing.Size(1702, 1033);
             this.panelContenedor.TabIndex = 1;
             // 
             // panel1
@@ -57,7 +57,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(200, 853);
+            this.panel1.Size = new System.Drawing.Size(200, 1033);
             this.panel1.TabIndex = 0;
             // 
             // btnVentas
@@ -106,7 +106,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(200, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1053, 60);
+            this.panel2.Size = new System.Drawing.Size(1702, 60);
             this.panel2.TabIndex = 1;
             // 
             // Form1
@@ -115,11 +115,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1253, 853);
+            this.ClientSize = new System.Drawing.Size(1902, 1033);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panelContenedor);
             this.Controls.Add(this.panel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(800, 900);
             this.Name = "Form1";
             this.Text = "Form1";
