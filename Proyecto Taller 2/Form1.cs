@@ -11,9 +11,9 @@ using System.Xml.Linq;
 
 namespace Proyecto_Taller_2
 {
-    public partial class FormPrincipal : Form
+    public partial class Form1 : Form
     {
-        public FormPrincipal(Usuario usuario)
+        public Form1(Usuario usuario)
         {
             InitializeComponent();
             Usuario usuarioActual = usuario;
@@ -25,7 +25,7 @@ namespace Proyecto_Taller_2
         {
             // Código a ejecutar cuando la ventana termine de cargar
         }
-        public FormPrincipal()
+        public Form1()
         {
             InitializeComponent();
             // Carga la pantalla de inicio al abrir el programa

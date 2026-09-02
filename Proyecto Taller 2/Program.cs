@@ -20,7 +20,7 @@ namespace Proyecto_Taller_2
             {
                 if (login.ShowDialog() == DialogResult.OK)
                 {
-                    Application.Run(new FormPrincipal(login.UsuarioAutenticado));
+                    Application.Run(new Form1(login.UsuarioAutenticado));
                 }
                 else
                 {
