@@ -16,7 +16,17 @@ namespace Proyecto_Taller_2
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            using (FormLogin login = new FormLogin())
+            {
+                if (login.ShowDialog() == DialogResult.OK)
+                {
+                    Application.Run(new Form1(login.UsuarioAutenticado));
+                }
+                else
+                {
+                    Application.Exit();
+                }
+            }
         }
     }
 }
