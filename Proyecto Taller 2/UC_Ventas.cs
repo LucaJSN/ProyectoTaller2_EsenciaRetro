@@ -56,5 +56,10 @@ namespace Proyecto_Taller_2
         {
 
         }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
