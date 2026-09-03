@@ -33,7 +33,7 @@ namespace Proyecto_Taller_2
                 btnEliminar.Name = "btnColumnaEliminar";
                 btnEliminar.HeaderText = "Eliminar";
                 btnEliminar.Text = "Eliminar";
-                btnEliminar.UseColumnTextForButtonValue = true; // Hace que todas las celdas muestren el texto "Eliminar"
+                btnEliminar.UseColumnTextForButtonValue = true; 
 
                 DGVProductos.Columns.Add(btnEliminar);
             }
@@ -55,7 +55,7 @@ namespace Proyecto_Taller_2
 
             Producto nuevoProducto = new Producto
             {
-                Id = contadorId++,
+                IdProducto = contadorId++,
                 Nombre = TBNombre.Text.Trim(),
                 Descripcion = TBDescripcion.Text.Trim(),
                 Talle = CBTalle.Text.Trim(),
