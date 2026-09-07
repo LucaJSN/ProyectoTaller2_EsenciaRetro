@@ -51,6 +51,7 @@
             this.TBCorreo.Name = "TBCorreo";
             this.TBCorreo.Size = new System.Drawing.Size(157, 22);
             this.TBCorreo.TabIndex = 1;
+            this.TBCorreo.TextChanged += new System.EventHandler(this.TBCorreo_TextChanged);
             // 
             // TBPassword
             // 
@@ -77,7 +78,7 @@
             this.LPassword.TabIndex = 4;
             this.LPassword.Text = "Contraseña";
             // 
-            // FLogin
+            // FormLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -90,7 +91,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "FLogin";
+            this.Name = "FormLogin";
             this.Text = "Ingresar";
             this.ResumeLayout(false);
             this.PerformLayout();
