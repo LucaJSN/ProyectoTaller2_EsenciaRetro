@@ -47,7 +47,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.label1);
             this.Name = "UC_Balance";
-            this.Size = new System.Drawing.Size(682, 355);
+            this.Size = new System.Drawing.Size(901, 452);
             this.ResumeLayout(false);
             this.PerformLayout();
 

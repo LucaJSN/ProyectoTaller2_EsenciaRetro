@@ -122,6 +122,12 @@
     <Compile Include="UC_Ventas.Designer.cs">
       <DependentUpon>UC_Ventas.cs</DependentUpon>
     </Compile>
+    <Compile Include="UC_Admin.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Admin.Designer.cs">
+      <DependentUpon>UC_Admin.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -138,6 +144,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UC_Admin.resx">
+      <DependentUpon>UC_Admin.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UC_Balance.resx">
       <DependentUpon>UC_Balance.cs</DependentUpon>
     </EmbeddedResource>
