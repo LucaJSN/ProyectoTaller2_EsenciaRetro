@@ -1,4 +1,3 @@
-using Proyecto_Taller_2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,13 +23,15 @@ namespace Proyecto_Taller_2
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Correo { get; set; }
-        public string Password{ get; set; }
+        public string Password { get; set; }
         public string Telefono { get; set; }
         public int DireccionId { get; set; }
         public int RolId { get; set; }
 
         public Rol Rol { get; set; }
+        public Direccion Direccion { get; set; }
 
+        // El constructor debe ir ACÁ ADENTRO, antes de cerrar la clase Usuario
         public Usuario()
         {
             Nombre = string.Empty;
@@ -39,6 +40,16 @@ namespace Proyecto_Taller_2
             Password = string.Empty;
             Telefono = string.Empty;
             Rol = new Rol();
+            Direccion = new Direccion();
         }
+    }
+
+    public class Direccion
+    {
+        public int IdDireccion { get; set; }
+        public string Provincia { get; set; }
+        public string Ciudad { get; set; }
+        public string Calle { get; set; }
+        public int Altura { get; set; }
     }
 }

@@ -1,14 +1,15 @@
-﻿using System;
+﻿using MySqlConnector;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions; //Para validar correo
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySqlConnector;
-using System.Text.RegularExpressions; //Para validar correo
+using Proyecto_Taller_2.Negocio;
 
 namespace Proyecto_Taller_2
 {
@@ -87,7 +88,70 @@ namespace Proyecto_Taller_2
 
         private void BtnAgregar_Click(object sender, EventArgs e)
         {
+            // === 1. VALIDACIONES DE LA VISTA (PRIMERO QUE NADA) ===
+            if (string.IsNullOrWhiteSpace(TBNombre.Text) || string.IsNullOrWhiteSpace(TBCorreo.Text))
+            {
+                MessageBox.Show("El nombre y el correo son obligatorios.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return; // Corta acá y no deja seguir
+            }
 
+            if (CBRol.SelectedValue == null)
+            {
+                MessageBox.Show("Debes seleccionar un rol.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                // 1. Creamos y llenamos la entidad Dirección con los datos de la vista
+                Direccion nuevaDireccion = new Direccion
+                {
+                    Provincia = TBProvincia.Text.Trim(),
+                    Ciudad = TBCiudad.Text.Trim(),
+                    Calle = TBCalle.Text.Trim(),
+                    // Convertimos la altura a entero de forma segura
+                    Altura = int.TryParse(TBAltura.Text.Trim(), out int alt) ? alt : 0
+                };
+
+                // 2. Creamos y llenamos la entidad Usuario
+                Usuario nuevoUsuario = new Usuario
+                {
+                    Nombre = TBNombre.Text.Trim(),
+                    Apellido = TBApellido.Text.Trim(),
+                    Correo = TBCorreo.Text.Trim(),
+                    Password = TBContraseña.Text, // Asegúrate de que el TextBox de la contraseña se llame así
+                    Telefono = TBTelefono.Text.Trim(),
+                    // Obtenemos el ID del rol seleccionado en el ComboBox
+                    RolId = Convert.ToInt32(CBRol.SelectedValue)
+                };
+
+                // 3. Instanciamos la Capa de Negocio
+                // (Asegúrate de agregar el using Proyecto_Taller_2.Negocio; arriba si es necesario)
+                UsuarioNegocio negocio = new UsuarioNegocio();
+
+                // 4. Invocamos al método que orquestará el guardado
+                bool resultado = negocio.RegistrarUsuario(nuevoUsuario, nuevaDireccion);
+
+                if (resultado)
+                {
+                    MessageBox.Show("¡Usuario registrado con éxito mediante arquitectura de 4 capas!",
+                                    "Éxito",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information);
+
+                    // Opcional: Limpiar los campos y refrescar la grilla de abajo
+                    // LimpiarFormulario();
+                    // CargarUsuariosEnGrilla();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Si la capa de Negocio o Datos lanza una excepción (por ejemplo, validaciones vacías o error de MySQL), lo atrapamos acá
+                MessageBox.Show("Ocurrió un error: " + ex.Message,
+                                "Error de validación",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+            }
         }
 
         private void TBApellido_TextChanged(object sender, EventArgs e)
@@ -206,6 +270,9 @@ namespace Proyecto_Taller_2
 
         }
 
+        private void TBContraseña_TextChanged(object sender, EventArgs e)
+        {
 
+        }
     }
 }

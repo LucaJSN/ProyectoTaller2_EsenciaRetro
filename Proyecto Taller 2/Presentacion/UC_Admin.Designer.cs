@@ -31,6 +31,15 @@
             this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.DGVUsuarios = new System.Windows.Forms.DataGridView();
+            this.CID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CApellido = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CCorreo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CRol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CTelefono = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CActivo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CEditar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.CEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -59,15 +68,6 @@
             this.label16 = new System.Windows.Forms.Label();
             this.BtnAgregar = new System.Windows.Forms.Button();
             this.BtnCancelar = new System.Windows.Forms.Button();
-            this.CID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CApellido = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CCorreo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CRol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CTelefono = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CActivo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CEditar = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.CEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.DGVUsuarios)).BeginInit();
             this.SuspendLayout();
             // 
@@ -100,6 +100,71 @@
             this.DGVUsuarios.Size = new System.Drawing.Size(1244, 385);
             this.DGVUsuarios.TabIndex = 1;
             this.DGVUsuarios.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            // 
+            // CID
+            // 
+            this.CID.HeaderText = "id";
+            this.CID.MinimumWidth = 6;
+            this.CID.Name = "CID";
+            this.CID.Width = 125;
+            // 
+            // CNombre
+            // 
+            this.CNombre.HeaderText = "Nombre";
+            this.CNombre.MinimumWidth = 6;
+            this.CNombre.Name = "CNombre";
+            this.CNombre.Width = 125;
+            // 
+            // CApellido
+            // 
+            this.CApellido.HeaderText = "Apellido";
+            this.CApellido.MinimumWidth = 6;
+            this.CApellido.Name = "CApellido";
+            this.CApellido.Width = 125;
+            // 
+            // CCorreo
+            // 
+            this.CCorreo.HeaderText = "Correo";
+            this.CCorreo.MinimumWidth = 6;
+            this.CCorreo.Name = "CCorreo";
+            this.CCorreo.Width = 125;
+            // 
+            // CRol
+            // 
+            this.CRol.HeaderText = "Rol";
+            this.CRol.MinimumWidth = 6;
+            this.CRol.Name = "CRol";
+            this.CRol.Width = 125;
+            // 
+            // CTelefono
+            // 
+            this.CTelefono.HeaderText = "Telefono";
+            this.CTelefono.MinimumWidth = 6;
+            this.CTelefono.Name = "CTelefono";
+            this.CTelefono.Width = 125;
+            // 
+            // CActivo
+            // 
+            this.CActivo.HeaderText = "Activo";
+            this.CActivo.MinimumWidth = 6;
+            this.CActivo.Name = "CActivo";
+            this.CActivo.Width = 125;
+            // 
+            // CEditar
+            // 
+            this.CEditar.HeaderText = "Editar";
+            this.CEditar.MinimumWidth = 6;
+            this.CEditar.Name = "CEditar";
+            this.CEditar.Text = "Editar";
+            this.CEditar.Width = 125;
+            // 
+            // CEliminar
+            // 
+            this.CEliminar.HeaderText = "Eliminar";
+            this.CEliminar.MinimumWidth = 6;
+            this.CEliminar.Name = "CEliminar";
+            this.CEliminar.Text = "Eliminar";
+            this.CEliminar.Width = 125;
             // 
             // label2
             // 
@@ -216,6 +281,7 @@
             this.TBContraseña.Size = new System.Drawing.Size(126, 22);
             this.TBContraseña.TabIndex = 14;
             this.TBContraseña.UseSystemPasswordChar = true;
+            this.TBContraseña.TextChanged += new System.EventHandler(this.TBContraseña_TextChanged);
             // 
             // CBRol
             // 
@@ -368,71 +434,6 @@
             this.BtnCancelar.TabIndex = 29;
             this.BtnCancelar.Text = "Cancelar";
             this.BtnCancelar.UseVisualStyleBackColor = false;
-            // 
-            // CID
-            // 
-            this.CID.HeaderText = "id";
-            this.CID.MinimumWidth = 6;
-            this.CID.Name = "CID";
-            this.CID.Width = 125;
-            // 
-            // CNombre
-            // 
-            this.CNombre.HeaderText = "Nombre";
-            this.CNombre.MinimumWidth = 6;
-            this.CNombre.Name = "CNombre";
-            this.CNombre.Width = 125;
-            // 
-            // CApellido
-            // 
-            this.CApellido.HeaderText = "Apellido";
-            this.CApellido.MinimumWidth = 6;
-            this.CApellido.Name = "CApellido";
-            this.CApellido.Width = 125;
-            // 
-            // CCorreo
-            // 
-            this.CCorreo.HeaderText = "Correo";
-            this.CCorreo.MinimumWidth = 6;
-            this.CCorreo.Name = "CCorreo";
-            this.CCorreo.Width = 125;
-            // 
-            // CRol
-            // 
-            this.CRol.HeaderText = "Rol";
-            this.CRol.MinimumWidth = 6;
-            this.CRol.Name = "CRol";
-            this.CRol.Width = 125;
-            // 
-            // CTelefono
-            // 
-            this.CTelefono.HeaderText = "Telefono";
-            this.CTelefono.MinimumWidth = 6;
-            this.CTelefono.Name = "CTelefono";
-            this.CTelefono.Width = 125;
-            // 
-            // CActivo
-            // 
-            this.CActivo.HeaderText = "Activo";
-            this.CActivo.MinimumWidth = 6;
-            this.CActivo.Name = "CActivo";
-            this.CActivo.Width = 125;
-            // 
-            // CEditar
-            // 
-            this.CEditar.HeaderText = "Editar";
-            this.CEditar.MinimumWidth = 6;
-            this.CEditar.Name = "CEditar";
-            this.CEditar.Text = "Editar";
-            this.CEditar.Width = 125;
-            // 
-            // CEliminar
-            // 
-            this.CEliminar.HeaderText = "Eliminar";
-            this.CEliminar.MinimumWidth = 6;
-            this.CEliminar.Name = "CEliminar";
-            this.CEliminar.Text = "Eliminar";
-            this.CEliminar.Width = 125;
             // 
             // UC_Admin
             // 
