@@ -200,5 +200,12 @@ namespace Proyecto_Taller_2
         {
 
         }
+
+        private void CBRol_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
     }
 }

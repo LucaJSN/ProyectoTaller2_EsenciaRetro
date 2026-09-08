@@ -92,11 +92,12 @@
             this.CActivo,
             this.CEditar,
             this.CEliminar});
+            this.DGVUsuarios.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.DGVUsuarios.Location = new System.Drawing.Point(0, 411);
             this.DGVUsuarios.Name = "DGVUsuarios";
             this.DGVUsuarios.RowHeadersWidth = 51;
             this.DGVUsuarios.RowTemplate.Height = 24;
-            this.DGVUsuarios.Size = new System.Drawing.Size(1222, 385);
+            this.DGVUsuarios.Size = new System.Drawing.Size(1244, 385);
             this.DGVUsuarios.TabIndex = 1;
             this.DGVUsuarios.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
@@ -172,6 +173,7 @@
             this.TBNombre.Size = new System.Drawing.Size(100, 22);
             this.TBNombre.TabIndex = 9;
             this.TBNombre.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.TBNombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TBNombre_KeyPress);
             // 
             // contextMenuStrip1
             // 
@@ -186,6 +188,7 @@
             this.TBApellido.Size = new System.Drawing.Size(100, 22);
             this.TBApellido.TabIndex = 11;
             this.TBApellido.TextChanged += new System.EventHandler(this.TBApellido_TextChanged);
+            this.TBApellido.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TBApellido_KeyPress);
             // 
             // TBTelefono
             // 
@@ -194,6 +197,7 @@
             this.TBTelefono.Size = new System.Drawing.Size(100, 22);
             this.TBTelefono.TabIndex = 12;
             this.TBTelefono.TextChanged += new System.EventHandler(this.TBTelefono_TextChanged);
+            this.TBTelefono.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TBTelefono_KeyPress);
             // 
             // TBCorreo
             // 
@@ -202,6 +206,7 @@
             this.TBCorreo.Size = new System.Drawing.Size(126, 22);
             this.TBCorreo.TabIndex = 13;
             this.TBCorreo.TextChanged += new System.EventHandler(this.TBCorreo_TextChanged);
+            this.TBCorreo.Leave += new System.EventHandler(this.TBCorreo_Leave);
             // 
             // TBContraseña
             // 
@@ -223,6 +228,7 @@
             this.CBRol.Name = "CBRol";
             this.CBRol.Size = new System.Drawing.Size(121, 24);
             this.CBRol.TabIndex = 15;
+            this.CBRol.SelectedIndexChanged += new System.EventHandler(this.CBRol_SelectedIndexChanged);
             // 
             // label9
             // 
@@ -287,6 +293,7 @@
             this.TBCiudad.Size = new System.Drawing.Size(126, 22);
             this.TBCiudad.TabIndex = 22;
             this.TBCiudad.TextChanged += new System.EventHandler(this.TBCiudad_TextChanged);
+            this.TBCiudad.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TBCiudad_KeyPress);
             // 
             // TBAltura
             // 
@@ -295,6 +302,7 @@
             this.TBAltura.Size = new System.Drawing.Size(126, 22);
             this.TBAltura.TabIndex = 23;
             this.TBAltura.TextChanged += new System.EventHandler(this.textBox7_TextChanged);
+            this.TBAltura.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TBAltura_KeyPress);
             // 
             // TBCalle
             // 
@@ -303,6 +311,7 @@
             this.TBCalle.Size = new System.Drawing.Size(126, 22);
             this.TBCalle.TabIndex = 24;
             this.TBCalle.TextChanged += new System.EventHandler(this.TBCalle_TextChanged);
+            this.TBCalle.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TBCalle_KeyPress);
             // 
             // TBProvincia
             // 
@@ -311,6 +320,7 @@
             this.TBProvincia.Size = new System.Drawing.Size(126, 22);
             this.TBProvincia.TabIndex = 25;
             this.TBProvincia.TextChanged += new System.EventHandler(this.TBProvincia_TextChanged);
+            this.TBProvincia.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TBProvincia_KeyPress);
             // 
             // label15
             // 
@@ -413,6 +423,7 @@
             this.CEditar.HeaderText = "Editar";
             this.CEditar.MinimumWidth = 6;
             this.CEditar.Name = "CEditar";
+            this.CEditar.Text = "Editar";
             this.CEditar.Width = 125;
             // 
             // CEliminar
@@ -420,6 +431,7 @@
             this.CEliminar.HeaderText = "Eliminar";
             this.CEliminar.MinimumWidth = 6;
             this.CEliminar.Name = "CEliminar";
+            this.CEliminar.Text = "Eliminar";
             this.CEliminar.Width = 125;
             // 
             // UC_Admin

@@ -61,5 +61,10 @@ namespace Proyecto_Taller_2
         {
             AbrirModulo(new UC_Ventas());
         }
+
+        private void BtnAdmin_Click(object sender, EventArgs e)
+        {
+            AbrirModulo(new UC_Admin());
+        }
     }
 }

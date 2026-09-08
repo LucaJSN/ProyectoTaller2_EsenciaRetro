@@ -35,6 +35,7 @@
             this.btnInicio = new System.Windows.Forms.Button();
             this.btnProductos = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.BtnAdmin = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,6 +51,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.panel1.Controls.Add(this.BtnAdmin);
             this.panel1.Controls.Add(this.btnVentas);
             this.panel1.Controls.Add(this.btnBalance);
             this.panel1.Controls.Add(this.btnInicio);
@@ -109,6 +111,16 @@
             this.panel2.Size = new System.Drawing.Size(1702, 60);
             this.panel2.TabIndex = 1;
             // 
+            // BtnAdmin
+            // 
+            this.BtnAdmin.Location = new System.Drawing.Point(16, 331);
+            this.BtnAdmin.Name = "BtnAdmin";
+            this.BtnAdmin.Size = new System.Drawing.Size(178, 23);
+            this.BtnAdmin.TabIndex = 4;
+            this.BtnAdmin.Text = "Administrador";
+            this.BtnAdmin.UseVisualStyleBackColor = true;
+            this.BtnAdmin.Click += new System.EventHandler(this.BtnAdmin_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -141,6 +153,7 @@
         private System.Windows.Forms.Button btnVentas;
         private System.Windows.Forms.Button btnProductos;
         private System.Windows.Forms.Button btnBalance;
+        private System.Windows.Forms.Button BtnAdmin;
     }
 }
 
