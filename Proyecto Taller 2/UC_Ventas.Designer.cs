@@ -316,6 +316,7 @@
             this.textBox6.Size = new System.Drawing.Size(125, 30);
             this.textBox6.TabIndex = 10;
             this.textBox6.Text = "          0        ";
+            this.textBox6.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
             // 
             // label14
             // 
@@ -498,7 +499,7 @@
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label16.Location = new System.Drawing.Point(415, 637);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(208, 39);
+            this.label16.Size = new System.Drawing.Size(200, 38);
             this.label16.TabIndex = 6;
             this.label16.Text = "Precio Total:";
             this.label16.Click += new System.EventHandler(this.label16_Click);
