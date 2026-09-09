@@ -13,6 +13,14 @@ namespace Proyecto_Taller_2
 {
     public partial class Form1 : Form
     {
+        public Form1(Usuario usuario)
+        {
+            InitializeComponent();
+            Usuario usuarioActual = usuario;
+
+            // Podés mostrar el usuario actual en el título o en un Label
+            this.Text = $"Sistema de Gestión - Usuario: {usuarioActual.Nombre} {usuarioActual.Apellido} ({usuarioActual.Rol.Tipo})";
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
             // Código a ejecutar cuando la ventana termine de cargar
@@ -52,6 +60,11 @@ namespace Proyecto_Taller_2
         private void btnVentas_Click(object sender, EventArgs e)
         {
             AbrirModulo(new UC_Ventas());
+        }
+
+        private void BtnAdmin_Click(object sender, EventArgs e)
+        {
+            AbrirModulo(new UC_Admin());
         }
     }
 }
