@@ -50,11 +50,11 @@ namespace Proyecto_Taller_2
                                 Correo = reader["correo"].ToString(),
                                 Password = reader["password"].ToString(),
                                 Telefono = reader["telefono"].ToString(),
-                                RolId = Convert.ToInt32(reader["Rol_id"]),
+                                rol_id = Convert.ToInt32(reader["Rol_id"]),
                                 Rol = new Rol
                                 {
-                                    IdRol = Convert.ToInt32(reader["Rol_id"]),
-                                    Tipo = reader["tipo"].ToString()
+                                    id_rol = Convert.ToInt32(reader["Rol_id"]),
+                                    tipo = reader["tipo"].ToString()
                                 }
                             };
                         }

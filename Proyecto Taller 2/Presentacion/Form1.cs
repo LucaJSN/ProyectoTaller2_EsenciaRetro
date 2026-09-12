@@ -19,7 +19,7 @@ namespace Proyecto_Taller_2
             Usuario usuarioActual = usuario;
 
             // Podés mostrar el usuario actual en el título o en un Label
-            this.Text = $"Sistema de Gestión - Usuario: {usuarioActual.Nombre} {usuarioActual.Apellido} ({usuarioActual.Rol.Tipo})";
+            this.Text = $"Sistema de Gestión - Usuario: {usuarioActual.Nombre} {usuarioActual.Apellido} ({usuarioActual.Rol.tipo})";
         }
         private void Form1_Load(object sender, EventArgs e)
         {

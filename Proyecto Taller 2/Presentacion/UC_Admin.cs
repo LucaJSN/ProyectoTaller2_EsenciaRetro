@@ -1,4 +1,6 @@
 ﻿using MySqlConnector;
+using Proyecto_Taller_2.Datos;
+using Proyecto_Taller_2.Negocio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +11,6 @@ using System.Text;
 using System.Text.RegularExpressions; //Para validar correo
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Proyecto_Taller_2.Negocio;
 
 namespace Proyecto_Taller_2
 {
@@ -22,7 +23,44 @@ namespace Proyecto_Taller_2
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            
+            // 1. Validamos que el clic no sea en la cabecera de la tabla (fila -1)
+            if (e.RowIndex < 0) return;
+
+            // 2. Verificamos si la columna donde hizo clic es la de eliminar (cambia "eliminar" por el Name de tu columna)
+            if (DGVUsuarios.Columns[e.ColumnIndex].Name == "CEliminar")
+            {
+                // 3. Obtenemos el ID del usuario de esa fila específica
+                // (Asegúrate de que la celda 0 o la columna del ID se llame o corresponda al IdUsuario)
+                int idUsuario = Convert.ToInt32(DGVUsuarios.Rows[e.RowIndex].Cells["IdUsuario"].Value);
+
+                // 4. Confirmación antes de dar de baja
+                DialogResult resultado = MessageBox.Show("¿Estás seguro de dar de baja a este usuario?",
+                                                        "Confirmar baja",
+                                                        MessageBoxButtons.YesNo,
+                                                        MessageBoxIcon.Question);
+
+                if (resultado == DialogResult.Yes)
+                {
+                    try
+                    {
+                        // 5. Llamamos a la Capa de Negocio para ejecutar la baja lógica
+                        UsuarioNegocio negocio = new UsuarioNegocio();
+                        bool exito = negocio.DarDeBajaUsuario(idUsuario); // (Este método debes declararlo en tu Negocio pasando al Datos)
+
+                        if (exito)
+                        {
+                            MessageBox.Show("Usuario dado de baja correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // 6. Refrescamos la grilla para que desaparezca de la vista
+                            // CargarUsuariosEnGrilla(); 
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Ocurrió un error al dar de baja: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -54,7 +92,23 @@ namespace Proyecto_Taller_2
 
         private void UC_Admin_Load(object sender, EventArgs e)
         {
+            CargarRolesEnComboBox();
+        }
 
+        private void CargarRolesEnComboBox()
+        {
+            try
+            {
+                RolNegocio negocioRol = new RolNegocio();
+                CBRol.DataSource = negocioRol.ListarRoles();
+                CBRol.DisplayMember = "tipo";
+                CBRol.ValueMember = "id_rol";
+                CBRol.SelectedIndex = -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar los roles: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void textBox7_TextChanged(object sender, EventArgs e)
@@ -122,7 +176,7 @@ namespace Proyecto_Taller_2
                     Password = TBContraseña.Text, // Asegúrate de que el TextBox de la contraseña se llame así
                     Telefono = TBTelefono.Text.Trim(),
                     // Obtenemos el ID del rol seleccionado en el ComboBox
-                    RolId = Convert.ToInt32(CBRol.SelectedValue)
+                    rol_id = Convert.ToInt32(CBRol.SelectedValue)
                 };
 
                 // 3. Instanciamos la Capa de Negocio
@@ -273,6 +327,12 @@ namespace Proyecto_Taller_2
         private void TBContraseña_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        public List<Usuario> ListarTodosLosUsuarios()
+        {
+            UsuarioDatos datos = new UsuarioDatos();
+            return datos.ObtenerTodosLosUsuarios();
         }
     }
 }

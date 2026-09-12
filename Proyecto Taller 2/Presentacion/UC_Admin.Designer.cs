@@ -31,15 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.DGVUsuarios = new System.Windows.Forms.DataGridView();
-            this.CID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CApellido = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CCorreo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CRol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CTelefono = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CActivo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CEditar = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.CEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -68,6 +59,15 @@
             this.label16 = new System.Windows.Forms.Label();
             this.BtnAgregar = new System.Windows.Forms.Button();
             this.BtnCancelar = new System.Windows.Forms.Button();
+            this.CID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CApellido = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CCorreo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CRol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CTelefono = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CFechaBaja = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CEditar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.CEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.DGVUsuarios)).BeginInit();
             this.SuspendLayout();
             // 
@@ -89,7 +89,7 @@
             this.CCorreo,
             this.CRol,
             this.CTelefono,
-            this.CActivo,
+            this.CFechaBaja,
             this.CEditar,
             this.CEliminar});
             this.DGVUsuarios.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -100,71 +100,6 @@
             this.DGVUsuarios.Size = new System.Drawing.Size(1244, 385);
             this.DGVUsuarios.TabIndex = 1;
             this.DGVUsuarios.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            // 
-            // CID
-            // 
-            this.CID.HeaderText = "id";
-            this.CID.MinimumWidth = 6;
-            this.CID.Name = "CID";
-            this.CID.Width = 125;
-            // 
-            // CNombre
-            // 
-            this.CNombre.HeaderText = "Nombre";
-            this.CNombre.MinimumWidth = 6;
-            this.CNombre.Name = "CNombre";
-            this.CNombre.Width = 125;
-            // 
-            // CApellido
-            // 
-            this.CApellido.HeaderText = "Apellido";
-            this.CApellido.MinimumWidth = 6;
-            this.CApellido.Name = "CApellido";
-            this.CApellido.Width = 125;
-            // 
-            // CCorreo
-            // 
-            this.CCorreo.HeaderText = "Correo";
-            this.CCorreo.MinimumWidth = 6;
-            this.CCorreo.Name = "CCorreo";
-            this.CCorreo.Width = 125;
-            // 
-            // CRol
-            // 
-            this.CRol.HeaderText = "Rol";
-            this.CRol.MinimumWidth = 6;
-            this.CRol.Name = "CRol";
-            this.CRol.Width = 125;
-            // 
-            // CTelefono
-            // 
-            this.CTelefono.HeaderText = "Telefono";
-            this.CTelefono.MinimumWidth = 6;
-            this.CTelefono.Name = "CTelefono";
-            this.CTelefono.Width = 125;
-            // 
-            // CActivo
-            // 
-            this.CActivo.HeaderText = "Activo";
-            this.CActivo.MinimumWidth = 6;
-            this.CActivo.Name = "CActivo";
-            this.CActivo.Width = 125;
-            // 
-            // CEditar
-            // 
-            this.CEditar.HeaderText = "Editar";
-            this.CEditar.MinimumWidth = 6;
-            this.CEditar.Name = "CEditar";
-            this.CEditar.Text = "Editar";
-            this.CEditar.Width = 125;
-            // 
-            // CEliminar
-            // 
-            this.CEliminar.HeaderText = "Eliminar";
-            this.CEliminar.MinimumWidth = 6;
-            this.CEliminar.Name = "CEliminar";
-            this.CEliminar.Text = "Eliminar";
-            this.CEliminar.Width = 125;
             // 
             // label2
             // 
@@ -285,11 +220,8 @@
             // 
             // CBRol
             // 
+            this.CBRol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CBRol.FormattingEnabled = true;
-            this.CBRol.Items.AddRange(new object[] {
-            "Vendedor",
-            "Supervisor",
-            "Administrador"});
             this.CBRol.Location = new System.Drawing.Point(416, 214);
             this.CBRol.Name = "CBRol";
             this.CBRol.Size = new System.Drawing.Size(121, 24);
@@ -435,6 +367,71 @@
             this.BtnCancelar.Text = "Cancelar";
             this.BtnCancelar.UseVisualStyleBackColor = false;
             // 
+            // CID
+            // 
+            this.CID.HeaderText = "id";
+            this.CID.MinimumWidth = 6;
+            this.CID.Name = "CID";
+            this.CID.Width = 125;
+            // 
+            // CNombre
+            // 
+            this.CNombre.HeaderText = "Nombre";
+            this.CNombre.MinimumWidth = 6;
+            this.CNombre.Name = "CNombre";
+            this.CNombre.Width = 125;
+            // 
+            // CApellido
+            // 
+            this.CApellido.HeaderText = "Apellido";
+            this.CApellido.MinimumWidth = 6;
+            this.CApellido.Name = "CApellido";
+            this.CApellido.Width = 125;
+            // 
+            // CCorreo
+            // 
+            this.CCorreo.HeaderText = "Correo";
+            this.CCorreo.MinimumWidth = 6;
+            this.CCorreo.Name = "CCorreo";
+            this.CCorreo.Width = 125;
+            // 
+            // CRol
+            // 
+            this.CRol.HeaderText = "Rol";
+            this.CRol.MinimumWidth = 6;
+            this.CRol.Name = "CRol";
+            this.CRol.Width = 125;
+            // 
+            // CTelefono
+            // 
+            this.CTelefono.HeaderText = "Telefono";
+            this.CTelefono.MinimumWidth = 6;
+            this.CTelefono.Name = "CTelefono";
+            this.CTelefono.Width = 125;
+            // 
+            // CFechaBaja
+            // 
+            this.CFechaBaja.HeaderText = "Fecha_baja";
+            this.CFechaBaja.MinimumWidth = 6;
+            this.CFechaBaja.Name = "CFechaBaja";
+            this.CFechaBaja.Width = 125;
+            // 
+            // CEditar
+            // 
+            this.CEditar.HeaderText = "Editar";
+            this.CEditar.MinimumWidth = 6;
+            this.CEditar.Name = "CEditar";
+            this.CEditar.Text = "Editar";
+            this.CEditar.Width = 125;
+            // 
+            // CEliminar
+            // 
+            this.CEliminar.HeaderText = "Eliminar";
+            this.CEliminar.MinimumWidth = 6;
+            this.CEliminar.Name = "CEliminar";
+            this.CEliminar.Text = "Eliminar";
+            this.CEliminar.Width = 125;
+            // 
             // UC_Admin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -515,7 +512,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CCorreo;
         private System.Windows.Forms.DataGridViewTextBoxColumn CRol;
         private System.Windows.Forms.DataGridViewTextBoxColumn CTelefono;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CActivo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CFechaBaja;
         private System.Windows.Forms.DataGridViewButtonColumn CEditar;
         private System.Windows.Forms.DataGridViewButtonColumn CEliminar;
     }

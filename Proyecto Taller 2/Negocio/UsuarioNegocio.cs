@@ -22,7 +22,7 @@ namespace Proyecto_Taller_2.Negocio
                 throw new Exception("El nombre del usuario no puede estar vacío.");
             }
 
-            if (usuario.RolId <= 0)
+            if (usuario.rol_id <= 0)
             {
                 throw new Exception("Debe seleccionar un rol válido.");
             }
@@ -33,6 +33,26 @@ namespace Proyecto_Taller_2.Negocio
             // 2. COMUNICACIÓN CON DATOS
             // Si todo está correcto, le pasamos la pelota a la capa de Datos
             return datosUsuario.InsertarUsuarioYDireccion(usuario, direccion);
+        }
+
+        public bool DarDeBajaUsuario(int idUsuario)
+        {
+            // Regla de negocio opcional: puedes validar que el ID sea mayor a 0
+            if (idUsuario <= 0)
+            {
+                throw new Exception("ID de usuario inválido para dar de baja.");
+            }
+
+            // Instanciamos la capa de datos si no la tienes como atributo global
+            UsuarioDatos datosUsuario = new UsuarioDatos();
+
+            // Llamamos al método de la capa de datos que actualiza la fecha_baja
+            return datosUsuario.DarDeBajaUsuario(idUsuario);
+        }
+        public List<Usuario> ListarTodosLosUsuarios()
+        {
+            UsuarioDatos datos = new UsuarioDatos();
+            return datos.ObtenerTodosLosUsuarios();
         }
     }
 }
