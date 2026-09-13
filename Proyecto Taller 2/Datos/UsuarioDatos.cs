@@ -40,7 +40,7 @@ namespace Proyecto_Taller_2.Datos
                         }
 
                         // --- PASO 2: INSERTAR USUARIO ---
-                        string queryUsu = @"INSERT INTO usuario (nombre, apellido, correo, password, telefono, Direccion_id, Rol_id) 
+                        string queryUsu = @"INSERT INTO usuario (nombre, apellido, correo, password, telefono, Direccion_id, Rol_id, Rol) 
                                             VALUES (@nom, @ape, @correo, @pass, @tel, @dirId, @rolId);";
 
                         using (MySqlCommand cmdUsu = new MySqlCommand(queryUsu, conexion, transaccion))
@@ -51,7 +51,7 @@ namespace Proyecto_Taller_2.Datos
                             cmdUsu.Parameters.AddWithValue("@pass", usuario.Password);
                             cmdUsu.Parameters.AddWithValue("@tel", usuario.Telefono);
                             cmdUsu.Parameters.AddWithValue("@dirId", usuario.DireccionId);
-                            cmdUsu.Parameters.AddWithValue("@rolId", usuario.rol_id);
+                            cmdUsu.Parameters.AddWithValue("@rolId", usuario.RolId);
 
                             cmdUsu.ExecuteNonQuery();
                         }
@@ -71,7 +71,7 @@ namespace Proyecto_Taller_2.Datos
         {
             using (MySqlConnection conexion = new MySqlConnection(connectionString))
             {
-                string query = "UPDATE usuario SET fecha_baja = NOW() WHERE IdUsuario = @id";
+                string query = "UPDATE usuario SET fecha_baja = NOW() WHERE id_usuario = @id";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, conexion))
                 {
@@ -100,16 +100,15 @@ namespace Proyecto_Taller_2.Datos
                         {
                             Usuario usu = new Usuario
                             {
-                                IdUsuario = Convert.ToInt32(reader["IdUsuario"]),
+                                IdUsuario = Convert.ToInt32(reader["id_usuario"]),
                                 Nombre = reader["nombre"].ToString(),
                                 Apellido = reader["apellido"].ToString(),
                                 Correo = reader["correo"].ToString(),
                                 Telefono = reader["telefono"].ToString(),
-                                rol_id = Convert.ToInt32(reader["Rol_id"]),
-
+                                RolId = Convert.ToInt32(reader["Rol_id"]),
                                 // Si en la base de datos es NULL, en C# se guarda como null, de lo contrario se convierte a DateTime
                                 FechaBaja = reader["fecha_baja"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["fecha_baja"])
-                            };
+                            }; 
                             lista.Add(usu);
                         }
                     }

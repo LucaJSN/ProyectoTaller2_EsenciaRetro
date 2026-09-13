@@ -95,6 +95,7 @@
             this.DGVUsuarios.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.DGVUsuarios.Location = new System.Drawing.Point(0, 411);
             this.DGVUsuarios.Name = "DGVUsuarios";
+            this.DGVUsuarios.ReadOnly = true;
             this.DGVUsuarios.RowHeadersWidth = 51;
             this.DGVUsuarios.RowTemplate.Height = 24;
             this.DGVUsuarios.Size = new System.Drawing.Size(1244, 385);
@@ -369,51 +370,65 @@
             // 
             // CID
             // 
+            this.CID.DataPropertyName = "IdUsuario";
             this.CID.HeaderText = "id";
             this.CID.MinimumWidth = 6;
             this.CID.Name = "CID";
+            this.CID.ReadOnly = true;
             this.CID.Width = 125;
             // 
             // CNombre
             // 
+            this.CNombre.DataPropertyName = "Nombre";
             this.CNombre.HeaderText = "Nombre";
             this.CNombre.MinimumWidth = 6;
             this.CNombre.Name = "CNombre";
+            this.CNombre.ReadOnly = true;
             this.CNombre.Width = 125;
             // 
             // CApellido
             // 
+            this.CApellido.DataPropertyName = "Apellido";
             this.CApellido.HeaderText = "Apellido";
             this.CApellido.MinimumWidth = 6;
             this.CApellido.Name = "CApellido";
+            this.CApellido.ReadOnly = true;
             this.CApellido.Width = 125;
             // 
             // CCorreo
             // 
+            this.CCorreo.DataPropertyName = "Correo";
             this.CCorreo.HeaderText = "Correo";
             this.CCorreo.MinimumWidth = 6;
             this.CCorreo.Name = "CCorreo";
+            this.CCorreo.ReadOnly = true;
             this.CCorreo.Width = 125;
             // 
             // CRol
             // 
-            this.CRol.HeaderText = "Rol";
+            this.CRol.DataPropertyName = "RolId";
+            this.CRol.HeaderText = "ID_ROL";
             this.CRol.MinimumWidth = 6;
             this.CRol.Name = "CRol";
+            this.CRol.ReadOnly = true;
             this.CRol.Width = 125;
             // 
             // CTelefono
             // 
+            this.CTelefono.DataPropertyName = "Telefono";
             this.CTelefono.HeaderText = "Telefono";
             this.CTelefono.MinimumWidth = 6;
             this.CTelefono.Name = "CTelefono";
+            this.CTelefono.ReadOnly = true;
             this.CTelefono.Width = 125;
             // 
             // CFechaBaja
             // 
+            this.CFechaBaja.DataPropertyName = "FechaBaja.Value";
             this.CFechaBaja.HeaderText = "Fecha_baja";
             this.CFechaBaja.MinimumWidth = 6;
             this.CFechaBaja.Name = "CFechaBaja";
+            this.CFechaBaja.ReadOnly = true;
             this.CFechaBaja.Width = 125;
             // 
             // CEditar
@@ -421,6 +436,7 @@
             this.CEditar.HeaderText = "Editar";
             this.CEditar.MinimumWidth = 6;
             this.CEditar.Name = "CEditar";
+            this.CEditar.ReadOnly = true;
             this.CEditar.Text = "Editar";
             this.CEditar.Width = 125;
             // 
@@ -429,6 +445,7 @@
             this.CEliminar.HeaderText = "Eliminar";
             this.CEliminar.MinimumWidth = 6;
             this.CEliminar.Name = "CEliminar";
+            this.CEliminar.ReadOnly = true;
             this.CEliminar.Text = "Eliminar";
             this.CEliminar.Width = 125;
             // 

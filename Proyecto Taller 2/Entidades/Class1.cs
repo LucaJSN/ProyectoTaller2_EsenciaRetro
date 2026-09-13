@@ -26,7 +26,7 @@ namespace Proyecto_Taller_2
         public string Password { get; set; }
         public string Telefono { get; set; }
         public int DireccionId { get; set; }
-        public int rol_id { get; set; }
+        public int RolId { get; set; }
         public DateTime? FechaBaja { get; set; } // El signo '?' indica que puede ser nulo si el usuario está activo
 
         public Rol Rol { get; set; }

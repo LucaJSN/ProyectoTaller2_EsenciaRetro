@@ -31,7 +31,7 @@ namespace Proyecto_Taller_2
             {
                 // 3. Obtenemos el ID del usuario de esa fila específica
                 // (Asegúrate de que la celda 0 o la columna del ID se llame o corresponda al IdUsuario)
-                int idUsuario = Convert.ToInt32(DGVUsuarios.Rows[e.RowIndex].Cells["IdUsuario"].Value);
+                int idUsuario = Convert.ToInt32(DGVUsuarios.Rows[e.RowIndex].Cells["CID"].Value);
 
                 // 4. Confirmación antes de dar de baja
                 DialogResult resultado = MessageBox.Show("¿Estás seguro de dar de baja a este usuario?",
@@ -50,9 +50,7 @@ namespace Proyecto_Taller_2
                         if (exito)
                         {
                             MessageBox.Show("Usuario dado de baja correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                            // 6. Refrescamos la grilla para que desaparezca de la vista
-                            // CargarUsuariosEnGrilla(); 
+                            CargarUsuariosEnGrilla();
                         }
                     }
                     catch (Exception ex)
@@ -93,6 +91,7 @@ namespace Proyecto_Taller_2
         private void UC_Admin_Load(object sender, EventArgs e)
         {
             CargarRolesEnComboBox();
+            CargarUsuariosEnGrilla();
         }
 
         private void CargarRolesEnComboBox()
@@ -176,7 +175,7 @@ namespace Proyecto_Taller_2
                     Password = TBContraseña.Text, // Asegúrate de que el TextBox de la contraseña se llame así
                     Telefono = TBTelefono.Text.Trim(),
                     // Obtenemos el ID del rol seleccionado en el ComboBox
-                    rol_id = Convert.ToInt32(CBRol.SelectedValue)
+                    RolId = Convert.ToInt32(CBRol.SelectedValue)
                 };
 
                 // 3. Instanciamos la Capa de Negocio
@@ -195,7 +194,7 @@ namespace Proyecto_Taller_2
 
                     // Opcional: Limpiar los campos y refrescar la grilla de abajo
                     // LimpiarFormulario();
-                    // CargarUsuariosEnGrilla();
+                    CargarUsuariosEnGrilla();
                 }
             }
             catch (Exception ex)
@@ -333,6 +332,28 @@ namespace Proyecto_Taller_2
         {
             UsuarioDatos datos = new UsuarioDatos();
             return datos.ObtenerTodosLosUsuarios();
+        }
+        private void CargarUsuariosEnGrilla()
+        {
+            try
+            {
+                DGVUsuarios.AutoGenerateColumns = false; //PPara que no cree columnas extras de las ya definidas
+                UsuarioNegocio negocio = new UsuarioNegocio();
+
+                // Asignamos la lista completa al DataGridView
+                DGVUsuarios.DataSource = negocio.ListarTodosLosUsuarios();
+
+                // Opcional: Asegúrate de que la columna de la grilla que mostrará la fecha baja 
+                // tenga su DataPropertyName configurado en "FechaBaja" (puedes hacerlo desde el diseñador visual o por código)
+                if (DGVUsuarios.Columns["CFechaBaja"] != null)
+                {
+                    DGVUsuarios.Columns["CFechaBaja"].DataPropertyName = "FechaBaja";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar la grilla de usuarios: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
