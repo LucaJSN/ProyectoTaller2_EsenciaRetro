@@ -103,7 +103,7 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(159, 30);
             this.textBox3.TabIndex = 5;
-            this.textBox3.Text = "             dni";
+            this.textBox3.Text = "            dni";
             // 
             // textBox2
             // 

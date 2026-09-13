@@ -37,6 +37,11 @@ namespace Proyecto_Taller_2
 
         }
 
+        private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
         private void panel3_Paint(object sender, PaintEventArgs e)
         {
 
