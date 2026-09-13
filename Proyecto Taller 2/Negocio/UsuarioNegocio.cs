@@ -1,4 +1,5 @@
-﻿using Proyecto_Taller_2.Datos;
+﻿using MySqlConnector;
+using Proyecto_Taller_2.Datos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,23 @@ namespace Proyecto_Taller_2.Negocio
             // 2. COMUNICACIÓN CON DATOS
             // Si todo está correcto, le pasamos la pelota a la capa de Datos
             return datosUsuario.InsertarUsuarioYDireccion(usuario, direccion);
+        }
+
+        public bool ActualizarUsuario(Usuario usuario, Direccion direccion)
+        {
+            try
+            {
+                // Instancias tu clase de la capa de datos
+                UsuarioDatos datos = new UsuarioDatos();
+
+                // Llamas al método que actualiza en la base de datos y retornas el resultado
+                return datos.ActualizarUsuarioYDireccion(usuario, direccion);
+            }
+            catch (Exception ex)
+            {
+                // Puedes registrar el error o relanzarlo para que lo capture el formulario
+                throw new Exception("Error en la capa de negocio al actualizar el usuario: " + ex.Message);
+            }
         }
 
 

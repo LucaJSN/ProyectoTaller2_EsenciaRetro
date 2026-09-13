@@ -28,6 +28,8 @@ namespace Proyecto_Taller_2
         public int DireccionId { get; set; }
         public int RolId { get; set; }
         public DateTime? FechaBaja { get; set; } // El signo '?' indica que puede ser nulo si el usuario está activo
+        public DateTime FechaAlta { get; set; }
+        public DateTime FechaModificacion { get; set; }
 
         public Rol Rol { get; set; }
         public Direccion Direccion { get; set; }
