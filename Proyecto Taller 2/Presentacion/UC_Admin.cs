@@ -17,6 +17,7 @@ namespace Proyecto_Taller_2
     public partial class UC_Admin : UserControl
     {
         private int idUsuarioSeleccionado = 0;
+        private int idDireccionSeleccionada = 0;
         public UC_Admin()
         {
             InitializeComponent();
@@ -80,6 +81,7 @@ namespace Proyecto_Taller_2
 
                     // 1. Guardamos el ID globalmente para saber que estamos editando
                     idUsuarioSeleccionado = usuarioSelec.IdUsuario;
+                    idDireccionSeleccionada = usuarioSelec.Direccion.IdDireccion;
 
                     // 2. Cargamos los datos en los TextBox para que el usuario los modifique
                     TBNombre.Text = usuarioSelec.Nombre;
@@ -181,67 +183,76 @@ namespace Proyecto_Taller_2
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            // Capturamos lo que quedó escrito en los TextBox (con los cambios ya hechos)
-            Usuario usuario = new Usuario
+            try
             {
-                Nombre = TBNombre.Text.Trim(),
-                Apellido = TBApellido.Text.Trim(),
-                Correo = TBCorreo.Text.Trim(),
-                Telefono = TBTelefono.Text.Trim(),
-                RolId = Convert.ToInt32(CBRol.SelectedValue),
-                Password = TBContraseña.Text.Trim()
-            };
-
-            Direccion direccion = new Direccion
-            {
-                Provincia = TBProvincia.Text.Trim(),
-                Ciudad = TBCiudad.Text.Trim(),
-                Calle = TBCalle.Text.Trim(),
-                Altura = int.TryParse(TBAltura.Text.Trim(), out int alt) ? alt : 0
-            };
-
-            UsuarioNegocio negocio = new UsuarioNegocio();
-
-            if (idUsuarioSeleccionado == 0)
-            {
-                // --- REGISTRO NUEVO ---
-                bool exito = negocio.RegistrarUsuario(usuario, direccion);
-                if (exito)
+                // Capturamos lo que quedó escrito en los TextBox (con los cambios ya hechos)
+                Usuario usuario = new Usuario
                 {
-                    MessageBox.Show("Usuario registrado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    CargarUsuariosEnGrilla();
-                    LimpiarControles();
-                }
-            }
-            else
-            {
-                // --- EDICIÓN ---
-                usuario.IdUsuario = idUsuarioSeleccionado; // Asignamos el ID del usuario que estamos modificando
+                    Nombre = TBNombre.Text.Trim(),
+                    Apellido = TBApellido.Text.Trim(),
+                    Correo = TBCorreo.Text.Trim(),
+                    Telefono = TBTelefono.Text.Trim(),
+                    RolId = Convert.ToInt32(CBRol.SelectedValue),
+                    Password = TBContraseña.Text.Trim()
+                };
 
-                DialogResult resultado = MessageBox.Show("¿Estás seguro que deseas guardar los cambios?",
-                                                        "Confirmar edición",
-                                                        MessageBoxButtons.YesNo,
-                                                        MessageBoxIcon.Question);
-
-                if (resultado == DialogResult.Yes)
+                Direccion direccion = new Direccion
                 {
-                    try
+                    Provincia = TBProvincia.Text.Trim(),
+                    Ciudad = TBCiudad.Text.Trim(),
+                    Calle = TBCalle.Text.Trim(),
+                    Altura = int.TryParse(TBAltura.Text.Trim(), out int alt) ? alt : 0
+                };
+
+                UsuarioNegocio negocio = new UsuarioNegocio();
+
+                if (idUsuarioSeleccionado == 0)
+                {
+                    // --- REGISTRO NUEVO ---
+                    bool exito = negocio.RegistrarUsuario(usuario, direccion);
+                    if (exito)
                     {
-                        bool exito = negocio.ActualizarUsuario(usuario, direccion);
+                        MessageBox.Show("Usuario registrado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CargarUsuariosEnGrilla();
+                        LimpiarControles();
+                    }
+                }
+                else
+                {
+                    // --- EDICIÓN ---
+                    usuario.IdUsuario = idUsuarioSeleccionado; // Asignamos el ID del usuario que estamos modificando
+                    usuario.DireccionId = idDireccionSeleccionada; //Y también el ID de direccion
 
-                        if (exito)
+                    DialogResult resultado = MessageBox.Show("¿Estás seguro que deseas guardar los cambios?",
+                                                            "Confirmar edición",
+                                                            MessageBoxButtons.YesNo,
+                                                            MessageBoxIcon.Question);
+
+                    if (resultado == DialogResult.Yes)
+                    {
+                        try
                         {
-                            MessageBox.Show("Usuario editado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            CargarUsuariosEnGrilla();
-                            LimpiarControles();
-                            idUsuarioSeleccionado = 0; // Reiniciamos la variable para volver al modo registro
+                            bool exito = negocio.ActualizarUsuario(usuario, direccion);
+
+                            if (exito)
+                            {
+                                MessageBox.Show("Usuario editado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                CargarUsuariosEnGrilla();
+                                LimpiarControles();
+                                idUsuarioSeleccionado = 0; // Reiniciamos la variable para volver al modo registro
+                                idDireccionSeleccionada = 0;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Ocurrió un error al editar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Ocurrió un error al editar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Atencion", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

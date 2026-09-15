@@ -2,6 +2,7 @@
 using Proyecto_Taller_2.Datos;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions; //Para validar correo
@@ -25,9 +26,49 @@ namespace Proyecto_Taller_2.Negocio
                 throw new Exception("El nombre del usuario no puede estar vacío.");
             }
 
+            if (string.IsNullOrWhiteSpace(usuario.Apellido))
+            {
+                throw new Exception("El Apellido del usuario no puede estar vacío.");
+            }
+
+            if (string.IsNullOrWhiteSpace(usuario.Correo))
+            {
+                throw new Exception("Debe ingresar un correo para el usuario");
+            }
+
+            if (datosUsuario.ExisteCorreo(usuario.Correo.ToString()))
+            {
+                throw new Exception("El correo ingresado ya tiene una cuenta registrada");
+            }
+
+            if (string.IsNullOrWhiteSpace(usuario.Password))
+            {
+                throw new Exception("Debe ingresar una contreseña para el usuario");
+            }
+
             if (usuario.RolId <= 0)
             {
                 throw new Exception("Debe seleccionar un rol válido.");
+            }
+
+            if (string.IsNullOrWhiteSpace(direccion.Provincia))
+            {
+                throw new Exception("Debe ingresar una Provincia");
+            }
+
+            if (string.IsNullOrWhiteSpace(direccion.Ciudad))
+            {
+                throw new Exception("Debe ingresar una Ciudad");
+            }
+
+            if (string.IsNullOrWhiteSpace(direccion.Calle))
+            {
+                throw new Exception("Debe ingresar una Calle");
+            }
+
+            if (direccion.Altura == 0)
+            {
+                throw new Exception("Debe ingresar una Altura");
             }
 
             // Podrías agregar más lógica aquí (Ej: validar formato de correo, 
@@ -45,6 +86,43 @@ namespace Proyecto_Taller_2.Negocio
             {
                 // Instancias tu clase de la capa de datos
                 UsuarioDatos datos = new UsuarioDatos();
+
+                // 1. REGLAS DE NEGOCIO (Validaciones extra)
+                // Aquí te aseguras de que no llegue basura a la base de datos
+                if (string.IsNullOrWhiteSpace(usuario.Nombre))
+                {
+                    throw new Exception("El nombre del usuario no puede estar vacío.");
+                }
+
+                if (string.IsNullOrWhiteSpace(usuario.Apellido))
+                {
+                    throw new Exception("El Apellido del usuario no puede estar vacío.");
+                }
+
+                if (string.IsNullOrWhiteSpace(usuario.Correo))
+                {
+                    throw new Exception("Debe ingresar un correo para el usuario");
+                }
+
+                if (datosUsuario.ExisteCorreo(usuario.Correo.ToString(), usuario.IdUsuario))
+                {
+                    throw new Exception("El correo ingresado ya pertenece a otra cuenta registrada.");
+                }
+
+                if (string.IsNullOrWhiteSpace(usuario.Password))
+                {
+                    throw new Exception("Debe ingresar una contreseña para el usuario");
+                }
+
+                if (usuario.RolId <= 0)
+                {
+                    throw new Exception("Debe seleccionar un rol válido.");
+                }
+
+                if (string.IsNullOrWhiteSpace(direccion.Provincia))
+                {
+                    throw new Exception("Debe ingresar una Provincia");
+                }
 
                 // Llamas al método que actualiza en la base de datos y retornas el resultado
                 return datos.ActualizarUsuarioYDireccion(usuario, direccion);

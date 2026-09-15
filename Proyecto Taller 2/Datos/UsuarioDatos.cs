@@ -1,6 +1,7 @@
 ﻿using MySqlConnector;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,6 +65,26 @@ namespace Proyecto_Taller_2.Datos
                         transaccion.Rollback();
                         throw; // ¡Importante! Lanzamos el error para que la capa de Presentación lo atrape y muestre el MessageBox
                     }
+                }
+            }
+        }
+
+        // Le agregamos idUsuarioAExcluir = 0 para que por defecto no excluya a nadie (ideal para cuando registras uno nuevo)
+        public bool ExisteCorreo(string correo, int idUsuarioAExcluir = 0)
+        {
+            // Agregamos la condición AND id_usuario != @Id
+            string query = "SELECT COUNT(*) FROM usuario WHERE correo = @Correo AND id_usuario != @Id";
+
+            using (MySqlConnection conexion = new MySqlConnection(connectionString))
+            {
+                using (MySqlCommand cmd = new MySqlCommand(query, conexion))
+                {
+                    cmd.Parameters.AddWithValue("@Correo", correo);
+                    cmd.Parameters.AddWithValue("@Id", idUsuarioAExcluir); // Pasamos el ID a la consulta
+
+                    conexion.Open();
+                    int cantidad = Convert.ToInt32(cmd.ExecuteScalar());
+                    return cantidad > 0;
                 }
             }
         }
@@ -146,7 +167,7 @@ namespace Proyecto_Taller_2.Datos
                 // 1. Agregamos 'u.password' al SELECT y usamos LEFT JOIN por mayor seguridad
                 string query = @"SELECT u.id_usuario, u.nombre, u.apellido, u.correo, u.password, u.telefono, u.Rol_id, u.fecha_baja, 
                                 u.fecha_alta, u.fecha_modificacion,
-                                d.provincia, d.ciudad, d.calle, d.altura 
+                                d.id_direccion, d.provincia, d.ciudad, d.calle, d.altura 
                          FROM usuario u
                          LEFT JOIN direccion d ON u.Direccion_id = d.id_direccion";
 
@@ -168,7 +189,8 @@ namespace Proyecto_Taller_2.Datos
                                 RolId = Convert.ToInt32(reader["Rol_id"]),
                                 FechaBaja = reader["fecha_baja"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["fecha_baja"]),
                                 FechaAlta = Convert.ToDateTime(reader["fecha_alta"]),
-                                FechaModificacion = Convert.ToDateTime(reader["fecha_modificacion"])
+                                FechaModificacion = Convert.ToDateTime(reader["fecha_modificacion"]),
+                                DireccionId = reader["id_direccion"] == DBNull.Value ? 0 : Convert.ToInt32(reader["id_direccion"])
                             };
 
                             // 2. Validamos que la dirección no sea nula en la BD antes de crear el objeto
@@ -176,6 +198,7 @@ namespace Proyecto_Taller_2.Datos
                             {
                                 usu.Direccion = new Direccion
                                 {
+                                    IdDireccion = Convert.ToInt32(reader["id_direccion"]),
                                     Provincia = reader["provincia"].ToString(),
                                     Ciudad = reader["ciudad"].ToString(),
                                     Calle = reader["calle"].ToString(),
