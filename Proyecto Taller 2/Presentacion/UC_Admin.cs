@@ -1,4 +1,6 @@
 ﻿using MySqlConnector;
+using Proyecto_Taller_2.Datos;
+using Proyecto_Taller_2.Negocio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,12 +11,12 @@ using System.Text;
 using System.Text.RegularExpressions; //Para validar correo
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Proyecto_Taller_2.Negocio;
 
 namespace Proyecto_Taller_2
 {
     public partial class UC_Admin : UserControl
     {
+        private int idUsuarioSeleccionado = 0;
         public UC_Admin()
         {
             InitializeComponent();
@@ -22,8 +24,82 @@ namespace Proyecto_Taller_2
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            
-        }
+            //validamos que el clic no sea en la cabecera de la tabla (fila -1)
+            if (e.RowIndex < 0) return;
+
+            if (DGVUsuarios.Columns[e.ColumnIndex].Name == "CEliminar")
+            {
+
+                int idUsuario = Convert.ToInt32(DGVUsuarios.Rows[e.RowIndex].Cells["CID"].Value);
+                Usuario usuarioSelec = DGVUsuarios.Rows[e.RowIndex].DataBoundItem as Usuario;
+
+                if (usuarioSelec != null)
+                {
+                    if (usuarioSelec.FechaBaja.HasValue)
+                    {
+                        MessageBox.Show("El usuario que intenta eliminar ya ha sido eliminado", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    DialogResult resultado = MessageBox.Show("¿Estás seguro de dar de baja a este usuario?",
+                                                            "Confirmar baja",
+                                                            MessageBoxButtons.YesNo,
+                                                            MessageBoxIcon.Question);
+
+                    if (resultado == DialogResult.Yes)
+                    {
+                        try
+                        {
+                            //llamamos a la capa de negocio para ejecutar la baja lógica
+                            UsuarioNegocio negocio = new UsuarioNegocio();
+                            bool exito = negocio.DarDeBajaUsuario(usuarioSelec.IdUsuario); //metodo de capa de negocio
+
+                            if (exito)
+                            {
+                                MessageBox.Show("Usuario dado de baja correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                CargarUsuariosEnGrilla();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Ocurrió un error al dar de baja: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            if (DGVUsuarios.Columns[e.ColumnIndex].Name == "CEditar")
+            {
+                Usuario usuarioSelec = DGVUsuarios.Rows[e.RowIndex].DataBoundItem as Usuario;
+                if (usuarioSelec != null)
+                {
+                    if (usuarioSelec.FechaBaja.HasValue)
+                    {
+                        MessageBox.Show("El usuario que intenta editar está dado de baja", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // 1. Guardamos el ID globalmente para saber que estamos editando
+                    idUsuarioSeleccionado = usuarioSelec.IdUsuario;
+
+                    // 2. Cargamos los datos en los TextBox para que el usuario los modifique
+                    TBNombre.Text = usuarioSelec.Nombre;
+                    TBApellido.Text = usuarioSelec.Apellido;
+                    TBCorreo.Text = usuarioSelec.Correo;
+                    TBTelefono.Text = usuarioSelec.Telefono;
+                    CBRol.SelectedValue = usuarioSelec.RolId;
+                    TBContraseña.Text = usuarioSelec.Password;
+
+                    // Validar que el objeto Dirección no sea nulo antes de leerlo
+                    if (usuarioSelec.Direccion != null)
+                    {
+                        TBProvincia.Text = usuarioSelec.Direccion.Provincia;
+                        TBCiudad.Text = usuarioSelec.Direccion.Ciudad;
+                        TBCalle.Text = usuarioSelec.Direccion.Calle;
+                        TBAltura.Text = usuarioSelec.Direccion.Altura.ToString();
+                    }
+                }
+            }
+        }   
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -54,7 +130,24 @@ namespace Proyecto_Taller_2
 
         private void UC_Admin_Load(object sender, EventArgs e)
         {
+            CargarRolesEnComboBox();
+            CargarUsuariosEnGrilla();
+        }
 
+        private void CargarRolesEnComboBox()
+        {
+            try
+            {
+                RolNegocio negocioRol = new RolNegocio();
+                CBRol.DataSource = negocioRol.ListarRoles();
+                CBRol.DisplayMember = "tipo";
+                CBRol.ValueMember = "id_rol";
+                CBRol.SelectedIndex = -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar los roles: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void textBox7_TextChanged(object sender, EventArgs e)
@@ -86,71 +179,69 @@ namespace Proyecto_Taller_2
 
         }
 
-        private void BtnAgregar_Click(object sender, EventArgs e)
+        private void btnGuardar_Click(object sender, EventArgs e)
         {
-            // === 1. VALIDACIONES DE LA VISTA (PRIMERO QUE NADA) ===
-            if (string.IsNullOrWhiteSpace(TBNombre.Text) || string.IsNullOrWhiteSpace(TBCorreo.Text))
+            // Capturamos lo que quedó escrito en los TextBox (con los cambios ya hechos)
+            Usuario usuario = new Usuario
             {
-                MessageBox.Show("El nombre y el correo son obligatorios.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return; // Corta acá y no deja seguir
-            }
+                Nombre = TBNombre.Text.Trim(),
+                Apellido = TBApellido.Text.Trim(),
+                Correo = TBCorreo.Text.Trim(),
+                Telefono = TBTelefono.Text.Trim(),
+                RolId = Convert.ToInt32(CBRol.SelectedValue),
+                Password = TBContraseña.Text.Trim()
+            };
 
-            if (CBRol.SelectedValue == null)
+            Direccion direccion = new Direccion
             {
-                MessageBox.Show("Debes seleccionar un rol.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                Provincia = TBProvincia.Text.Trim(),
+                Ciudad = TBCiudad.Text.Trim(),
+                Calle = TBCalle.Text.Trim(),
+                Altura = int.TryParse(TBAltura.Text.Trim(), out int alt) ? alt : 0
+            };
 
-            try
+            UsuarioNegocio negocio = new UsuarioNegocio();
+
+            if (idUsuarioSeleccionado == 0)
             {
-                // 1. Creamos y llenamos la entidad Dirección con los datos de la vista
-                Direccion nuevaDireccion = new Direccion
+                // --- REGISTRO NUEVO ---
+                bool exito = negocio.RegistrarUsuario(usuario, direccion);
+                if (exito)
                 {
-                    Provincia = TBProvincia.Text.Trim(),
-                    Ciudad = TBCiudad.Text.Trim(),
-                    Calle = TBCalle.Text.Trim(),
-                    // Convertimos la altura a entero de forma segura
-                    Altura = int.TryParse(TBAltura.Text.Trim(), out int alt) ? alt : 0
-                };
-
-                // 2. Creamos y llenamos la entidad Usuario
-                Usuario nuevoUsuario = new Usuario
-                {
-                    Nombre = TBNombre.Text.Trim(),
-                    Apellido = TBApellido.Text.Trim(),
-                    Correo = TBCorreo.Text.Trim(),
-                    Password = TBContraseña.Text, // Asegúrate de que el TextBox de la contraseña se llame así
-                    Telefono = TBTelefono.Text.Trim(),
-                    // Obtenemos el ID del rol seleccionado en el ComboBox
-                    RolId = Convert.ToInt32(CBRol.SelectedValue)
-                };
-
-                // 3. Instanciamos la Capa de Negocio
-                // (Asegúrate de agregar el using Proyecto_Taller_2.Negocio; arriba si es necesario)
-                UsuarioNegocio negocio = new UsuarioNegocio();
-
-                // 4. Invocamos al método que orquestará el guardado
-                bool resultado = negocio.RegistrarUsuario(nuevoUsuario, nuevaDireccion);
-
-                if (resultado)
-                {
-                    MessageBox.Show("¡Usuario registrado con éxito mediante arquitectura de 4 capas!",
-                                    "Éxito",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Information);
-
-                    // Opcional: Limpiar los campos y refrescar la grilla de abajo
-                    // LimpiarFormulario();
-                    // CargarUsuariosEnGrilla();
+                    MessageBox.Show("Usuario registrado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CargarUsuariosEnGrilla();
+                    LimpiarControles();
                 }
             }
-            catch (Exception ex)
+            else
             {
-                // Si la capa de Negocio o Datos lanza una excepción (por ejemplo, validaciones vacías o error de MySQL), lo atrapamos acá
-                MessageBox.Show("Ocurrió un error: " + ex.Message,
-                                "Error de validación",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                // --- EDICIÓN ---
+                usuario.IdUsuario = idUsuarioSeleccionado; // Asignamos el ID del usuario que estamos modificando
+
+                DialogResult resultado = MessageBox.Show("¿Estás seguro que deseas guardar los cambios?",
+                                                        "Confirmar edición",
+                                                        MessageBoxButtons.YesNo,
+                                                        MessageBoxIcon.Question);
+
+                if (resultado == DialogResult.Yes)
+                {
+                    try
+                    {
+                        bool exito = negocio.ActualizarUsuario(usuario, direccion);
+
+                        if (exito)
+                        {
+                            MessageBox.Show("Usuario editado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            CargarUsuariosEnGrilla();
+                            LimpiarControles();
+                            idUsuarioSeleccionado = 0; // Reiniciamos la variable para volver al modo registro
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Ocurrió un error al editar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
             }
         }
 
@@ -273,6 +364,60 @@ namespace Proyecto_Taller_2
         private void TBContraseña_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        public List<Usuario> ListarTodosLosUsuarios()
+        {
+            UsuarioDatos datos = new UsuarioDatos();
+            return datos.ObtenerTodosLosUsuarios();
+        }
+        private void CargarUsuariosEnGrilla()
+        {
+            try
+            {
+                DGVUsuarios.AutoGenerateColumns = false; //PPara que no cree columnas extras de las ya definidas
+                UsuarioNegocio negocio = new UsuarioNegocio();
+
+                // Asignamos la lista completa al DataGridView
+                DGVUsuarios.DataSource = negocio.ListarTodosLosUsuarios();
+
+                // Opcional: Asegúrate de que la columna de la grilla que mostrará la fecha baja 
+                // tenga su DataPropertyName configurado en "FechaBaja" (puedes hacerlo desde el diseñador visual o por código)
+                if (DGVUsuarios.Columns["CFechaBaja"] != null)
+                {
+                    DGVUsuarios.Columns["CFechaBaja"].DataPropertyName = "FechaBaja";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar la grilla de usuarios: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BtnCancelar_Click(object sender, EventArgs e)
+        {
+            LimpiarControles();
+        }
+        private void LimpiarControles()
+        {
+            TBNombre.Clear();
+            TBApellido.Clear();
+            TBCorreo.Clear();
+            TBTelefono.Clear();
+            TBProvincia.Clear();
+            TBCiudad.Clear();
+            TBCalle.Clear();
+            TBAltura.Clear();
+            TBContraseña.Clear();
+
+            // Si el ComboBox tiene elementos, lo devolvemos al inicio (índice 0 o -1)
+            if (CBRol.Items.Count > 0)
+            {
+                CBRol.SelectedIndex = -1;
+            }
+
+            // Devolvemos la variable global a su estado inicial de registro
+            idUsuarioSeleccionado = 0;
         }
     }
 }

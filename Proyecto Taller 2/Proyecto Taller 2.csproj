@@ -82,11 +82,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Datos\RolDatos.cs" />
     <Compile Include="Datos\UsuarioDatos.cs" />
     <Compile Include="Entidades\Class1.cs" />
     <Compile Include="Entidades\Class2.cs" />
     <Compile Include="Entidades\Class3.cs" />
     <Compile Include="Datos\Conexion.cs" />
+    <Compile Include="Negocio\RolNegocio.cs" />
     <Compile Include="Negocio\UsuarioNegocio.cs" />
     <Compile Include="Presentacion\Form1.cs">
       <SubType>Form</SubType>
