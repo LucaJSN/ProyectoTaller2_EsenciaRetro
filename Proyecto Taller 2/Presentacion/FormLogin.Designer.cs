@@ -59,6 +59,7 @@
             this.TBPassword.Name = "TBPassword";
             this.TBPassword.Size = new System.Drawing.Size(157, 22);
             this.TBPassword.TabIndex = 2;
+            this.TBPassword.UseSystemPasswordChar = true;
             // 
             // LCorreo
             // 
