@@ -1,9 +1,12 @@
-﻿using System;
+﻿using MySqlConnector;
+using Proyecto_Taller_2.Datos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions; //Para validar correo
 using System.Threading.Tasks;
-using Proyecto_Taller_2.Datos;
+using System.Windows.Forms;
 
 namespace Proyecto_Taller_2.Negocio
 {
@@ -30,9 +33,48 @@ namespace Proyecto_Taller_2.Negocio
             // Podrías agregar más lógica aquí (Ej: validar formato de correo, 
             // buscar si el correo ya existe en la BD antes de intentar guardarlo, etc.)
 
+
             // 2. COMUNICACIÓN CON DATOS
             // Si todo está correcto, le pasamos la pelota a la capa de Datos
             return datosUsuario.InsertarUsuarioYDireccion(usuario, direccion);
+        }
+
+        public bool ActualizarUsuario(Usuario usuario, Direccion direccion)
+        {
+            try
+            {
+                // Instancias tu clase de la capa de datos
+                UsuarioDatos datos = new UsuarioDatos();
+
+                // Llamas al método que actualiza en la base de datos y retornas el resultado
+                return datos.ActualizarUsuarioYDireccion(usuario, direccion);
+            }
+            catch (Exception ex)
+            {
+                // Puedes registrar el error o relanzarlo para que lo capture el formulario
+                throw new Exception("Error en la capa de negocio al actualizar el usuario: " + ex.Message);
+            }
+        }
+
+
+        public bool DarDeBajaUsuario(int idUsuario)
+        {
+            // Regla de negocio opcional: puedes validar que el ID sea mayor a 0
+            if (idUsuario <= 0)
+            {
+                throw new Exception("ID de usuario inválido para dar de baja.");
+            }
+
+            // Instanciamos la capa de datos si no la tienes como atributo global
+            UsuarioDatos datosUsuario = new UsuarioDatos();
+
+            // Llamamos al método de la capa de datos que actualiza la fecha_baja
+            return datosUsuario.DarDeBajaUsuario(idUsuario);
+        }
+        public List<Usuario> ListarTodosLosUsuarios()
+        {
+            UsuarioDatos datos = new UsuarioDatos();
+            return datos.ObtenerTodosLosUsuarios();
         }
     }
 }

@@ -53,8 +53,8 @@ namespace Proyecto_Taller_2
                                 RolId = Convert.ToInt32(reader["Rol_id"]),
                                 Rol = new Rol
                                 {
-                                    IdRol = Convert.ToInt32(reader["Rol_id"]),
-                                    Tipo = reader["tipo"].ToString()
+                                    id_rol = Convert.ToInt32(reader["Rol_id"]),
+                                    tipo = reader["tipo"].ToString()
                                 }
                             };
                         }

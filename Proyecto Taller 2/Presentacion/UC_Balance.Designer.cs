@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.CBMesDesde = new System.Windows.Forms.ComboBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.BtnAplicarFiltros = new System.Windows.Forms.Button();
@@ -100,16 +100,16 @@
             // 
             // chartEvolucion
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chartEvolucion.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chartEvolucion.Legends.Add(legend2);
-            this.chartEvolucion.Location = new System.Drawing.Point(3, 214);
+            chartArea1.Name = "ChartArea1";
+            this.chartEvolucion.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chartEvolucion.Legends.Add(legend1);
+            this.chartEvolucion.Location = new System.Drawing.Point(127, 192);
             this.chartEvolucion.Name = "chartEvolucion";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chartEvolucion.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartEvolucion.Series.Add(series1);
             this.chartEvolucion.Size = new System.Drawing.Size(638, 300);
             this.chartEvolucion.TabIndex = 7;
             this.chartEvolucion.Text = "chart1";
@@ -117,7 +117,7 @@
             // DGVFacturas
             // 
             this.DGVFacturas.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DGVFacturas.Location = new System.Drawing.Point(757, 316);
+            this.DGVFacturas.Location = new System.Drawing.Point(862, 214);
             this.DGVFacturas.Name = "DGVFacturas";
             this.DGVFacturas.RowHeadersWidth = 51;
             this.DGVFacturas.RowTemplate.Height = 24;
@@ -157,6 +157,7 @@
             this.Controls.Add(this.CBMesDesde);
             this.Name = "UC_Balance";
             this.Size = new System.Drawing.Size(1470, 730);
+            this.Load += new System.EventHandler(this.UC_Balance_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartEvolucion)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGVFacturas)).EndInit();
