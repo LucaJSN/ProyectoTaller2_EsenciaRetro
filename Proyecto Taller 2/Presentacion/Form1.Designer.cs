@@ -36,6 +36,7 @@
             this.btnInicio = new System.Windows.Forms.Button();
             this.btnProductos = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnBackUp = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,6 +52,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.panel1.Controls.Add(this.btnBackUp);
             this.panel1.Controls.Add(this.BtnAdmin);
             this.panel1.Controls.Add(this.btnVentas);
             this.panel1.Controls.Add(this.btnBalance);
@@ -121,6 +123,16 @@
             this.panel2.Size = new System.Drawing.Size(1702, 60);
             this.panel2.TabIndex = 2;
             // 
+            // btnBackUp
+            // 
+            this.btnBackUp.Location = new System.Drawing.Point(62, 398);
+            this.btnBackUp.Name = "btnBackUp";
+            this.btnBackUp.Size = new System.Drawing.Size(75, 23);
+            this.btnBackUp.TabIndex = 0;
+            this.btnBackUp.Text = "BACK-UP";
+            this.btnBackUp.UseVisualStyleBackColor = true;
+            this.btnBackUp.Click += new System.EventHandler(this.btnBackUp_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -153,5 +165,6 @@
         private System.Windows.Forms.Button btnProductos;
         private System.Windows.Forms.Button btnBalance;
         private System.Windows.Forms.Button BtnAdmin;
+        private System.Windows.Forms.Button btnBackUp;
     }
 }

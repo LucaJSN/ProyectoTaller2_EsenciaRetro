@@ -66,5 +66,10 @@ namespace Proyecto_Taller_2
         {
             AbrirModulo(new UC_Admin());
         }
+
+        private void btnBackUp_Click(object sender, EventArgs e)
+        {
+            AbrirModulo(new UC_Backup());
+        }
     }
 }
