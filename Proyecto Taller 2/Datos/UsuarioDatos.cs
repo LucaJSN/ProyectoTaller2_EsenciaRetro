@@ -158,6 +158,23 @@ namespace Proyecto_Taller_2.Datos
                 }
             }
         }
+
+        public void ActivarUsuario(int idUsuario)
+        {
+            using (MySqlConnection conexion = new MySqlConnection(connectionString))
+            {
+                // El UPDATE simplemente pone la fecha_baja en NULL
+                string query = "UPDATE usuario SET fecha_baja = NULL WHERE id_usuario = @idUsu;";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, conexion))
+                {
+                    cmd.Parameters.AddWithValue("@idUsu", idUsuario);
+
+                    conexion.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
         public List<Usuario> ObtenerTodosLosUsuarios()
         {
             List<Usuario> lista = new List<Usuario>();

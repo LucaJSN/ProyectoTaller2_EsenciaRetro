@@ -73,6 +73,7 @@
             this.TBBuscador = new System.Windows.Forms.TextBox();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.label17 = new System.Windows.Forms.Label();
+            this.CReactivar = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.DGVUsuarios)).BeginInit();
             this.SuspendLayout();
             // 
@@ -97,7 +98,8 @@
             this.CTelefono,
             this.CFechaBaja,
             this.CEditar,
-            this.CEliminar});
+            this.CEliminar,
+            this.CReactivar});
             this.DGVUsuarios.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.DGVUsuarios.GridColor = System.Drawing.Color.Black;
             this.DGVUsuarios.Location = new System.Drawing.Point(0, 566);
@@ -505,6 +507,14 @@
             this.label17.TabIndex = 36;
             this.label17.Text = "🔍";
             // 
+            // CReactivar
+            // 
+            this.CReactivar.HeaderText = "Reactivar";
+            this.CReactivar.MinimumWidth = 6;
+            this.CReactivar.Name = "CReactivar";
+            this.CReactivar.ReadOnly = true;
+            this.CReactivar.Width = 125;
+            // 
             // UC_Admin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -598,5 +608,6 @@
         private System.Windows.Forms.TextBox TBBuscador;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.DataGridViewButtonColumn CReactivar;
     }
 }
