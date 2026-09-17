@@ -80,6 +80,12 @@ namespace Proyecto_Taller_2.Negocio
             return datosUsuario.InsertarUsuarioYDireccion(usuario, direccion);
         }
 
+        public void ActivarUsuario(int idUsuario)
+        {
+            UsuarioDatos datos = new UsuarioDatos();
+            datos.ActivarUsuario(idUsuario);
+        }
+
         public bool ActualizarUsuario(Usuario usuario, Direccion direccion)
         {
             try

@@ -104,6 +104,34 @@ namespace Proyecto_Taller_2
                     }
                 }
             }
+            if (DGVUsuarios.Columns[e.ColumnIndex].Name == "CReactivar") // Asumiendo que el botón se llama CActivar
+            {
+                Usuario usuarioSelec = DGVUsuarios.Rows[e.RowIndex].DataBoundItem as Usuario;
+
+                if (usuarioSelec != null)
+                {
+                    // Verificamos si realmente está inactivo antes de hacer el viaje a la BD
+                    if (usuarioSelec.FechaBaja.HasValue)
+                    {
+                        DialogResult respuesta = MessageBox.Show($"¿Deseas reactivar al usuario {usuarioSelec.Nombre}?", "Confirmar activación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                        if (respuesta == DialogResult.Yes)
+                        {
+                            UsuarioNegocio negocio = new UsuarioNegocio();
+                            negocio.ActivarUsuario(usuarioSelec.IdUsuario);
+
+                            MessageBox.Show("Usuario reactivado con éxito.");
+
+                            // Recargamos la grilla para que el usuario vuelva a aparecer como Activo
+                            CargarUsuariosEnGrilla();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Este usuario ya se encuentra activo.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
         }   
 
         private void textBox1_TextChanged(object sender, EventArgs e)
