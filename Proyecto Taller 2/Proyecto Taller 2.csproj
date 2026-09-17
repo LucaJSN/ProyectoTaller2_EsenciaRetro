@@ -122,6 +122,7 @@
     <Compile Include="Entidades\Class3.cs" />
     <Compile Include="Datos\Conexion.cs" />
     <Compile Include="Negocio\BackNegocio.cs" />
+    <Compile Include="Negocio\LoginNegocio.cs" />
     <Compile Include="Negocio\RolNegocio.cs" />
     <Compile Include="Negocio\UsuarioNegocio.cs" />
     <Compile Include="Presentacion\Form1.cs">

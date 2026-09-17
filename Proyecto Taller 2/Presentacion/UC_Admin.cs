@@ -16,6 +16,7 @@ namespace Proyecto_Taller_2
 {
     public partial class UC_Admin : UserControl
     {
+        private List<Usuario> listaUsuariosGlobal = new List<Usuario>();
         private int idUsuarioSeleccionado = 0;
         private int idDireccionSeleccionada = 0;
         public UC_Admin()
@@ -70,12 +71,14 @@ namespace Proyecto_Taller_2
             }
             if (DGVUsuarios.Columns[e.ColumnIndex].Name == "CEditar")
             {
+                LCuestionario.Text = "Editar Usuario";
                 Usuario usuarioSelec = DGVUsuarios.Rows[e.RowIndex].DataBoundItem as Usuario;
                 if (usuarioSelec != null)
                 {
                     if (usuarioSelec.FechaBaja.HasValue)
                     {
                         MessageBox.Show("El usuario que intenta editar está dado de baja", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        LCuestionario.Text = "Crear Usuario";
                         return;
                     }
 
@@ -386,18 +389,37 @@ namespace Proyecto_Taller_2
         {
             try
             {
-                DGVUsuarios.AutoGenerateColumns = false; //PPara que no cree columnas extras de las ya definidas
+                DGVUsuarios.AutoGenerateColumns = false; //Para que no cree columnas extras de las ya definidas
                 UsuarioNegocio negocio = new UsuarioNegocio();
 
-                // Asignamos la lista completa al DataGridView
-                DGVUsuarios.DataSource = negocio.ListarTodosLosUsuarios();
+                List<Usuario> listaCompleta = negocio.ListarTodosLosUsuarios();
+                List<Usuario> listaFiltrada = listaUsuariosGlobal.ToList();
 
-                // Opcional: Asegúrate de que la columna de la grilla que mostrará la fecha baja 
-                // tenga su DataPropertyName configurado en "FechaBaja" (puedes hacerlo desde el diseñador visual o por código)
-                if (DGVUsuarios.Columns["CFechaBaja"] != null)
+                string filtro = CBFiltro.Text;
+
+                if (filtro == "Activos")
                 {
-                    DGVUsuarios.Columns["CFechaBaja"].DataPropertyName = "FechaBaja";
+                    listaFiltrada = listaCompleta.Where(u => !u.FechaBaja.HasValue).ToList();
                 }
+                else if (filtro == "Inactivos")
+                {
+                    listaFiltrada = listaCompleta.Where(u => u.FechaBaja.HasValue).ToList();
+                }
+                else
+                {
+                    listaFiltrada = listaCompleta;
+                }
+                string textoBusqueda = TBBuscador.Text.Trim();
+                if (!string.IsNullOrEmpty(textoBusqueda))
+                {
+                    listaFiltrada = listaFiltrada.Where(u =>
+                        (u.Nombre != null && u.Nombre.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                        (u.Apellido != null && u.Apellido.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                        (u.Correo != null && u.Correo.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0)
+                    ).ToList(); // <-- ¡El secreto está aquí! Ejecuta el filtro de texto inmediatamente
+                }
+                DGVUsuarios.DataSource = null;
+                DGVUsuarios.DataSource = listaFiltrada;
             }
             catch (Exception ex)
             {
@@ -408,6 +430,7 @@ namespace Proyecto_Taller_2
         private void BtnCancelar_Click(object sender, EventArgs e)
         {
             LimpiarControles();
+            LCuestionario.Text = "Crear Usuario";
         }
         private void LimpiarControles()
         {
@@ -429,6 +452,16 @@ namespace Proyecto_Taller_2
 
             // Devolvemos la variable global a su estado inicial de registro
             idUsuarioSeleccionado = 0;
+        }
+
+        private void CBFiltro_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarUsuariosEnGrilla();
+        }
+
+        private void TBBuscador_TextChanged(object sender, EventArgs e)
+        {
+            CargarUsuariosEnGrilla();
         }
     }
 }
