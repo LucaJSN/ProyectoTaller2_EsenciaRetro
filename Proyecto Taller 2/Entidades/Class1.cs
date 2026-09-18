@@ -8,12 +8,12 @@ namespace Proyecto_Taller_2
 {
     public class Rol
     {
-        public int IdRol { get; set; }
-        public string Tipo { get; set; }
+        public int id_rol { get; set; }
+        public string tipo { get; set; }
 
         public Rol()
         {
-            Tipo = string.Empty;
+            tipo = string.Empty;
         }
     }
 
@@ -27,6 +27,9 @@ namespace Proyecto_Taller_2
         public string Telefono { get; set; }
         public int DireccionId { get; set; }
         public int RolId { get; set; }
+        public DateTime? FechaBaja { get; set; } // El signo '?' indica que puede ser nulo si el usuario está activo
+        public DateTime FechaAlta { get; set; }
+        public DateTime FechaModificacion { get; set; }
 
         public Rol Rol { get; set; }
         public Direccion Direccion { get; set; }

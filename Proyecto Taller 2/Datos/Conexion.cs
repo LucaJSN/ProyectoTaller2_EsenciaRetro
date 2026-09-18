@@ -24,7 +24,7 @@ namespace Proyecto_Taller_2
         {
             Usuario usuario = null;
 
-            string query = @"SELECT u.id_usuario, u.nombre, u.apellido, u.correo, u.password, u.telefono, u.Rol_id, r.tipo 
+            string query = @"SELECT u.id_usuario, u.nombre, u.apellido, u.correo, u.password, u.telefono, u.Rol_id, u.fecha_baja, r.tipo 
                              FROM Usuario u 
                              INNER JOIN Rol r ON u.Rol_id = r.id_rol 
                              WHERE u.correo = @correo AND u.password = @password";
@@ -42,6 +42,10 @@ namespace Proyecto_Taller_2
                     {
                         if (reader.Read())
                         {
+                            if (reader["fecha_baja"] != DBNull.Value)
+                            {
+                                throw new Exception("Tu cuenta ha sido desactivada. Contacta al administrador.");
+                            }
                             usuario = new Usuario
                             {
                                 IdUsuario = Convert.ToInt32(reader["id_usuario"]),
@@ -53,8 +57,8 @@ namespace Proyecto_Taller_2
                                 RolId = Convert.ToInt32(reader["Rol_id"]),
                                 Rol = new Rol
                                 {
-                                    IdRol = Convert.ToInt32(reader["Rol_id"]),
-                                    Tipo = reader["tipo"].ToString()
+                                    id_rol = Convert.ToInt32(reader["Rol_id"]),
+                                    tipo = reader["tipo"].ToString()
                                 }
                             };
                         }

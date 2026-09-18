@@ -66,5 +66,10 @@ namespace Proyecto_Taller_2
         {
 
         }
+
+        private void UC_Balance_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

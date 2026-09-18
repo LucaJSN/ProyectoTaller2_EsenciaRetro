@@ -13,17 +13,27 @@ namespace Proyecto_Taller_2
 {
     public partial class Form1 : Form
     {
+        private Usuario usuarioActivo;
         public Form1(Usuario usuario)
         {
             InitializeComponent();
             Usuario usuarioActual = usuario;
+            usuarioActivo = usuarioActual;
 
             // Podés mostrar el usuario actual en el título o en un Label
-            this.Text = $"Sistema de Gestión - Usuario: {usuarioActual.Nombre} {usuarioActual.Apellido} ({usuarioActual.Rol.Tipo})";
+            this.Text = $"Sistema de Gestión - Usuario: {usuarioActual.Nombre} {usuarioActual.Apellido} ({usuarioActual.Rol.tipo})";
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Código a ejecutar cuando la ventana termine de cargar
+            //Bloquear Botones a las vistas
+            if (usuarioActivo.RolId != 1)
+            {
+                BtnAdmin.Enabled = false; //aparece gris y no se puede clickear
+            }
+            if (usuarioActivo.RolId != 2)
+            {
+                btnProductos.Enabled = false;
+            }
         }
         public Form1()
         {
@@ -64,7 +74,13 @@ namespace Proyecto_Taller_2
 
         private void BtnAdmin_Click(object sender, EventArgs e)
         {
+            
             AbrirModulo(new UC_Admin());
+        }
+
+        private void btnBackUp_Click(object sender, EventArgs e)
+        {
+            AbrirModulo(new UC_Backup());
         }
     }
 }
