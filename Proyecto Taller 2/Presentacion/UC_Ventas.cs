@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Proyecto_Taller_2
@@ -17,7 +14,8 @@ namespace Proyecto_Taller_2
             public string IdProducto { get; set; }
             public string Descripcion { get; set; }
             public int Cantidad { get; set; }
-            public decimal SubTotal { get; set; }
+            public decimal PrecioUnitario { get; set; }
+            public decimal SubTotal => Cantidad * PrecioUnitario;
         }
 
         private BindingList<DetalleVentaItem> listaCarrito = new BindingList<DetalleVentaItem>();
@@ -29,46 +27,94 @@ namespace Proyecto_Taller_2
 
         private void UC_Ventas_Load(object sender, EventArgs e)
         {
-            // Configuración del DataGridView
+            ConfigurarGrid();
+            VincularEventosYValidaciones();
+            ActualizarTotalVenta();
+        }
+
+        private void ConfigurarGrid()
+        {
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.DataSource = listaCarrito;
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-            if (dataGridView1.Columns.Contains("idVentas"))
-                dataGridView1.Columns["idVentas"].DataPropertyName = "IdProducto";
+            // Mapeo por posición estricta de columna para garantizar que ID Venta tome el ID y Descripción tome el texto
+            if (dataGridView1.Columns.Count >= 4)
+            {
+                dataGridView1.Columns[0].DataPropertyName = "IdProducto";
+                dataGridView1.Columns[1].DataPropertyName = "Descripcion";
+                dataGridView1.Columns[2].DataPropertyName = "Cantidad";
+                dataGridView1.Columns[3].DataPropertyName = "SubTotal";
+            }
 
-            if (dataGridView1.Columns.Contains("descripcion"))
-                dataGridView1.Columns["descripcion"].DataPropertyName = "Descripcion";
-
-            if (dataGridView1.Columns.Contains("cantidad"))
-                dataGridView1.Columns["cantidad"].DataPropertyName = "Cantidad";
-
-            if (dataGridView1.Columns.Contains("subTotal"))
-                dataGridView1.Columns["subTotal"].DataPropertyName = "SubTotal";
-
-            // Enlazar evento para borrar automáticamente el contenido al tocar CUALQUIER campo
-            AsignarBorradoAlTocar(textBox1); // ID Cliente
-            AsignarBorradoAlTocar(textBox2); // Nombre
-            AsignarBorradoAlTocar(textBox3); // DNI
-            AsignarBorradoAlTocar(textBox4); // Producto ID
-            AsignarBorradoAlTocar(textBox5); // Descripción
-            AsignarBorradoAlTocar(textBox6); // Stock Disponible
-            AsignarBorradoAlTocar(textBox7); // Precio Venta
-
-            // Validaciones de entrada por teclado
-            textBox3.KeyPress += TextBox3_KeyPress; // Solo números en DNI
-            textBox2.KeyPress += TextBox2_KeyPress; // Solo letras en Nombre
+            dataGridView1.CellClick -= DataGridView1_CellClick;
+            dataGridView1.CellClick += DataGridView1_CellClick;
         }
 
-        // Método que borra completamente el texto al hacer clic o ganar el foco
-        private void AsignarBorradoAlTocar(TextBox txt)
+        private void VincularEventosYValidaciones()
         {
-            txt.Click += (s, e) => txt.Clear();
-            txt.GotFocus += (s, e) => txt.Clear();
+            // Vinculación de Botones
+            if (button1 != null) { button1.Click -= ExecBuscarCliente; button1.Click += ExecBuscarCliente; }
+            if (button2 != null) { button2.Click -= ExecBuscarProducto; button2.Click += ExecBuscarProducto; }
+            if (button4 != null) { button4.Click -= ExecAgregarProducto; button4.Click += ExecAgregarProducto; }
+            if (button5 != null) { button5.Click -= ExecRegistrarVenta; button5.Click += ExecRegistrarVenta; }
+
+            // Restricciones de teclado
+            if (textBox1 != null) AsignarSoloNumeros(textBox1);   // ID Cliente
+            if (textBox2 != null) AsignarSoloLetras(textBox2);    // Nombre Cliente
+            if (textBox3 != null) AsignarSoloNumeros(textBox3);   // DNI Cliente
+
+            if (textBox5 != null) AsignarSoloNumeros(textBox5);   // Producto ID
+            if (textBox4 != null) AsignarSoloLetras(textBox4);    // Descripción
+            if (textBox6 != null) AsignarSoloNumeros(textBox6);   // Stock
+            if (textBox7 != null)                                 // Precio Venta
+            {
+                textBox7.ReadOnly = false;
+                AsignarSoloDecimales(textBox7);
+            }
+
+            // Limpieza al tocar
+            TextBox[] todosLosTextBox = { textBox1, textBox2, textBox3, textBox4, textBox5, textBox6, textBox7 };
+            foreach (var txt in todosLosTextBox)
+            {
+                if (txt != null)
+                {
+                    txt.Click -= LimpiarPlaceHolder;
+                    txt.Click += LimpiarPlaceHolder;
+                    txt.Enter -= LimpiarPlaceHolder;
+                    txt.Enter += LimpiarPlaceHolder;
+                }
+            }
+
+            if (domainUpDown2 != null)
+            {
+                domainUpDown2.Click -= LimpiarDomainUpDown;
+                domainUpDown2.Click += LimpiarDomainUpDown;
+                domainUpDown2.Enter -= LimpiarDomainUpDown;
+                domainUpDown2.Enter += LimpiarDomainUpDown;
+            }
         }
 
-        // Restricción a solo números para el DNI
-        private void TextBox3_KeyPress(object sender, KeyPressEventArgs e)
+        #region --- REGLAS DE TECLADO Y LIMPIEZA ---
+
+        private void AsignarSoloNumeros(TextBox txt)
+        {
+            txt.KeyPress -= SoloNumeros_KeyPress;
+            txt.KeyPress += SoloNumeros_KeyPress;
+        }
+
+        private void AsignarSoloLetras(TextBox txt)
+        {
+            txt.KeyPress -= SoloLetras_KeyPress;
+            txt.KeyPress += SoloLetras_KeyPress;
+        }
+
+        private void AsignarSoloDecimales(TextBox txt)
+        {
+            txt.KeyPress -= SoloDecimales_KeyPress;
+            txt.KeyPress += SoloDecimales_KeyPress;
+        }
+
+        private void SoloNumeros_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
@@ -76,8 +122,7 @@ namespace Proyecto_Taller_2
             }
         }
 
-        // Restricción a solo letras para Nombre
-        private void TextBox2_KeyPress(object sender, KeyPressEventArgs e)
+        private void SoloLetras_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
             {
@@ -85,63 +130,226 @@ namespace Proyecto_Taller_2
             }
         }
 
-        #region --- BOTONES DE BÚSQUEDA ---
-
-        private void button1_Click(object sender, EventArgs e)
+        private void SoloDecimales_KeyPress(object sender, KeyPressEventArgs e)
         {
-            MessageBox.Show("Debe completar los campos para buscar cliente.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != ',' && e.KeyChar != '.')
+            {
+                e.Handled = true;
+            }
+            if ((e.KeyChar == ',' || e.KeyChar == '.') && sender is TextBox txt)
+            {
+                if (txt.Text.Contains(",") || txt.Text.Contains("."))
+                {
+                    e.Handled = true;
+                }
+            }
         }
 
-        private void button3_Click(object sender, EventArgs e) => MostrarMensajeBusquedaProducto();
-        private void button4_Click(object sender, EventArgs e) => MostrarMensajeBusquedaProducto();
-
-        private void MostrarMensajeBusquedaProducto()
+        private void LimpiarPlaceHolder(object sender, EventArgs e)
         {
-            MessageBox.Show("Debe completar el campo ID Producto o Descripción para poder buscar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            if (sender is TextBox txt)
+            {
+                string val = txt.Text.Trim().ToLower();
+                if (val.Contains("id") || val.Contains("nombre") || val.Contains("dni") || val.Contains("produ") || val.Contains("descrip") || val.Contains("noescribir") || val.Contains("$"))
+                {
+                    txt.Clear();
+                }
+                else
+                {
+                    txt.SelectAll();
+                }
+            }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void LimpiarDomainUpDown(object sender, EventArgs e)
         {
-            MessageBox.Show("Seleccione un rango de fechas válido.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (domainUpDown2 != null && (domainUpDown2.Text == "0" || domainUpDown2.Text.ToLower().Contains("cant")))
+            {
+                domainUpDown2.Text = "";
+            }
         }
 
         #endregion
 
-        #region --- BOTONES ABAJO (AGREGAR Y ELIMINAR) ---
+        #region --- OPERACIONES ---
 
-        // BOTÓN VERDE AGREGAR (button5)
-        private void button5_Click(object sender, EventArgs e)
+        private void ExecBuscarCliente(object sender, EventArgs e)
         {
-            MessageBox.Show("No se puede agregar si no se encontraron productos.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            string idCliente = textBox1 != null ? textBox1.Text.Trim() : "";
+
+            if (string.IsNullOrWhiteSpace(idCliente) || idCliente.ToLower().Contains("id"))
+            {
+                MessageBox.Show("Ingrese un ID de cliente válido para buscar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            MessageBox.Show($"Cliente buscado (ID: {idCliente}).", "Cliente Buscado", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        // BOTÓN ROJO ELIMINAR (button6)
-        private void button6_Click(object sender, EventArgs e)
+        private void ExecBuscarProducto(object sender, EventArgs e)
         {
-            MessageBox.Show("No se puede eliminar si no hay productos agregados.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            string idProd = textBox5 != null ? textBox5.Text.Trim() : "";
+
+            if (string.IsNullOrWhiteSpace(idProd) || idProd.ToLower().Contains("id") || idProd.ToLower().Contains("prod"))
+            {
+                MessageBox.Show("Ingrese un ID de producto válido para buscar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            MessageBox.Show($"Producto buscado (ID: {idProd}).", "Producto Buscado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void ExecAgregarProducto(object sender, EventArgs e)
+        {
+            string idProd = textBox5 != null ? textBox5.Text.Trim() : "";      // Producto ID
+            string desc = textBox4 != null ? textBox4.Text.Trim() : "";        // Descripción
+            string stockRaw = textBox6 != null ? textBox6.Text.Trim() : "0";    // Stock
+            string precioRaw = textBox7 != null ? textBox7.Text.Trim() : "0";   // Precio
+
+            if (string.IsNullOrWhiteSpace(desc) || desc.ToLower().Contains("descrip"))
+            {
+                MessageBox.Show("Complete la descripción del producto antes de agregar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int cantSeleccionada = 1;
+            if (domainUpDown2 != null)
+            {
+                int.TryParse(domainUpDown2.Text.Trim(), out cantSeleccionada);
+                if (cantSeleccionada <= 0) cantSeleccionada = 1;
+            }
+
+            int stockDisponible = int.TryParse(stockRaw, out int s) ? s : 0;
+            if (cantSeleccionada > stockDisponible)
+            {
+                MessageBox.Show($"La cantidad solicitada ({cantSeleccionada}) supera el stock disponible ({stockDisponible}).",
+                                "Stock Insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string precioLimpio = new string(precioRaw.Where(c => char.IsDigit(c) || c == ',' || c == '.').ToArray()).Replace(".", ",");
+            decimal precio = decimal.TryParse(precioLimpio, out decimal p) ? p : 0;
+
+            listaCarrito.Add(new DetalleVentaItem
+            {
+                IdProducto = idProd,
+                Descripcion = desc,
+                Cantidad = cantSeleccionada,
+                PrecioUnitario = precio
+            });
+
+            ActualizarTotalVenta();
+
+            if (textBox5 != null) textBox5.Clear();
+            if (textBox4 != null) textBox4.Clear();
+            if (textBox6 != null) textBox6.Clear();
+            if (textBox7 != null) textBox7.Clear();
+            if (domainUpDown2 != null) domainUpDown2.Text = "1";
+        }
+
+        private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && btnEliminarCol != null && e.ColumnIndex == btnEliminarCol.Index)
+            {
+                if (dataGridView1.Rows[e.RowIndex].DataBoundItem is DetalleVentaItem item)
+                {
+                    if (MessageBox.Show($"¿Desea eliminar '{item.Descripcion}' de la lista?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        listaCarrito.Remove(item);
+                        ActualizarTotalVenta();
+                    }
+                }
+            }
+        }
+
+        private void ExecRegistrarVenta(object sender, EventArgs e)
+        {
+            if (listaCarrito.Count == 0)
+            {
+                MessageBox.Show("No hay productos en la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            decimal total = listaCarrito.Sum(x => x.SubTotal);
+
+            string clienteNombre = (textBox2 != null && !string.IsNullOrWhiteSpace(textBox2.Text) && !textBox2.Text.ToLower().Contains("nombre"))
+                ? textBox2.Text.Trim()
+                : "Consumidor Final";
+
+            MessageBox.Show($"¡Venta registrada con éxito!\n\nCliente: {clienteNombre}\nTotal: $ {total:N2}",
+                            "Venta Finalizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            listaCarrito.Clear();
+            ActualizarTotalVenta();
+        }
+
+        private void ActualizarTotalVenta()
+        {
+            decimal total = listaCarrito.Sum(x => x.SubTotal);
+
+            // Búsqueda inteligente por posición Y: actualiza ÚNICAMENTE la etiqueta que está ubicada abajo de la pantalla
+            Label labelTotalAbajo = null;
+            int mayorY = -1;
+
+            foreach (Control c in this.Controls)
+            {
+                BuscarLabelInferior(c, ref labelTotalAbajo, ref mayorY);
+            }
+
+            if (labelTotalAbajo != null)
+            {
+                labelTotalAbajo.Text = $"$ {total:N2}";
+            }
+        }
+
+        private void BuscarLabelInferior(Control contenedor, ref Label resultado, ref int mayorY)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c is Label lbl)
+                {
+                    Point posPantalla = lbl.Parent != null ? lbl.Parent.PointToScreen(lbl.Location) : lbl.Location;
+                    if (posPantalla.Y > mayorY && (lbl.Text.Contains("$") || lbl.Text.Contains("0")))
+                    {
+                        mayorY = posPantalla.Y;
+                        resultado = lbl;
+                    }
+                }
+                if (c.HasChildren)
+                {
+                    BuscarLabelInferior(c, ref resultado, ref mayorY);
+                }
+            }
         }
 
         #endregion
 
-        // Eventos vacíos para no romper la compatibilidad con el Diseñador
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
-        private void label1_Click(object sender, EventArgs e) { }
-        private void label2_Click(object sender, EventArgs e) { }
-        private void label1_Click_1(object sender, EventArgs e) { }
-        private void label5_Click(object sender, EventArgs e) { }
-        private void label3_Click(object sender, EventArgs e) { }
+        #region --- MÉTODOS REQUERIDOS POR EL DESIGNER (Eliminan errores CS1061) ---
+
+        private void button1_Click_1(object sender, EventArgs e) { }
         private void textBox1_TextChanged(object sender, EventArgs e) { }
+        private void label2_Click(object sender, EventArgs e) { }
+        private void button2_Click_1(object sender, EventArgs e) { }
+        private void button4_Click(object sender, EventArgs e) { }
+        private void textBox6_TextChanged(object sender, EventArgs e) { }
+        private void label1_Click_1(object sender, EventArgs e) { }
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+        private void button5_Click(object sender, EventArgs e) { }
+
+        private void label1_Click(object sender, EventArgs e) { }
+        private void label3_Click(object sender, EventArgs e) { }
+        private void label5_Click(object sender, EventArgs e) { }
         private void label6_Click(object sender, EventArgs e) { }
-        private void label8_Click(object sender, EventArgs e) { }
+        private void label7_Click(object sender, EventArgs e) { }
+        private void label10_Click(object sender, EventArgs e) { }
         private void label11_Click(object sender, EventArgs e) { }
+        private void label12_Click(object sender, EventArgs e) { }
+        private void label13_Click(object sender, EventArgs e) { }
         private void label14_Click(object sender, EventArgs e) { }
-        private void label17_Click(object sender, EventArgs e) { }
+        private void label15_Click(object sender, EventArgs e) { }
         private void label16_Click(object sender, EventArgs e) { }
-        private void textBox8_TextChanged(object sender, EventArgs e) { }
+        private void label17_Click(object sender, EventArgs e) { }
 
-        private void textBox6_TextChanged(object sender, EventArgs e)
-        {
-
-        }
+        #endregion
     }
 }
