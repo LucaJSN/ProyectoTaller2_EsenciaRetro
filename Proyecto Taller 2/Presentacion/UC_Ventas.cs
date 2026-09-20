@@ -28,8 +28,20 @@ namespace Proyecto_Taller_2
         private void UC_Ventas_Load(object sender, EventArgs e)
         {
             ConfigurarGrid();
+            ConfigurarComboBoxCantidad();
             VincularEventosYValidaciones();
             ActualizarTotalVenta();
+        }
+
+        private void ConfigurarComboBoxCantidad()
+        {
+            if (comboBox1 != null)
+            {
+                comboBox1.Items.Clear();
+                comboBox1.Items.AddRange(new object[] { "1", "2", "3", "4", "5" });
+                comboBox1.DropDownStyle = ComboBoxStyle.DropDown;
+                comboBox1.Text = "1";
+            }
         }
 
         private void ConfigurarGrid()
@@ -37,7 +49,11 @@ namespace Proyecto_Taller_2
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.DataSource = listaCarrito;
 
-            // Mapeo por posición estricta de columna para garantizar que ID Venta tome el ID y Descripción tome el texto
+            dataGridView1.DefaultCellStyle.ForeColor = Color.Black;
+            dataGridView1.DefaultCellStyle.BackColor = Color.White;
+            dataGridView1.DefaultCellStyle.SelectionForeColor = Color.White;
+            dataGridView1.DefaultCellStyle.SelectionBackColor = Color.FromArgb(44, 62, 80);
+
             if (dataGridView1.Columns.Count >= 4)
             {
                 dataGridView1.Columns[0].DataPropertyName = "IdProducto";
@@ -72,7 +88,13 @@ namespace Proyecto_Taller_2
                 AsignarSoloDecimales(textBox7);
             }
 
-            // Limpieza al tocar
+            if (comboBox1 != null)
+            {
+                comboBox1.KeyPress -= SoloNumeros_KeyPress;
+                comboBox1.KeyPress += SoloNumeros_KeyPress;
+            }
+
+            // Limpieza de placeholder al hacer click o entrar a las cajas de texto
             TextBox[] todosLosTextBox = { textBox1, textBox2, textBox3, textBox4, textBox5, textBox6, textBox7 };
             foreach (var txt in todosLosTextBox)
             {
@@ -83,14 +105,6 @@ namespace Proyecto_Taller_2
                     txt.Enter -= LimpiarPlaceHolder;
                     txt.Enter += LimpiarPlaceHolder;
                 }
-            }
-
-            if (domainUpDown2 != null)
-            {
-                domainUpDown2.Click -= LimpiarDomainUpDown;
-                domainUpDown2.Click += LimpiarDomainUpDown;
-                domainUpDown2.Enter -= LimpiarDomainUpDown;
-                domainUpDown2.Enter += LimpiarDomainUpDown;
             }
         }
 
@@ -161,14 +175,6 @@ namespace Proyecto_Taller_2
             }
         }
 
-        private void LimpiarDomainUpDown(object sender, EventArgs e)
-        {
-            if (domainUpDown2 != null && (domainUpDown2.Text == "0" || domainUpDown2.Text.ToLower().Contains("cant")))
-            {
-                domainUpDown2.Text = "";
-            }
-        }
-
         #endregion
 
         #region --- OPERACIONES ---
@@ -183,7 +189,7 @@ namespace Proyecto_Taller_2
                 return;
             }
 
-            MessageBox.Show($"Cliente buscado (ID: {idCliente}).", "Cliente Buscado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($"Cliente con ID {idCliente} buscado correctamente.", "Buscar Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void ExecBuscarProducto(object sender, EventArgs e)
@@ -201,10 +207,10 @@ namespace Proyecto_Taller_2
 
         private void ExecAgregarProducto(object sender, EventArgs e)
         {
-            string idProd = textBox5 != null ? textBox5.Text.Trim() : "";      // Producto ID
-            string desc = textBox4 != null ? textBox4.Text.Trim() : "";        // Descripción
-            string stockRaw = textBox6 != null ? textBox6.Text.Trim() : "0";    // Stock
-            string precioRaw = textBox7 != null ? textBox7.Text.Trim() : "0";   // Precio
+            string idProd = textBox5 != null ? textBox5.Text.Trim() : "";
+            string desc = textBox4 != null ? textBox4.Text.Trim() : "";
+            string stockRaw = textBox6 != null ? textBox6.Text.Trim() : "0";
+            string precioRaw = textBox7 != null ? textBox7.Text.Trim() : "0";
 
             if (string.IsNullOrWhiteSpace(desc) || desc.ToLower().Contains("descrip"))
             {
@@ -213,14 +219,14 @@ namespace Proyecto_Taller_2
             }
 
             int cantSeleccionada = 1;
-            if (domainUpDown2 != null)
+            if (comboBox1 != null && !string.IsNullOrWhiteSpace(comboBox1.Text))
             {
-                int.TryParse(domainUpDown2.Text.Trim(), out cantSeleccionada);
-                if (cantSeleccionada <= 0) cantSeleccionada = 1;
+                int.TryParse(comboBox1.Text.Trim(), out cantSeleccionada);
             }
+            if (cantSeleccionada <= 0) cantSeleccionada = 1;
 
             int stockDisponible = int.TryParse(stockRaw, out int s) ? s : 0;
-            if (cantSeleccionada > stockDisponible)
+            if (cantSeleccionada > stockDisponible && stockDisponible > 0)
             {
                 MessageBox.Show($"La cantidad solicitada ({cantSeleccionada}) supera el stock disponible ({stockDisponible}).",
                                 "Stock Insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -244,7 +250,7 @@ namespace Proyecto_Taller_2
             if (textBox4 != null) textBox4.Clear();
             if (textBox6 != null) textBox6.Clear();
             if (textBox7 != null) textBox7.Clear();
-            if (domainUpDown2 != null) domainUpDown2.Text = "1";
+            if (comboBox1 != null) comboBox1.Text = "1";
         }
 
         private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -264,30 +270,46 @@ namespace Proyecto_Taller_2
 
         private void ExecRegistrarVenta(object sender, EventArgs e)
         {
+            // 1. Validar que existan productos en el carrito
             if (listaCarrito.Count == 0)
             {
                 MessageBox.Show("No hay productos en la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
+            // 2. VALIDACIÓN OBLIGATORIA DE NOMBRE Y DNI
+            string nombreIngresado = textBox2 != null ? textBox2.Text.Trim() : "";
+            string dniIngresado = textBox3 != null ? textBox3.Text.Trim() : "";
+
+            bool nombreInvalido = string.IsNullOrWhiteSpace(nombreIngresado) || nombreIngresado.Equals("nombre", StringComparison.OrdinalIgnoreCase);
+            bool dniInvalido = string.IsNullOrWhiteSpace(dniIngresado) || dniIngresado.Equals("dni", StringComparison.OrdinalIgnoreCase);
+
+            if (nombreInvalido || dniInvalido)
+            {
+                MessageBox.Show("Debe completar obligatoriamente el Nombre y el DNI del cliente para poder registrar la venta.",
+                                "Datos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 3. Registrar Venta si pasa las validaciones
             decimal total = listaCarrito.Sum(x => x.SubTotal);
 
-            string clienteNombre = (textBox2 != null && !string.IsNullOrWhiteSpace(textBox2.Text) && !textBox2.Text.ToLower().Contains("nombre"))
-                ? textBox2.Text.Trim()
-                : "Consumidor Final";
-
-            MessageBox.Show($"¡Venta registrada con éxito!\n\nCliente: {clienteNombre}\nTotal: $ {total:N2}",
+            MessageBox.Show($"¡Venta registrada con éxito!\n\nCliente: {nombreIngresado}\nDNI: {dniIngresado}\nTotal: $ {total:N2}",
                             "Venta Finalizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+            // Reiniciar estado post-venta
             listaCarrito.Clear();
             ActualizarTotalVenta();
+
+            if (textBox1 != null) textBox1.Text = "";
+            if (textBox2 != null) textBox2.Text = "nombre";
+            if (textBox3 != null) textBox3.Text = "dni";
         }
 
         private void ActualizarTotalVenta()
         {
             decimal total = listaCarrito.Sum(x => x.SubTotal);
 
-            // Búsqueda inteligente por posición Y: actualiza ÚNICAMENTE la etiqueta que está ubicada abajo de la pantalla
             Label labelTotalAbajo = null;
             int mayorY = -1;
 
@@ -324,7 +346,7 @@ namespace Proyecto_Taller_2
 
         #endregion
 
-        #region --- MÉTODOS REQUERIDOS POR EL DESIGNER (Eliminan errores CS1061) ---
+        #region --- MÉTODOS REQUERIDOS POR EL DESIGNER ---
 
         private void button1_Click_1(object sender, EventArgs e) { }
         private void textBox1_TextChanged(object sender, EventArgs e) { }
@@ -351,5 +373,10 @@ namespace Proyecto_Taller_2
         private void label17_Click(object sender, EventArgs e) { }
 
         #endregion
+
+        private void panel4_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace Proyecto_Taller_2.Datos
     public class UsuarioDatos
     {
         // La conexión se guarda EXCLUSIVAMENTE en esta capa
-        private string connectionString = "Server=localhost;Port=33060;Database=esenciaretro;Uid=root;Pwd=puntoybarraroot;";
+        private string connectionString = "Server=localhost;Port=3306;Database=esenciaretro;Uid=root;Pwd=puntoybarraroot;";
 
         // Recibe las dos entidades ya cargadas con los datos desde la vista
         public bool InsertarUsuarioYDireccion(Usuario usuario, Direccion direccion)

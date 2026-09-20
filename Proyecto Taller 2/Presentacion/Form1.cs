@@ -14,42 +14,52 @@ namespace Proyecto_Taller_2
     public partial class Form1 : Form
     {
         private Usuario usuarioActivo;
+
         public Form1(Usuario usuario)
         {
             InitializeComponent();
             Usuario usuarioActual = usuario;
             usuarioActivo = usuarioActual;
 
-            // Podés mostrar el usuario actual en el título o en un Label
             this.Text = $"Sistema de Gestión - Usuario: {usuarioActual.Nombre} {usuarioActual.Apellido} ({usuarioActual.Rol.tipo})";
-        }
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            //Bloquear Botones a las vistas
-            if (usuarioActivo.RolId != 1)
-            {
-                BtnAdmin.Enabled = false; //aparece gris y no se puede clickear
-            }
-            if (usuarioActivo.RolId != 2)
-            {
-                btnProductos.Enabled = false;
-            }
-        }
-        public Form1()
-        {
-            InitializeComponent();
-            // Carga la pantalla de inicio al abrir el programa
+
+            // Carga la pantalla de inicio al iniciar
             AbrirModulo(new UC_Dashboard());
         }
 
-        // Método encargado de cambiar la vista dentro del panel contenedor
+        public Form1()
+        {
+            InitializeComponent();
+            AbrirModulo(new UC_Dashboard());
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // Mantiene los botones habilitados
+            if (button1 != null)
+            {
+                button1.Enabled = true;
+                button1.ForeColor = Color.White;
+            }
+
+            if (btnProductos != null)
+            {
+                btnProductos.Enabled = true;
+                btnProductos.ForeColor = Color.White;
+            }
+        }
+
+        // Método encargado de cambiar la vista dentro del contenedor principal
         private void AbrirModulo(UserControl modulo)
         {
-            panelContenedor.Controls.Clear();
-            modulo.Dock = DockStyle.Fill;
-            panelContenedor.Controls.Add(modulo);
-            panelContenedor.Tag = modulo;
-            modulo.BringToFront();
+            if (BtnAdmin != null)
+            {
+                BtnAdmin.Controls.Clear();
+                modulo.Dock = DockStyle.Fill;
+                BtnAdmin.Controls.Add(modulo);
+                BtnAdmin.Tag = modulo;
+                modulo.BringToFront();
+            }
         }
 
         private void btnInicio_Click(object sender, EventArgs e)
@@ -74,13 +84,22 @@ namespace Proyecto_Taller_2
 
         private void BtnAdmin_Click(object sender, EventArgs e)
         {
-            
             AbrirModulo(new UC_Admin());
         }
 
         private void btnBackUp_Click(object sender, EventArgs e)
         {
             AbrirModulo(new UC_Backup());
+        }
+
+        private void panelContenedor_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

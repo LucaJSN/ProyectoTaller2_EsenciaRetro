@@ -38,7 +38,6 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
-            this.domainUpDown2 = new System.Windows.Forms.DomainUpDown();
             this.label15 = new System.Windows.Forms.Label();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
@@ -64,6 +63,7 @@
             this.label17 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -156,9 +156,9 @@
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.Lavender;
+            this.panel3.Controls.Add(this.comboBox1);
             this.panel3.Controls.Add(this.button2);
             this.panel3.Controls.Add(this.button4);
-            this.panel3.Controls.Add(this.domainUpDown2);
             this.panel3.Controls.Add(this.label15);
             this.panel3.Controls.Add(this.textBox7);
             this.panel3.Controls.Add(this.textBox6);
@@ -200,19 +200,11 @@
             this.button4.UseVisualStyleBackColor = false;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // domainUpDown2
-            // 
-            this.domainUpDown2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.domainUpDown2.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.domainUpDown2.Location = new System.Drawing.Point(425, 199);
-            this.domainUpDown2.Name = "domainUpDown2";
-            this.domainUpDown2.Size = new System.Drawing.Size(70, 30);
-            this.domainUpDown2.TabIndex = 13;
-            // 
             // label15
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.ForeColor = System.Drawing.Color.Black;
             this.label15.Location = new System.Drawing.Point(405, 167);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(115, 29);
@@ -244,6 +236,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.ForeColor = System.Drawing.Color.Black;
             this.label14.Location = new System.Drawing.Point(24, 281);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(156, 29);
@@ -255,6 +248,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.ForeColor = System.Drawing.Color.Black;
             this.label13.Location = new System.Drawing.Point(18, 198);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(201, 29);
@@ -285,6 +279,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.ForeColor = System.Drawing.Color.Black;
             this.label11.Location = new System.Drawing.Point(241, 62);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(147, 29);
@@ -296,6 +291,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.ForeColor = System.Drawing.Color.Black;
             this.label12.Location = new System.Drawing.Point(38, 62);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(142, 29);
@@ -306,6 +302,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.ForeColor = System.Drawing.Color.Black;
             this.label10.Location = new System.Drawing.Point(157, 10);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(321, 32);
@@ -328,6 +325,7 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(781, 190);
             this.panel4.TabIndex = 2;
+            this.panel4.Paint += new System.Windows.Forms.PaintEventHandler(this.panel4_Paint);
             // 
             // panel1
             // 
@@ -344,6 +342,7 @@
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(20, 19);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(196, 29);
@@ -430,6 +429,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.ForeColor = System.Drawing.Color.Black;
             this.label16.Location = new System.Drawing.Point(15, 19);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(163, 29);
@@ -442,6 +442,7 @@
             this.label17.AutoSize = true;
             this.label17.BackColor = System.Drawing.Color.Transparent;
             this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.ForeColor = System.Drawing.Color.Black;
             this.label17.Location = new System.Drawing.Point(58, 61);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(58, 29);
@@ -472,6 +473,16 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(191, 108);
             this.panel2.TabIndex = 3;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBox1.ForeColor = System.Drawing.Color.Black;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(424, 199);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(68, 28);
+            this.comboBox1.TabIndex = 15;
             // 
             // UC_Ventas
             // 
@@ -522,7 +533,6 @@
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.DomainUpDown domainUpDown2;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
@@ -535,5 +545,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cantidad;
         private System.Windows.Forms.DataGridViewTextBoxColumn subTotal;
         private System.Windows.Forms.DataGridViewButtonColumn btnEliminarCol;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
