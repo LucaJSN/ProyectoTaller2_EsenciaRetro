@@ -18,10 +18,10 @@ namespace Proyecto_Taller_2
         public Form1(Usuario usuario)
         {
             InitializeComponent();
-            Usuario usuarioActual = usuario;
-            usuarioActivo = usuarioActual;
+            usuarioActivo = usuario;
 
-            this.Text = $"Sistema de Gestión - Usuario: {usuarioActual.Nombre} {usuarioActual.Apellido} ({usuarioActual.Rol.tipo})";
+            string tipoRol = usuarioActivo?.Rol?.tipo ?? "Sin Rol";
+            this.Text = $"Sistema de Gestión - Usuario: {usuarioActivo?.Nombre} {usuarioActivo?.Apellido} ({tipoRol})";
 
             // Carga la pantalla de inicio al iniciar
             AbrirModulo(new UC_Dashboard());
@@ -35,7 +35,6 @@ namespace Proyecto_Taller_2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Mantiene los botones habilitados
             if (button1 != null)
             {
                 button1.Enabled = true;
@@ -62,35 +61,114 @@ namespace Proyecto_Taller_2
             }
         }
 
-        private void btnInicio_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Evalúa si el usuario activo tiene permiso para acceder al módulo solicitado.
+        /// Retorna true si tiene acceso, o false si no posee el rol adecuado.
+        /// </summary>
+        private bool ValidarAccesoModulo(string moduloSolicitado)
         {
-            AbrirModulo(new UC_Dashboard());
+            if (usuarioActivo == null || usuarioActivo.Rol == null)
+            {
+                // Si no hay información de usuario, se asume acceso total para pruebas locales
+                return true;
+            }
+
+            string rol = usuarioActivo.Rol.tipo.Trim().ToLower();
+
+            // Administrador tiene acceso irrestricto
+            if (rol.Contains("admin"))
+            {
+                return true;
+            }
+
+            // Vendedor
+            if (rol.Contains("vendedor"))
+            {
+                if (moduloSolicitado == "Inicio" || moduloSolicitado == "Productos" || moduloSolicitado == "Ventas")
+                {
+                    return true;
+                }
+
+                MostrarAlertaAccesoDenegado(moduloSolicitado, "Administrador o Supervisor");
+                return false;
+            }
+
+            // Supervisor
+            if (rol.Contains("supervisor") || rol.Contains("gerente"))
+            {
+                if (moduloSolicitado == "Inicio" || moduloSolicitado == "Productos" || moduloSolicitado == "Ventas" || moduloSolicitado == "Balance")
+                {
+                    return true;
+                }
+
+                MostrarAlertaAccesoDenegado(moduloSolicitado, "Administrador");
+                return false;
+            }
+
+            // Para cualquier otro rol no contemplado
+            MostrarAlertaAccesoDenegado(moduloSolicitado, "Administrador");
+            return false;
         }
 
-        private void btnBalance_Click(object sender, EventArgs e)
+        private void MostrarAlertaAccesoDenegado(string modulo, string rolRequerido)
         {
-            AbrirModulo(new UC_Balance());
+            MessageBox.Show($"Acceso Denegado.\n\nNo posee los permisos necesarios para acceder al módulo de '{modulo}'.\nSe requiere nivel de acceso: {rolRequerido}.",
+                            "Restricción de Seguridad",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Stop);
+        }
+
+        #region --- EVENTOS DE BOTONES DEL MENÚ ---
+
+        private void btnInicio_Click(object sender, EventArgs e)
+        {
+            if (ValidarAccesoModulo("Inicio"))
+            {
+                AbrirModulo(new UC_Dashboard());
+            }
         }
 
         private void btnProductos_Click(object sender, EventArgs e)
         {
-            AbrirModulo(new UC_Productos());
+            if (ValidarAccesoModulo("Productos"))
+            {
+                AbrirModulo(new UC_Productos());
+            }
         }
 
         private void btnVentas_Click(object sender, EventArgs e)
         {
-            AbrirModulo(new UC_Ventas());
+            if (ValidarAccesoModulo("Ventas"))
+            {
+                AbrirModulo(new UC_Ventas());
+            }
+        }
+
+        private void btnBalance_Click(object sender, EventArgs e)
+        {
+            if (ValidarAccesoModulo("Balance"))
+            {
+                AbrirModulo(new UC_Balance());
+            }
         }
 
         private void BtnAdmin_Click(object sender, EventArgs e)
         {
-            AbrirModulo(new UC_Admin());
+            if (ValidarAccesoModulo("Administrador"))
+            {
+                AbrirModulo(new UC_Admin());
+            }
         }
 
         private void btnBackUp_Click(object sender, EventArgs e)
         {
-            AbrirModulo(new UC_Backup());
+            if (ValidarAccesoModulo("BackUp"))
+            {
+                AbrirModulo(new UC_Backup());
+            }
         }
+
+        #endregion
 
         private void panelContenedor_Paint(object sender, PaintEventArgs e)
         {

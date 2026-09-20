@@ -47,7 +47,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnGenerarBackup);
             this.Name = "UC_Backup";
-            this.Size = new System.Drawing.Size(954, 429);
+            this.Size = new System.Drawing.Size(1324, 745);
             this.Load += new System.EventHandler(this.UC_Backup_Load);
             this.ResumeLayout(false);
 
