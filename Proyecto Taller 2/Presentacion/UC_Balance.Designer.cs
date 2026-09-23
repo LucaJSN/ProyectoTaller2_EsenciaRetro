@@ -74,7 +74,7 @@
             // LTotalFacturado
             // 
             this.LTotalFacturado.AutoSize = true;
-            this.LTotalFacturado.Location = new System.Drawing.Point(307, 156);
+            this.LTotalFacturado.Location = new System.Drawing.Point(235, 156);
             this.LTotalFacturado.Name = "LTotalFacturado";
             this.LTotalFacturado.Size = new System.Drawing.Size(44, 16);
             this.LTotalFacturado.TabIndex = 4;
@@ -83,7 +83,7 @@
             // LTicketPromedio
             // 
             this.LTicketPromedio.AutoSize = true;
-            this.LTicketPromedio.Location = new System.Drawing.Point(614, 156);
+            this.LTicketPromedio.Location = new System.Drawing.Point(509, 156);
             this.LTicketPromedio.Name = "LTicketPromedio";
             this.LTicketPromedio.Size = new System.Drawing.Size(44, 16);
             this.LTicketPromedio.TabIndex = 5;
@@ -92,7 +92,7 @@
             // LTotalFacturas
             // 
             this.LTotalFacturas.AutoSize = true;
-            this.LTotalFacturas.Location = new System.Drawing.Point(454, 156);
+            this.LTotalFacturas.Location = new System.Drawing.Point(382, 156);
             this.LTotalFacturas.Name = "LTotalFacturas";
             this.LTotalFacturas.Size = new System.Drawing.Size(44, 16);
             this.LTotalFacturas.TabIndex = 6;
@@ -104,7 +104,7 @@
             this.chartEvolucion.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chartEvolucion.Legends.Add(legend1);
-            this.chartEvolucion.Location = new System.Drawing.Point(127, 192);
+            this.chartEvolucion.Location = new System.Drawing.Point(80, 252);
             this.chartEvolucion.Name = "chartEvolucion";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
@@ -117,7 +117,7 @@
             // DGVFacturas
             // 
             this.DGVFacturas.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DGVFacturas.Location = new System.Drawing.Point(862, 214);
+            this.DGVFacturas.Location = new System.Drawing.Point(791, 262);
             this.DGVFacturas.Name = "DGVFacturas";
             this.DGVFacturas.RowHeadersWidth = 51;
             this.DGVFacturas.RowTemplate.Height = 24;
