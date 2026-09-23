@@ -49,10 +49,30 @@ namespace Proyecto_Taller_2
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.DataSource = listaCarrito;
 
-            dataGridView1.DefaultCellStyle.ForeColor = Color.Black;
-            dataGridView1.DefaultCellStyle.BackColor = Color.White;
-            dataGridView1.DefaultCellStyle.SelectionForeColor = Color.White;
-            dataGridView1.DefaultCellStyle.SelectionBackColor = Color.FromArgb(44, 62, 80);
+            // Bloqueo total de escritura manual y filas nuevas
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AllowUserToDeleteRows = false;
+            dataGridView1.ReadOnly = true;
+            dataGridView1.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.MultiSelect = false;
+            dataGridView1.RowHeadersVisible = false;
+
+            // Fondo blanco para la zona vacía de la grilla
+            dataGridView1.BackgroundColor = Color.White;
+
+            // Estilo visual corporativo y fondo blanco en las celdas
+            dataGridView1.EnableHeadersVisualStyles = false;
+            dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(30, 40, 50);
+            dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+
+            dataGridView1.RowsDefaultCellStyle.ForeColor = Color.Black;
+            dataGridView1.RowsDefaultCellStyle.BackColor = Color.White;
+            dataGridView1.RowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(51, 153, 255);
+            dataGridView1.RowsDefaultCellStyle.SelectionForeColor = Color.White;
+
+            dataGridView1.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 247, 250);
 
             if (dataGridView1.Columns.Count >= 4)
             {
@@ -60,6 +80,15 @@ namespace Proyecto_Taller_2
                 dataGridView1.Columns[1].DataPropertyName = "Descripcion";
                 dataGridView1.Columns[2].DataPropertyName = "Cantidad";
                 dataGridView1.Columns[3].DataPropertyName = "SubTotal";
+            }
+
+            // Centrar el icono del tachito de eliminar en su respectiva columna si existe
+            foreach (DataGridViewColumn col in dataGridView1.Columns)
+            {
+                if (col.Name.ToLower().Contains("eliminar") || col.HeaderText.ToLower().Contains("eliminar"))
+                {
+                    col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                }
             }
 
             dataGridView1.CellClick -= DataGridView1_CellClick;
@@ -229,7 +258,7 @@ namespace Proyecto_Taller_2
             if (cantSeleccionada > stockDisponible && stockDisponible > 0)
             {
                 MessageBox.Show($"La cantidad solicitada ({cantSeleccionada}) supera el stock disponible ({stockDisponible}).",
-                                "Stock Insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            "Stock Insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -287,7 +316,7 @@ namespace Proyecto_Taller_2
             if (nombreInvalido || dniInvalido)
             {
                 MessageBox.Show("Debe completar obligatoriamente el Nombre y el DNI del cliente para poder registrar la venta.",
-                                "Datos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            "Datos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

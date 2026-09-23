@@ -147,11 +147,11 @@
             this.descripcion,
             this.cantidad,
             this.subTotal});
-            this.dataGridView1.Location = new System.Drawing.Point(206, 432);
+            this.dataGridView1.Location = new System.Drawing.Point(131, 432);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(736, 150);
+            this.dataGridView1.Size = new System.Drawing.Size(953, 270);
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
@@ -191,7 +191,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.panel1);
             this.Name = "UC_Dashboard";
-            this.Size = new System.Drawing.Size(1221, 671);
+            this.Size = new System.Drawing.Size(1313, 791);
             this.Load += new System.EventHandler(this.UC_Dashboard_Load);
             this.panel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
