@@ -164,7 +164,7 @@ namespace Proyecto_Taller_2
         {
             if (ValidarAccesoModulo("BackUp"))
             {
-                AbrirModulo(new UC_Backup());
+                AbrirModulo(new UC_BackUp()); // <-- Corregido con el guion bajo
             }
         }
 
@@ -176,6 +176,11 @@ namespace Proyecto_Taller_2
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnAdmin_Click_1(object sender, EventArgs e)
         {
 
         }

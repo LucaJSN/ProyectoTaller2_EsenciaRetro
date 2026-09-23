@@ -53,6 +53,7 @@
             this.BtnAdmin.Size = new System.Drawing.Size(1702, 973);
             this.BtnAdmin.TabIndex = 1;
             this.BtnAdmin.UseVisualStyleBackColor = false;
+            this.BtnAdmin.Click += new System.EventHandler(this.BtnAdmin_Click_1);
             this.BtnAdmin.Paint += new System.Windows.Forms.PaintEventHandler(this.panelContenedor_Paint);
             // 
             // panel1
