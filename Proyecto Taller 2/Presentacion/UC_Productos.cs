@@ -203,7 +203,7 @@ namespace Proyecto_Taller_2
         private void BtnConexion_Click(object sender, EventArgs e)
         {
             string connectionString =
-            "Server=localhost;Port=3306;Database=esencia-base;User=root;Password=123456;";
+            "Server=127.0.0.1;Port=3306;Database=esenciaretro;Uid=root;Pwd=puntoybarraroot;";
 
                 try
                 {

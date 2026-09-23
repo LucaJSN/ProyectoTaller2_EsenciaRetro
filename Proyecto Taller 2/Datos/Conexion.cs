@@ -9,8 +9,8 @@ namespace Proyecto_Taller_2
 {
     public static class Conexion
     {
-        // Ajustá con los datos de tu servidor MariaDB (puerto por defecto 3306)
-        private static string cadenaConexion = "Server=localhost;Port=33060;Database=esenciaretro;Uid=root;Pwd=puntoybarraroot;";
+        
+        private static string cadenaConexion = "Server=127.0.0.1;Port=3306;Database=esenciaretro;Uid=root;Pwd=puntoybarraroot;";
 
         public static MySqlConnection ObtenerConexion()
         {

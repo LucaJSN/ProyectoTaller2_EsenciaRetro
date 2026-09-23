@@ -163,6 +163,8 @@ namespace Proyecto_Taller_2
 
         private void UC_Admin_Load(object sender, EventArgs e)
         {
+            // Forzar el texto en negro para que sea visible
+            DGVUsuarios.DefaultCellStyle.ForeColor = Color.Black;
             CargarRolesEnComboBox();
             CargarUsuariosEnGrilla();
         }
