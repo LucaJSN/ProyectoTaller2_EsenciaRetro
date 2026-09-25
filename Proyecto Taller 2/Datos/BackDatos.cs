@@ -10,7 +10,7 @@ namespace Proyecto_Taller_2.Datos
 {
     internal class BackDatos
     {
-        private string connectionString = "Server=localhost;Port=3306;Database=esenciaretro;Uid=root;Pwd=puntoybarraroot;";
+        private string connectionString = "Server=localhost;Port=33060;Database=esenciaretro;Uid=root;Pwd=puntoybarraroot;";
 
         public bool GenerarBackup(string rutaArchivo)
         {
