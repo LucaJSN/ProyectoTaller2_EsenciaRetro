@@ -20,8 +20,8 @@ namespace Proyecto_Taller_2
             InitializeComponent();
             usuarioActivo = usuario;
 
-            string tipoRol = usuarioActivo?.Rol?.tipo ?? "Sin Rol";
-            this.Text = $"Sistema de Gestión - Usuario: {usuarioActivo?.Nombre} {usuarioActivo?.Apellido} ({tipoRol})";
+            string tipoRol = usuarioActivo?.rol?.tipo ?? "Sin Rol";
+            this.Text = $"Sistema de Gestión - Usuario: {usuarioActivo?.nombre} {usuarioActivo?.apellido} ({tipoRol})";
 
             // Carga la pantalla de inicio al iniciar
             AbrirModulo(new UC_Dashboard());
@@ -67,13 +67,13 @@ namespace Proyecto_Taller_2
         /// </summary>
         private bool ValidarAccesoModulo(string moduloSolicitado)
         {
-            if (usuarioActivo == null || usuarioActivo.Rol == null)
+            if (usuarioActivo == null || usuarioActivo.rol == null)
             {
                 // Si no hay información de usuario, se asume acceso total para pruebas locales
                 return true;
             }
 
-            string rol = usuarioActivo.Rol.tipo.Trim().ToLower();
+            string rol = usuarioActivo.rol.tipo.Trim().ToLower();
 
             // Administrador tiene acceso irrestricto
             if (rol.Contains("admin"))
