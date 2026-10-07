@@ -1,7 +1,6 @@
 ﻿using MySqlConnector;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -143,6 +142,7 @@ namespace Proyecto_Taller_2.Datos
                 }
             }
         }
+
         public bool DarDeBajaUsuario(int idUsuario)
         {
             using (MySqlConnection conexion = new MySqlConnection(connectionString))
@@ -175,14 +175,14 @@ namespace Proyecto_Taller_2.Datos
                 }
             }
         }
+
         public List<Usuario> ObtenerTodosLosUsuarios()
         {
             List<Usuario> lista = new List<Usuario>();
 
             using (MySqlConnection conexion = new MySqlConnection(connectionString))
             {
-                // 1. Agregamos 'u.password' al SELECT y usamos LEFT JOIN por mayor seguridad
-                string query = @"SELECT u.id_usuario, u.nombre, u.apellido, u.correo, u.password, u.telefono, u.id_rol, u.fecha_baja, 
+                string query = @"SELECT u.id_usuario, u.nombre, u.apellido, u.correo, u.password, u.telefono, u.Rol_id, u.fecha_baja, 
                                 u.fecha_alta, u.fecha_modificacion,
                                 d.id_direccion, d.provincia, d.ciudad, d.calle, d.altura 
                          FROM usuario u
@@ -197,20 +197,19 @@ namespace Proyecto_Taller_2.Datos
                         {
                             Usuario usu = new Usuario
                             {
-                                id_usuario = Convert.ToInt32(reader["id_usuario"]),
-                                nombre = reader["nombre"].ToString(),
-                                apellido = reader["apellido"].ToString(),
-                                correo = reader["correo"].ToString(),
-                                password = reader["password"].ToString(), // <-- AQUÍ CARGAMOS LA CONTRASEÑA
-                                telefono = reader["telefono"].ToString(),
-                                id_rol= Convert.ToInt32(reader["id_rol"]),
-                                fecha_baja = reader["fecha_baja"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["fecha_baja"]),
-                                fecha_alta = Convert.ToDateTime(reader["fecha_alta"]),
-                                fecha_modificacion = Convert.ToDateTime(reader["fecha_modificacion"]),
-                                id_direccion = reader["id_direccion"] == DBNull.Value ? 0 : Convert.ToInt32(reader["id_direccion"])
+                                IdUsuario = Convert.ToInt32(reader["id_usuario"]),
+                                Nombre = reader["nombre"].ToString(),
+                                Apellido = reader["apellido"].ToString(),
+                                Correo = reader["correo"].ToString(),
+                                Password = reader["password"].ToString(),
+                                Telefono = reader["telefono"].ToString(),
+                                RolId = Convert.ToInt32(reader["Rol_id"]),
+                                FechaBaja = reader["fecha_baja"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["fecha_baja"]),
+                                FechaAlta = Convert.ToDateTime(reader["fecha_alta"]),
+                                FechaModificacion = Convert.ToDateTime(reader["fecha_modificacion"]),
+                                DireccionId = reader["id_direccion"] == DBNull.Value ? 0 : Convert.ToInt32(reader["id_direccion"])
                             };
 
-                            // 2. Validamos que la dirección no sea nula en la BD antes de crear el objeto
                             if (reader["provincia"] != DBNull.Value)
                             {
                                 usu.direccion = new Direccion
@@ -229,6 +228,70 @@ namespace Proyecto_Taller_2.Datos
                 }
             }
             return lista;
+        }
+
+        // --- MÉTODO NUEVO AGREGADO PARA EL LOGIN ---
+        public Usuario ValidarUsuario(string correo, string password)
+        {
+            string query = @"SELECT u.id_usuario, u.nombre, u.apellido, u.correo, u.password, u.telefono, u.Rol_id, u.fecha_baja, 
+                                    u.fecha_alta, u.fecha_modificacion,
+                                    d.id_direccion, d.provincia, d.ciudad, d.calle, d.altura,
+                                    r.id_rol, r.tipo
+                             FROM usuario u
+                             LEFT JOIN direccion d ON u.Direccion_id = d.id_direccion
+                             LEFT JOIN rol r ON u.Rol_id = r.id_rol
+                             WHERE u.correo = @correo AND u.password = @pass AND u.fecha_baja IS NULL";
+
+            using (MySqlConnection conexion = new MySqlConnection(connectionString))
+            {
+                using (MySqlCommand cmd = new MySqlCommand(query, conexion))
+                {
+                    cmd.Parameters.AddWithValue("@correo", correo);
+                    cmd.Parameters.AddWithValue("@pass", password);
+
+                    conexion.Open();
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            Usuario usu = new Usuario
+                            {
+                                IdUsuario = Convert.ToInt32(reader["id_usuario"]),
+                                Nombre = reader["nombre"].ToString(),
+                                Apellido = reader["apellido"].ToString(),
+                                Correo = reader["correo"].ToString(),
+                                Password = reader["password"].ToString(),
+                                Telefono = reader["telefono"].ToString(),
+                                RolId = reader["Rol_id"] == DBNull.Value ? 0 : Convert.ToInt32(reader["Rol_id"]),
+                                FechaBaja = reader["fecha_baja"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["fecha_baja"]),
+                                FechaAlta = Convert.ToDateTime(reader["fecha_alta"]),
+                                FechaModificacion = Convert.ToDateTime(reader["fecha_modificacion"]),
+                                DireccionId = reader["id_direccion"] == DBNull.Value ? 0 : Convert.ToInt32(reader["id_direccion"]),
+                                Rol = new Rol
+                                {
+                                    id_rol = reader["Rol_id"] == DBNull.Value ? 0 : Convert.ToInt32(reader["Rol_id"]),
+                                    tipo = reader["tipo"] == DBNull.Value ? "Sin Rol" : reader["tipo"].ToString()
+                                }
+                            };
+
+                            if (reader["provincia"] != DBNull.Value)
+                            {
+                                usu.Direccion = new Direccion
+                                {
+                                    IdDireccion = Convert.ToInt32(reader["id_direccion"]),
+                                    Provincia = reader["provincia"].ToString(),
+                                    Ciudad = reader["ciudad"].ToString(),
+                                    Calle = reader["calle"].ToString(),
+                                    Altura = Convert.ToInt32(reader["altura"])
+                                };
+                            }
+
+                            return usu;
+                        }
+                    }
+                }
+            }
+            return null;
         }
     }
 }
