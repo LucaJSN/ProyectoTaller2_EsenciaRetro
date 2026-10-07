@@ -10,7 +10,7 @@ namespace Proyecto_Taller_2.Datos
     public class UsuarioDatos
     {
         // La conexión se guarda EXCLUSIVAMENTE en esta capa
-        private string connectionString = "Server=localhost;Port=3306;Database=esenciaretro;Uid=root;Pwd=puntoybarraroot;";
+        private string connectionString = "Server=localhost;Port=33060;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";
 
         // Recibe las dos entidades ya cargadas con los datos desde la vista
         public bool InsertarUsuarioYDireccion(Usuario usuario, Direccion direccion)
@@ -30,28 +30,28 @@ namespace Proyecto_Taller_2.Datos
 
                         using (MySqlCommand cmdDir = new MySqlCommand(queryDir, conexion, transaccion))
                         {
-                            cmdDir.Parameters.AddWithValue("@prov", direccion.Provincia);
-                            cmdDir.Parameters.AddWithValue("@ciud", direccion.Ciudad);
-                            cmdDir.Parameters.AddWithValue("@calle", direccion.Calle);
-                            cmdDir.Parameters.AddWithValue("@alt", direccion.Altura);
+                            cmdDir.Parameters.AddWithValue("@prov", direccion.provincia);
+                            cmdDir.Parameters.AddWithValue("@ciud", direccion.ciudad);
+                            cmdDir.Parameters.AddWithValue("@calle", direccion.calle);
+                            cmdDir.Parameters.AddWithValue("@alt", direccion.altura);
 
                             // Capturamos el ID generado y se lo asignamos a la entidad Usuario
-                            usuario.DireccionId = Convert.ToInt32(cmdDir.ExecuteScalar());
+                            usuario.id_direccion = Convert.ToInt32(cmdDir.ExecuteScalar());
                         }
 
                         // --- PASO 2: INSERTAR USUARIO ---
-                        string queryUsu = @"INSERT INTO usuario (nombre, apellido, correo, password, telefono, Direccion_id, Rol_id) 
+                        string queryUsu = @"INSERT INTO usuario (nombre, apellido, correo, password, telefono, id_direccion, id_rol) 
                                             VALUES (@nom, @ape, @correo, @pass, @tel, @dirId, @rolId);";
 
                         using (MySqlCommand cmdUsu = new MySqlCommand(queryUsu, conexion, transaccion))
                         {
-                            cmdUsu.Parameters.AddWithValue("@nom", usuario.Nombre);
-                            cmdUsu.Parameters.AddWithValue("@ape", usuario.Apellido);
-                            cmdUsu.Parameters.AddWithValue("@correo", usuario.Correo);
-                            cmdUsu.Parameters.AddWithValue("@pass", usuario.Password);
-                            cmdUsu.Parameters.AddWithValue("@tel", usuario.Telefono);
-                            cmdUsu.Parameters.AddWithValue("@dirId", usuario.DireccionId);
-                            cmdUsu.Parameters.AddWithValue("@rolId", usuario.RolId);
+                            cmdUsu.Parameters.AddWithValue("@nom", usuario.nombre);
+                            cmdUsu.Parameters.AddWithValue("@ape", usuario.apellido);
+                            cmdUsu.Parameters.AddWithValue("@correo", usuario.correo);
+                            cmdUsu.Parameters.AddWithValue("@pass", usuario.password);
+                            cmdUsu.Parameters.AddWithValue("@tel", usuario.telefono);
+                            cmdUsu.Parameters.AddWithValue("@dirId", usuario.id_direccion);
+                            cmdUsu.Parameters.AddWithValue("@rolId", usuario.id_rol);
 
                             cmdUsu.ExecuteNonQuery();
                         }
@@ -104,29 +104,29 @@ namespace Proyecto_Taller_2.Datos
 
                         using (MySqlCommand cmdDir = new MySqlCommand(queryDir, conexion, transaccion))
                         {
-                            cmdDir.Parameters.AddWithValue("@prov", direccion.Provincia);
-                            cmdDir.Parameters.AddWithValue("@ciud", direccion.Ciudad);
-                            cmdDir.Parameters.AddWithValue("@calle", direccion.Calle);
-                            cmdDir.Parameters.AddWithValue("@alt", direccion.Altura);
-                            cmdDir.Parameters.AddWithValue("@dirId", usuario.DireccionId); // El ID de la dirección de ese usuario
+                            cmdDir.Parameters.AddWithValue("@prov", direccion.provincia);
+                            cmdDir.Parameters.AddWithValue("@ciud", direccion.ciudad);
+                            cmdDir.Parameters.AddWithValue("@calle", direccion.calle);
+                            cmdDir.Parameters.AddWithValue("@alt", direccion.altura);
+                            cmdDir.Parameters.AddWithValue("@dirId", usuario.id_direccion); // El ID de la dirección de ese usuario
 
                             cmdDir.ExecuteNonQuery();
                         }
 
                         // --- PASO 2: ACTUALIZAR USUARIO ---
                         string queryUsu = @"UPDATE usuario 
-                                    SET nombre = @nom, apellido = @ape, correo = @correo, password = @pass, telefono = @tel, Rol_id = @rolId 
+                                    SET nombre = @nom, apellido = @ape, correo = @correo, password = @pass, telefono = @tel, id_rol = @rolId 
                                     WHERE id_usuario = @idUsu;";
 
                         using (MySqlCommand cmdUsu = new MySqlCommand(queryUsu, conexion, transaccion))
                         {
-                            cmdUsu.Parameters.AddWithValue("@nom", usuario.Nombre);
-                            cmdUsu.Parameters.AddWithValue("@ape", usuario.Apellido);
-                            cmdUsu.Parameters.AddWithValue("@correo", usuario.Correo);
-                            cmdUsu.Parameters.AddWithValue("@tel", usuario.Telefono);
-                            cmdUsu.Parameters.AddWithValue("@rolId", usuario.RolId);
-                            cmdUsu.Parameters.AddWithValue("@idUsu", usuario.IdUsuario);
-                            cmdUsu.Parameters.AddWithValue("@pass", usuario.Password);
+                            cmdUsu.Parameters.AddWithValue("@nom", usuario.nombre);
+                            cmdUsu.Parameters.AddWithValue("@ape", usuario.apellido);
+                            cmdUsu.Parameters.AddWithValue("@correo", usuario.correo);
+                            cmdUsu.Parameters.AddWithValue("@tel", usuario.telefono);
+                            cmdUsu.Parameters.AddWithValue("@rolId", usuario.id_rol);
+                            cmdUsu.Parameters.AddWithValue("@idUsu", usuario.id_usuario);
+                            cmdUsu.Parameters.AddWithValue("@pass", usuario.password);
 
                             cmdUsu.ExecuteNonQuery();
                         }
@@ -186,7 +186,7 @@ namespace Proyecto_Taller_2.Datos
                                 u.fecha_alta, u.fecha_modificacion,
                                 d.id_direccion, d.provincia, d.ciudad, d.calle, d.altura 
                          FROM usuario u
-                         LEFT JOIN direccion d ON u.Direccion_id = d.id_direccion";
+                         LEFT JOIN direccion d ON u.id_direccion = d.id_direccion";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, conexion))
                 {
@@ -212,13 +212,13 @@ namespace Proyecto_Taller_2.Datos
 
                             if (reader["provincia"] != DBNull.Value)
                             {
-                                usu.Direccion = new Direccion
+                                usu.direccion = new Direccion
                                 {
-                                    IdDireccion = Convert.ToInt32(reader["id_direccion"]),
-                                    Provincia = reader["provincia"].ToString(),
-                                    Ciudad = reader["ciudad"].ToString(),
-                                    Calle = reader["calle"].ToString(),
-                                    Altura = Convert.ToInt32(reader["altura"])
+                                    id_direccion = Convert.ToInt32(reader["id_direccion"]),
+                                    provincia = reader["provincia"].ToString(),
+                                    ciudad = reader["ciudad"].ToString(),
+                                    calle = reader["calle"].ToString(),
+                                    altura = Convert.ToInt32(reader["altura"])
                                 };
                             }
 

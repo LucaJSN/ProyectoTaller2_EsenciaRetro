@@ -19,40 +19,40 @@ namespace Proyecto_Taller_2
 
     public class Usuario
     {
-        public int IdUsuario { get; set; }
-        public string Nombre { get; set; }
-        public string Apellido { get; set; }
-        public string Correo { get; set; }
-        public string Password { get; set; }
-        public string Telefono { get; set; }
-        public int DireccionId { get; set; }
-        public int RolId { get; set; }
-        public DateTime? FechaBaja { get; set; } // El signo '?' indica que puede ser nulo si el usuario está activo
-        public DateTime FechaAlta { get; set; }
-        public DateTime FechaModificacion { get; set; }
+        public int id_usuario { get; set; }
+        public string nombre { get; set; }
+        public string apellido { get; set; }
+        public string correo { get; set; }
+        public string password { get; set; }
+        public string telefono { get; set; }
+        public int id_direccion{ get; set; }
+        public int id_rol { get; set; }
+        public DateTime? fecha_baja { get; set; } // El signo '?' indica que puede ser nulo si el usuario está activo
+        public DateTime fecha_alta { get; set; }
+        public DateTime fecha_modificacion { get; set; }
 
-        public Rol Rol { get; set; }
-        public Direccion Direccion { get; set; }
+        public Rol rol { get; set; }
+        public Direccion direccion { get; set; }
 
         // El constructor debe ir ACÁ ADENTRO, antes de cerrar la clase Usuario
         public Usuario()
         {
-            Nombre = string.Empty;
-            Apellido = string.Empty;
-            Correo = string.Empty;
-            Password = string.Empty;
-            Telefono = string.Empty;
-            Rol = new Rol();
-            Direccion = new Direccion();
+            nombre = string.Empty;
+            apellido = string.Empty;
+            correo = string.Empty;
+            password = string.Empty;
+            telefono = string.Empty;
+            rol = new Rol();
+            direccion = new Direccion();
         }
     }
 
     public class Direccion
     {
-        public int IdDireccion { get; set; }
-        public string Provincia { get; set; }
-        public string Ciudad { get; set; }
-        public string Calle { get; set; }
-        public int Altura { get; set; }
+        public int id_direccion { get; set; }
+        public string provincia { get; set; }
+        public string ciudad { get; set; }
+        public string calle { get; set; }
+        public int altura { get; set; }
     }
 }

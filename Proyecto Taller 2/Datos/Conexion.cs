@@ -10,7 +10,7 @@ namespace Proyecto_Taller_2
     public static class Conexion
     {
         
-        private static string cadenaConexion = "Server=127.0.0.1;Port=3306;Database=esenciaretro;Uid=root;Pwd=puntoybarraroot;";
+        private static string cadenaConexion = "Server=localhost;Port=33060;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";
 
         public static MySqlConnection ObtenerConexion()
         {
@@ -24,9 +24,9 @@ namespace Proyecto_Taller_2
         {
             Usuario usuario = null;
 
-            string query = @"SELECT u.id_usuario, u.nombre, u.apellido, u.correo, u.password, u.telefono, u.Rol_id, u.fecha_baja, r.tipo 
+            string query = @"SELECT u.id_usuario, u.nombre, u.apellido, u.correo, u.password, u.telefono, u.id_rol, u.fecha_baja, r.tipo 
                              FROM Usuario u 
-                             INNER JOIN Rol r ON u.Rol_id = r.id_rol 
+                             INNER JOIN Rol r ON u.id_rol = r.id_rol 
                              WHERE u.correo = @correo AND u.password = @password";
 
             using (MySqlConnection conn = Conexion.ObtenerConexion())
@@ -48,16 +48,16 @@ namespace Proyecto_Taller_2
                             }
                             usuario = new Usuario
                             {
-                                IdUsuario = Convert.ToInt32(reader["id_usuario"]),
-                                Nombre = reader["nombre"].ToString(),
-                                Apellido = reader["apellido"].ToString(),
-                                Correo = reader["correo"].ToString(),
-                                Password = reader["password"].ToString(),
-                                Telefono = reader["telefono"].ToString(),
-                                RolId = Convert.ToInt32(reader["Rol_id"]),
-                                Rol = new Rol
+                                id_usuario = Convert.ToInt32(reader["id_usuario"]),
+                                nombre = reader["nombre"].ToString(),
+                                apellido = reader["apellido"].ToString(),
+                                correo = reader["correo"].ToString(),
+                                password = reader["password"].ToString(),
+                                telefono = reader["telefono"].ToString(),
+                                id_rol = Convert.ToInt32(reader["id_rol"]),
+                                rol = new Rol
                                 {
-                                    id_rol = Convert.ToInt32(reader["Rol_id"]),
+                                    id_rol = Convert.ToInt32(reader["id_rol"]),
                                     tipo = reader["tipo"].ToString()
                                 }
                             };

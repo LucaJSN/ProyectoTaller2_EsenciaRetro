@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Proyecto_Taller_2.Negocio;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -140,10 +141,10 @@ namespace Proyecto_Taller_2
         {
             try
             {
-                string destino = txtDestino.Text.Trim();
+                string destinoDir = txtDestino.Text.Trim();
 
                 // 1. Validar si el campo está vacío
-                if (string.IsNullOrWhiteSpace(destino))
+                if (string.IsNullOrWhiteSpace(destinoDir))
                 {
                     MessageBox.Show("Debe especificar una ruta de destino.", "Carpeta Requerida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtDestino.Focus();
@@ -151,7 +152,7 @@ namespace Proyecto_Taller_2
                 }
 
                 // 2. Validar estrictamente si la carpeta existe físicamente en el equipo
-                if (!Directory.Exists(destino))
+                if (!Directory.Exists(destinoDir))
                 {
                     MessageBox.Show("La carpeta especificada no existe. Por favor, ingrese o seleccione una ruta de carpeta válida.",
                                     "Carpeta Inexistente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -159,20 +160,35 @@ namespace Proyecto_Taller_2
                     return;
                 }
 
-                DateTime ahora = DateTime.Now;
-                BackupModel nuevoBackup = new BackupModel
+                // 3. Crear el nombre del archivo y armar la ruta completa dentro de la carpeta elegida
+                string nombreArchivo = "Backup_Usuarios_" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm") + ".sql";
+                string rutaCompleta = System.IO.Path.Combine(destinoDir, nombreArchivo);
+
+                // 4. Llamar a la capa de Negocio para generar y guardar el archivo físico real
+                BackNegocio negocio = new BackNegocio();
+                bool exito = negocio.GenerarBackup(rutaCompleta);
+
+                if (exito)
                 {
-                    FechaHora = ahora,
-                    Tipo = "Manual",
-                    Destino = destino,
-                    Tamanio = "1.4 GB"
-                };
+                    DateTime ahora = DateTime.Now;
+                    BackupModel nuevoBackup = new BackupModel
+                    {
+                        FechaHora = ahora,
+                        Tipo = "Manual",
+                        Destino = rutaCompleta,
+                        Tamanio = "1.4 GB" // O el tamaño que maneje tu sistema
+                    };
 
-                _historialBackups.Insert(0, nuevoBackup);
-                ActualizarGrillaHistorial();
+                    _historialBackups.Insert(0, nuevoBackup);
+                    ActualizarGrillaHistorial();
 
-                MessageBox.Show($"¡Copia de seguridad generada con éxito!\nFecha: {ahora:dd/MM/yyyy} a las {ahora:HH:mm}",
-                                "Back-Up Completo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"¡Copia de seguridad generada y guardada con éxito!\nArchivo: {nombreArchivo}",
+                                    "Back-Up Completo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("El proceso de negocio no pudo completar la creación del archivo.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
             catch (Exception ex)
             {
@@ -240,6 +256,16 @@ namespace Proyecto_Taller_2
         private void lblTituloPrincipal_Click(object sender, EventArgs e)
         {
             // Método requerido por el diseñador
+        }
+
+        private void UC_BackUp_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnGenerarBackup_Click_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

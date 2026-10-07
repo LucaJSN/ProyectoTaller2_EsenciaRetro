@@ -37,7 +37,7 @@ namespace Proyecto_Taller_2
 
                 if (usuarioSelec != null)
                 {
-                    if (usuarioSelec.FechaBaja.HasValue)
+                    if (usuarioSelec.fecha_baja.HasValue)
                     {
                         MessageBox.Show("El usuario que intenta eliminar ya ha sido eliminado", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
@@ -54,7 +54,7 @@ namespace Proyecto_Taller_2
                         {
                             //llamamos a la capa de negocio para ejecutar la baja lógica
                             UsuarioNegocio negocio = new UsuarioNegocio();
-                            bool exito = negocio.DarDeBajaUsuario(usuarioSelec.IdUsuario); //metodo de capa de negocio
+                            bool exito = negocio.DarDeBajaUsuario(usuarioSelec.id_usuario); //metodo de capa de negocio
 
                             if (exito)
                             {
@@ -75,7 +75,7 @@ namespace Proyecto_Taller_2
                 Usuario usuarioSelec = DGVUsuarios.Rows[e.RowIndex].DataBoundItem as Usuario;
                 if (usuarioSelec != null)
                 {
-                    if (usuarioSelec.FechaBaja.HasValue)
+                    if (usuarioSelec.fecha_baja.HasValue)
                     {
                         MessageBox.Show("El usuario que intenta editar está dado de baja", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         LCuestionario.Text = "Crear Usuario";
@@ -83,24 +83,24 @@ namespace Proyecto_Taller_2
                     }
 
                     // 1. Guardamos el ID globalmente para saber que estamos editando
-                    idUsuarioSeleccionado = usuarioSelec.IdUsuario;
-                    idDireccionSeleccionada = usuarioSelec.Direccion.IdDireccion;
+                    idUsuarioSeleccionado = usuarioSelec.id_usuario;
+                    idDireccionSeleccionada = usuarioSelec.direccion.id_direccion;
 
                     // 2. Cargamos los datos en los TextBox para que el usuario los modifique
-                    TBNombre.Text = usuarioSelec.Nombre;
-                    TBApellido.Text = usuarioSelec.Apellido;
-                    TBCorreo.Text = usuarioSelec.Correo;
-                    TBTelefono.Text = usuarioSelec.Telefono;
-                    CBRol.SelectedValue = usuarioSelec.RolId;
-                    TBContraseña.Text = usuarioSelec.Password;
+                    TBNombre.Text = usuarioSelec.nombre;
+                    TBApellido.Text = usuarioSelec.apellido;
+                    TBCorreo.Text = usuarioSelec.correo;
+                    TBTelefono.Text = usuarioSelec.telefono;
+                    CBRol.SelectedValue = usuarioSelec.id_rol;
+                    TBContraseña.Text = usuarioSelec.password;
 
                     // Validar que el objeto Dirección no sea nulo antes de leerlo
-                    if (usuarioSelec.Direccion != null)
+                    if (usuarioSelec.direccion != null)
                     {
-                        TBProvincia.Text = usuarioSelec.Direccion.Provincia;
-                        TBCiudad.Text = usuarioSelec.Direccion.Ciudad;
-                        TBCalle.Text = usuarioSelec.Direccion.Calle;
-                        TBAltura.Text = usuarioSelec.Direccion.Altura.ToString();
+                        TBProvincia.Text = usuarioSelec.direccion.provincia;
+                        TBCiudad.Text = usuarioSelec.direccion.ciudad;
+                        TBCalle.Text = usuarioSelec.direccion.calle;
+                        TBAltura.Text = usuarioSelec.direccion.altura.ToString();
                     }
                 }
             }
@@ -111,14 +111,14 @@ namespace Proyecto_Taller_2
                 if (usuarioSelec != null)
                 {
                     // Verificamos si realmente está inactivo antes de hacer el viaje a la BD
-                    if (usuarioSelec.FechaBaja.HasValue)
+                    if (usuarioSelec.fecha_baja.HasValue)
                     {
-                        DialogResult respuesta = MessageBox.Show($"¿Deseas reactivar al usuario {usuarioSelec.Nombre}?", "Confirmar activación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        DialogResult respuesta = MessageBox.Show($"¿Deseas reactivar al usuario {usuarioSelec.nombre}?", "Confirmar activación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                         if (respuesta == DialogResult.Yes)
                         {
                             UsuarioNegocio negocio = new UsuarioNegocio();
-                            negocio.ActivarUsuario(usuarioSelec.IdUsuario);
+                            negocio.ActivarUsuario(usuarioSelec.id_usuario);
 
                             MessageBox.Show("Usuario reactivado con éxito.");
 
@@ -221,20 +221,20 @@ namespace Proyecto_Taller_2
                 // Capturamos lo que quedó escrito en los TextBox (con los cambios ya hechos)
                 Usuario usuario = new Usuario
                 {
-                    Nombre = TBNombre.Text.Trim(),
-                    Apellido = TBApellido.Text.Trim(),
-                    Correo = TBCorreo.Text.Trim(),
-                    Telefono = TBTelefono.Text.Trim(),
-                    RolId = Convert.ToInt32(CBRol.SelectedValue),
-                    Password = TBContraseña.Text.Trim()
+                    nombre = TBNombre.Text.Trim(),
+                    apellido = TBApellido.Text.Trim(),
+                    correo = TBCorreo.Text.Trim(),
+                    telefono = TBTelefono.Text.Trim(),
+                    id_rol= Convert.ToInt32(CBRol.SelectedValue),
+                    password = TBContraseña.Text.Trim()
                 };
 
                 Direccion direccion = new Direccion
                 {
-                    Provincia = TBProvincia.Text.Trim(),
-                    Ciudad = TBCiudad.Text.Trim(),
-                    Calle = TBCalle.Text.Trim(),
-                    Altura = int.TryParse(TBAltura.Text.Trim(), out int alt) ? alt : 0
+                    provincia = TBProvincia.Text.Trim(),
+                    ciudad = TBCiudad.Text.Trim(),
+                    calle = TBCalle.Text.Trim(),
+                    altura = int.TryParse(TBAltura.Text.Trim(), out int alt) ? alt : 0
                 };
 
                 UsuarioNegocio negocio = new UsuarioNegocio();
@@ -253,8 +253,8 @@ namespace Proyecto_Taller_2
                 else
                 {
                     // --- EDICIÓN ---
-                    usuario.IdUsuario = idUsuarioSeleccionado; // Asignamos el ID del usuario que estamos modificando
-                    usuario.DireccionId = idDireccionSeleccionada; //Y también el ID de direccion
+                    usuario.id_usuario = idUsuarioSeleccionado; // Asignamos el ID del usuario que estamos modificando
+                    usuario.id_direccion = idDireccionSeleccionada; //Y también el ID de direccion
 
                     DialogResult resultado = MessageBox.Show("¿Estás seguro que deseas guardar los cambios?",
                                                             "Confirmar edición",
@@ -429,11 +429,11 @@ namespace Proyecto_Taller_2
 
                 if (filtro == "Activos")
                 {
-                    listaFiltrada = listaCompleta.Where(u => !u.FechaBaja.HasValue).ToList();
+                    listaFiltrada = listaCompleta.Where(u => !u.fecha_baja.HasValue).ToList();
                 }
                 else if (filtro == "Inactivos")
                 {
-                    listaFiltrada = listaCompleta.Where(u => u.FechaBaja.HasValue).ToList();
+                    listaFiltrada = listaCompleta.Where(u => u.fecha_baja.HasValue).ToList();
                 }
                 else
                 {
@@ -443,9 +443,9 @@ namespace Proyecto_Taller_2
                 if (!string.IsNullOrEmpty(textoBusqueda))
                 {
                     listaFiltrada = listaFiltrada.Where(u =>
-                        (u.Nombre != null && u.Nombre.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                        (u.Apellido != null && u.Apellido.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                        (u.Correo != null && u.Correo.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0)
+                        (u.nombre != null && u.nombre.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                        (u.apellido != null && u.apellido.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                        (u.correo != null && u.correo.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0)
                     ).ToList(); // <-- ¡El secreto está aquí! Ejecuta el filtro de texto inmediatamente
                 }
                 DGVUsuarios.DataSource = null;

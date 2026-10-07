@@ -21,52 +21,52 @@ namespace Proyecto_Taller_2.Negocio
         {
             // 1. REGLAS DE NEGOCIO (Validaciones extra)
             // Aquí te aseguras de que no llegue basura a la base de datos
-            if (string.IsNullOrWhiteSpace(usuario.Nombre))
+            if (string.IsNullOrWhiteSpace(usuario.nombre))
             {
                 throw new Exception("El nombre del usuario no puede estar vacío.");
             }
 
-            if (string.IsNullOrWhiteSpace(usuario.Apellido))
+            if (string.IsNullOrWhiteSpace(usuario.apellido))
             {
                 throw new Exception("El Apellido del usuario no puede estar vacío.");
             }
 
-            if (string.IsNullOrWhiteSpace(usuario.Correo))
+            if (string.IsNullOrWhiteSpace(usuario.correo))
             {
                 throw new Exception("Debe ingresar un correo para el usuario");
             }
 
-            if (datosUsuario.ExisteCorreo(usuario.Correo.ToString()))
+            if (datosUsuario.ExisteCorreo(usuario.correo.ToString()))
             {
                 throw new Exception("El correo ingresado ya tiene una cuenta registrada");
             }
 
-            if (string.IsNullOrWhiteSpace(usuario.Password))
+            if (string.IsNullOrWhiteSpace(usuario.password))
             {
                 throw new Exception("Debe ingresar una contreseña para el usuario");
             }
 
-            if (usuario.RolId <= 0)
+            if (usuario.id_rol <= 0)
             {
                 throw new Exception("Debe seleccionar un rol válido.");
             }
 
-            if (string.IsNullOrWhiteSpace(direccion.Provincia))
+            if (string.IsNullOrWhiteSpace(direccion.provincia))
             {
                 throw new Exception("Debe ingresar una Provincia");
             }
 
-            if (string.IsNullOrWhiteSpace(direccion.Ciudad))
+            if (string.IsNullOrWhiteSpace(direccion.ciudad))
             {
                 throw new Exception("Debe ingresar una Ciudad");
             }
 
-            if (string.IsNullOrWhiteSpace(direccion.Calle))
+            if (string.IsNullOrWhiteSpace(direccion.calle))
             {
                 throw new Exception("Debe ingresar una Calle");
             }
 
-            if (direccion.Altura == 0)
+            if (direccion.altura == 0)
             {
                 throw new Exception("Debe ingresar una Altura");
             }
@@ -95,37 +95,37 @@ namespace Proyecto_Taller_2.Negocio
 
                 // 1. REGLAS DE NEGOCIO (Validaciones extra)
                 // Aquí te aseguras de que no llegue basura a la base de datos
-                if (string.IsNullOrWhiteSpace(usuario.Nombre))
+                if (string.IsNullOrWhiteSpace(usuario.nombre))
                 {
                     throw new Exception("El nombre del usuario no puede estar vacío.");
                 }
 
-                if (string.IsNullOrWhiteSpace(usuario.Apellido))
+                if (string.IsNullOrWhiteSpace(usuario.apellido))
                 {
                     throw new Exception("El Apellido del usuario no puede estar vacío.");
                 }
 
-                if (string.IsNullOrWhiteSpace(usuario.Correo))
+                if (string.IsNullOrWhiteSpace(usuario.correo))
                 {
                     throw new Exception("Debe ingresar un correo para el usuario");
                 }
 
-                if (datosUsuario.ExisteCorreo(usuario.Correo.ToString(), usuario.IdUsuario))
+                if (datosUsuario.ExisteCorreo(usuario.correo.ToString(), usuario.id_usuario))
                 {
                     throw new Exception("El correo ingresado ya pertenece a otra cuenta registrada.");
                 }
 
-                if (string.IsNullOrWhiteSpace(usuario.Password))
+                if (string.IsNullOrWhiteSpace(usuario.password))
                 {
                     throw new Exception("Debe ingresar una contreseña para el usuario");
                 }
 
-                if (usuario.RolId <= 0)
+                if (usuario.id_rol <= 0)
                 {
                     throw new Exception("Debe seleccionar un rol válido.");
                 }
 
-                if (string.IsNullOrWhiteSpace(direccion.Provincia))
+                if (string.IsNullOrWhiteSpace(direccion.provincia))
                 {
                     throw new Exception("Debe ingresar una Provincia");
                 }
