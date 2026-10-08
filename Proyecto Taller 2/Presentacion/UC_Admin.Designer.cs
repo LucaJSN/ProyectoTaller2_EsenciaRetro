@@ -32,16 +32,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.DGVUsuarios = new System.Windows.Forms.DataGridView();
-            this.CID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CApellido = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CCorreo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CRol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CTelefono = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CFechaBaja = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CEditar = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.CEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.CReactivar = new System.Windows.Forms.DataGridViewButtonColumn();
             this.label2 = new System.Windows.Forms.Label();
             this.LCuestionario = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -75,6 +65,16 @@
             this.TBBuscador = new System.Windows.Forms.TextBox();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.label17 = new System.Windows.Forms.Label();
+            this.CID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CApellido = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CCorreo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CRol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CTelefono = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CFechaBaja = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CEditar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.CEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.CReactivar = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.DGVUsuarios)).BeginInit();
             this.SuspendLayout();
             // 
@@ -119,95 +119,6 @@
             this.DGVUsuarios.Size = new System.Drawing.Size(1244, 230);
             this.DGVUsuarios.TabIndex = 1;
             this.DGVUsuarios.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            // 
-            // CID
-            // 
-            this.CID.DataPropertyName = "IdUsuario";
-            this.CID.HeaderText = "id";
-            this.CID.MinimumWidth = 6;
-            this.CID.Name = "CID";
-            this.CID.ReadOnly = true;
-            this.CID.Width = 125;
-            // 
-            // CNombre
-            // 
-            this.CNombre.DataPropertyName = "Nombre";
-            this.CNombre.HeaderText = "Nombre";
-            this.CNombre.MinimumWidth = 6;
-            this.CNombre.Name = "CNombre";
-            this.CNombre.ReadOnly = true;
-            this.CNombre.Width = 125;
-            // 
-            // CApellido
-            // 
-            this.CApellido.DataPropertyName = "Apellido";
-            this.CApellido.HeaderText = "Apellido";
-            this.CApellido.MinimumWidth = 6;
-            this.CApellido.Name = "CApellido";
-            this.CApellido.ReadOnly = true;
-            this.CApellido.Width = 125;
-            // 
-            // CCorreo
-            // 
-            this.CCorreo.DataPropertyName = "Correo";
-            this.CCorreo.HeaderText = "Correo";
-            this.CCorreo.MinimumWidth = 6;
-            this.CCorreo.Name = "CCorreo";
-            this.CCorreo.ReadOnly = true;
-            this.CCorreo.Width = 125;
-            // 
-            // CRol
-            // 
-            this.CRol.DataPropertyName = "RolId";
-            this.CRol.HeaderText = "ID_ROL";
-            this.CRol.MinimumWidth = 6;
-            this.CRol.Name = "CRol";
-            this.CRol.ReadOnly = true;
-            this.CRol.Width = 125;
-            // 
-            // CTelefono
-            // 
-            this.CTelefono.DataPropertyName = "Telefono";
-            this.CTelefono.HeaderText = "Telefono";
-            this.CTelefono.MinimumWidth = 6;
-            this.CTelefono.Name = "CTelefono";
-            this.CTelefono.ReadOnly = true;
-            this.CTelefono.Width = 125;
-            // 
-            // CFechaBaja
-            // 
-            this.CFechaBaja.DataPropertyName = "FechaBaja";
-            this.CFechaBaja.HeaderText = "Fecha_baja";
-            this.CFechaBaja.MinimumWidth = 6;
-            this.CFechaBaja.Name = "CFechaBaja";
-            this.CFechaBaja.ReadOnly = true;
-            this.CFechaBaja.Width = 125;
-            // 
-            // CEditar
-            // 
-            this.CEditar.HeaderText = "Editar";
-            this.CEditar.MinimumWidth = 6;
-            this.CEditar.Name = "CEditar";
-            this.CEditar.ReadOnly = true;
-            this.CEditar.Text = "Editar";
-            this.CEditar.Width = 125;
-            // 
-            // CEliminar
-            // 
-            this.CEliminar.HeaderText = "Eliminar";
-            this.CEliminar.MinimumWidth = 6;
-            this.CEliminar.Name = "CEliminar";
-            this.CEliminar.ReadOnly = true;
-            this.CEliminar.Text = "Eliminar";
-            this.CEliminar.Width = 125;
-            // 
-            // CReactivar
-            // 
-            this.CReactivar.HeaderText = "Reactivar";
-            this.CReactivar.MinimumWidth = 6;
-            this.CReactivar.Name = "CReactivar";
-            this.CReactivar.ReadOnly = true;
-            this.CReactivar.Width = 125;
             // 
             // label2
             // 
@@ -541,6 +452,95 @@
             this.label17.TabIndex = 36;
             this.label17.Text = "🔍";
             // 
+            // CID
+            // 
+            this.CID.DataPropertyName = "id_usuario";
+            this.CID.HeaderText = "id";
+            this.CID.MinimumWidth = 6;
+            this.CID.Name = "CID";
+            this.CID.ReadOnly = true;
+            this.CID.Width = 125;
+            // 
+            // CNombre
+            // 
+            this.CNombre.DataPropertyName = "Nombre";
+            this.CNombre.HeaderText = "Nombre";
+            this.CNombre.MinimumWidth = 6;
+            this.CNombre.Name = "CNombre";
+            this.CNombre.ReadOnly = true;
+            this.CNombre.Width = 125;
+            // 
+            // CApellido
+            // 
+            this.CApellido.DataPropertyName = "Apellido";
+            this.CApellido.HeaderText = "Apellido";
+            this.CApellido.MinimumWidth = 6;
+            this.CApellido.Name = "CApellido";
+            this.CApellido.ReadOnly = true;
+            this.CApellido.Width = 125;
+            // 
+            // CCorreo
+            // 
+            this.CCorreo.DataPropertyName = "Correo";
+            this.CCorreo.HeaderText = "Correo";
+            this.CCorreo.MinimumWidth = 6;
+            this.CCorreo.Name = "CCorreo";
+            this.CCorreo.ReadOnly = true;
+            this.CCorreo.Width = 125;
+            // 
+            // CRol
+            // 
+            this.CRol.DataPropertyName = "id_rol";
+            this.CRol.HeaderText = "ID_ROL";
+            this.CRol.MinimumWidth = 6;
+            this.CRol.Name = "CRol";
+            this.CRol.ReadOnly = true;
+            this.CRol.Width = 125;
+            // 
+            // CTelefono
+            // 
+            this.CTelefono.DataPropertyName = "Telefono";
+            this.CTelefono.HeaderText = "Telefono";
+            this.CTelefono.MinimumWidth = 6;
+            this.CTelefono.Name = "CTelefono";
+            this.CTelefono.ReadOnly = true;
+            this.CTelefono.Width = 125;
+            // 
+            // CFechaBaja
+            // 
+            this.CFechaBaja.DataPropertyName = "FechaBaja";
+            this.CFechaBaja.HeaderText = "Fecha_baja";
+            this.CFechaBaja.MinimumWidth = 6;
+            this.CFechaBaja.Name = "CFechaBaja";
+            this.CFechaBaja.ReadOnly = true;
+            this.CFechaBaja.Width = 125;
+            // 
+            // CEditar
+            // 
+            this.CEditar.HeaderText = "Editar";
+            this.CEditar.MinimumWidth = 6;
+            this.CEditar.Name = "CEditar";
+            this.CEditar.ReadOnly = true;
+            this.CEditar.Text = "Editar";
+            this.CEditar.Width = 125;
+            // 
+            // CEliminar
+            // 
+            this.CEliminar.HeaderText = "Eliminar";
+            this.CEliminar.MinimumWidth = 6;
+            this.CEliminar.Name = "CEliminar";
+            this.CEliminar.ReadOnly = true;
+            this.CEliminar.Text = "Eliminar";
+            this.CEliminar.Width = 125;
+            // 
+            // CReactivar
+            // 
+            this.CReactivar.HeaderText = "Reactivar";
+            this.CReactivar.MinimumWidth = 6;
+            this.CReactivar.Name = "CReactivar";
+            this.CReactivar.ReadOnly = true;
+            this.CReactivar.Width = 125;
+            // 
             // UC_Admin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -622,6 +622,9 @@
         private System.Windows.Forms.Button BtnCancelar;
         private System.Windows.Forms.ComboBox CBFiltro;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox TBBuscador;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.Label label17;
         private System.Windows.Forms.DataGridViewTextBoxColumn CID;
         private System.Windows.Forms.DataGridViewTextBoxColumn CNombre;
         private System.Windows.Forms.DataGridViewTextBoxColumn CApellido;
@@ -631,9 +634,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CFechaBaja;
         private System.Windows.Forms.DataGridViewButtonColumn CEditar;
         private System.Windows.Forms.DataGridViewButtonColumn CEliminar;
-        private System.Windows.Forms.TextBox TBBuscador;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
-        private System.Windows.Forms.Label label17;
         private System.Windows.Forms.DataGridViewButtonColumn CReactivar;
     }
 }

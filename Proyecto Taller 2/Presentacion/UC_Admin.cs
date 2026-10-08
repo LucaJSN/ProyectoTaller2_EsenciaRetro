@@ -173,11 +173,27 @@ namespace Proyecto_Taller_2
         {
             try
             {
-                RolNegocio negocioRol = new RolNegocio();
-                CBRol.DataSource = negocioRol.ListarRoles();
-                CBRol.DisplayMember = "tipo";
-                CBRol.ValueMember = "id_rol";
-                CBRol.SelectedIndex = -1;
+                string connectionString = "Server=localhost;Port=3306;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";
+
+                using (MySqlConnection conexion = new MySqlConnection(connectionString))
+                {
+                    string query = "SELECT id_rol, tipo FROM rol";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, conexion))
+                    {
+                        conexion.Open();
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            DataTable dt = new DataTable();
+                            dt.Load(reader);
+
+                            CBRol.DataSource = dt;
+                            CBRol.DisplayMember = "tipo";
+                            CBRol.ValueMember = "id_rol";
+                            CBRol.SelectedIndex = -1;
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
