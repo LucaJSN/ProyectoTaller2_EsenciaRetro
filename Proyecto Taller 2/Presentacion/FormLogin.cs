@@ -76,5 +76,40 @@ namespace Proyecto_Taller_2
                 TBCorreo.Focus(); // Opcional: Mantiene el cursor en el TextBox hasta que lo corrija
             }
         }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LCorreo_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnMostrarContraseña_Click(object sender, EventArgs e)
+        {
+            // Aseguramos que UseSystemPasswordChar no bloquee el enmascaramiento
+            TBPassword.UseSystemPasswordChar = false;
+
+            if (TBPassword.PasswordChar == '\0')
+            {
+                // Si estaba visible, lo ocultamos
+                TBPassword.PasswordChar = '●';
+                btnMostrarContraseña.Text = "👁";
+            }
+            else
+            {
+                // Si estaba oculto, lo mostramos
+                TBPassword.PasswordChar = '\0';
+                btnMostrarContraseña.Text = "👁";
+
+            }
+        }
     }
 }
