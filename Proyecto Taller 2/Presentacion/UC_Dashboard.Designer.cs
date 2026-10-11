@@ -49,12 +49,12 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.LightSeaGreen;
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(57)))), ((int)(((byte)(74)))));
             this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.panel2);
-            this.panel1.Location = new System.Drawing.Point(47, 202);
+            this.panel1.Location = new System.Drawing.Point(122, 202);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1101, 140);
+            this.panel1.Size = new System.Drawing.Size(1026, 140);
             this.panel1.TabIndex = 0;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
@@ -64,7 +64,7 @@
             this.panel3.Controls.Add(this.label5);
             this.panel3.Controls.Add(this.label4);
             this.panel3.ForeColor = System.Drawing.Color.Black;
-            this.panel3.Location = new System.Drawing.Point(764, 12);
+            this.panel3.Location = new System.Drawing.Point(686, 12);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(322, 112);
             this.panel3.TabIndex = 1;
@@ -98,7 +98,7 @@
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.label2);
             this.panel2.ForeColor = System.Drawing.Color.Black;
-            this.panel2.Location = new System.Drawing.Point(61, 12);
+            this.panel2.Location = new System.Drawing.Point(23, 12);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(323, 112);
             this.panel2.TabIndex = 0;
@@ -120,7 +120,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Black;
-            this.label2.Location = new System.Drawing.Point(40, 8);
+            this.label2.Location = new System.Drawing.Point(44, 8);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(236, 29);
             this.label2.TabIndex = 0;
@@ -147,11 +147,11 @@
             this.descripcion,
             this.cantidad,
             this.subTotal});
-            this.dataGridView1.Location = new System.Drawing.Point(131, 432);
+            this.dataGridView1.Location = new System.Drawing.Point(145, 436);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(953, 270);
+            this.dataGridView1.Size = new System.Drawing.Size(985, 270);
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
