@@ -29,9 +29,19 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.DGVUsuarios = new System.Windows.Forms.DataGridView();
+            this.CID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CApellido = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CCorreo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CRol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CTelefono = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CFechaBaja = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CEditar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.CEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.CReactivar = new System.Windows.Forms.DataGridViewButtonColumn();
             this.label2 = new System.Windows.Forms.Label();
             this.LCuestionario = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -65,16 +75,6 @@
             this.TBBuscador = new System.Windows.Forms.TextBox();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.label17 = new System.Windows.Forms.Label();
-            this.CID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CApellido = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CCorreo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CRol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CTelefono = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CFechaBaja = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CEditar = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.CEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.CReactivar = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.DGVUsuarios)).BeginInit();
             this.SuspendLayout();
             // 
@@ -89,14 +89,14 @@
             // DGVUsuarios
             // 
             this.DGVUsuarios.BackgroundColor = System.Drawing.Color.Teal;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DGVUsuarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DGVUsuarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.DGVUsuarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DGVUsuarios.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.CID,
@@ -119,6 +119,95 @@
             this.DGVUsuarios.Size = new System.Drawing.Size(1244, 230);
             this.DGVUsuarios.TabIndex = 1;
             this.DGVUsuarios.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            // 
+            // CID
+            // 
+            this.CID.DataPropertyName = "id_usuario";
+            this.CID.HeaderText = "id";
+            this.CID.MinimumWidth = 6;
+            this.CID.Name = "CID";
+            this.CID.ReadOnly = true;
+            this.CID.Width = 125;
+            // 
+            // CNombre
+            // 
+            this.CNombre.DataPropertyName = "Nombre";
+            this.CNombre.HeaderText = "Nombre";
+            this.CNombre.MinimumWidth = 6;
+            this.CNombre.Name = "CNombre";
+            this.CNombre.ReadOnly = true;
+            this.CNombre.Width = 125;
+            // 
+            // CApellido
+            // 
+            this.CApellido.DataPropertyName = "Apellido";
+            this.CApellido.HeaderText = "Apellido";
+            this.CApellido.MinimumWidth = 6;
+            this.CApellido.Name = "CApellido";
+            this.CApellido.ReadOnly = true;
+            this.CApellido.Width = 125;
+            // 
+            // CCorreo
+            // 
+            this.CCorreo.DataPropertyName = "Correo";
+            this.CCorreo.HeaderText = "Correo";
+            this.CCorreo.MinimumWidth = 6;
+            this.CCorreo.Name = "CCorreo";
+            this.CCorreo.ReadOnly = true;
+            this.CCorreo.Width = 125;
+            // 
+            // CRol
+            // 
+            this.CRol.DataPropertyName = "id_rol";
+            this.CRol.HeaderText = "ID_ROL";
+            this.CRol.MinimumWidth = 6;
+            this.CRol.Name = "CRol";
+            this.CRol.ReadOnly = true;
+            this.CRol.Width = 125;
+            // 
+            // CTelefono
+            // 
+            this.CTelefono.DataPropertyName = "Telefono";
+            this.CTelefono.HeaderText = "Telefono";
+            this.CTelefono.MinimumWidth = 6;
+            this.CTelefono.Name = "CTelefono";
+            this.CTelefono.ReadOnly = true;
+            this.CTelefono.Width = 125;
+            // 
+            // CFechaBaja
+            // 
+            this.CFechaBaja.DataPropertyName = "FechaBaja";
+            this.CFechaBaja.HeaderText = "Fecha_baja";
+            this.CFechaBaja.MinimumWidth = 6;
+            this.CFechaBaja.Name = "CFechaBaja";
+            this.CFechaBaja.ReadOnly = true;
+            this.CFechaBaja.Width = 125;
+            // 
+            // CEditar
+            // 
+            this.CEditar.HeaderText = "Editar";
+            this.CEditar.MinimumWidth = 6;
+            this.CEditar.Name = "CEditar";
+            this.CEditar.ReadOnly = true;
+            this.CEditar.Text = "Editar";
+            this.CEditar.Width = 125;
+            // 
+            // CEliminar
+            // 
+            this.CEliminar.HeaderText = "Eliminar";
+            this.CEliminar.MinimumWidth = 6;
+            this.CEliminar.Name = "CEliminar";
+            this.CEliminar.ReadOnly = true;
+            this.CEliminar.Text = "Eliminar";
+            this.CEliminar.Width = 125;
+            // 
+            // CReactivar
+            // 
+            this.CReactivar.HeaderText = "Reactivar";
+            this.CReactivar.MinimumWidth = 6;
+            this.CReactivar.Name = "CReactivar";
+            this.CReactivar.ReadOnly = true;
+            this.CReactivar.Width = 125;
             // 
             // label2
             // 
@@ -452,100 +541,11 @@
             this.label17.TabIndex = 36;
             this.label17.Text = "🔍";
             // 
-            // CID
-            // 
-            this.CID.DataPropertyName = "id_usuario";
-            this.CID.HeaderText = "id";
-            this.CID.MinimumWidth = 6;
-            this.CID.Name = "CID";
-            this.CID.ReadOnly = true;
-            this.CID.Width = 125;
-            // 
-            // CNombre
-            // 
-            this.CNombre.DataPropertyName = "Nombre";
-            this.CNombre.HeaderText = "Nombre";
-            this.CNombre.MinimumWidth = 6;
-            this.CNombre.Name = "CNombre";
-            this.CNombre.ReadOnly = true;
-            this.CNombre.Width = 125;
-            // 
-            // CApellido
-            // 
-            this.CApellido.DataPropertyName = "Apellido";
-            this.CApellido.HeaderText = "Apellido";
-            this.CApellido.MinimumWidth = 6;
-            this.CApellido.Name = "CApellido";
-            this.CApellido.ReadOnly = true;
-            this.CApellido.Width = 125;
-            // 
-            // CCorreo
-            // 
-            this.CCorreo.DataPropertyName = "Correo";
-            this.CCorreo.HeaderText = "Correo";
-            this.CCorreo.MinimumWidth = 6;
-            this.CCorreo.Name = "CCorreo";
-            this.CCorreo.ReadOnly = true;
-            this.CCorreo.Width = 125;
-            // 
-            // CRol
-            // 
-            this.CRol.DataPropertyName = "id_rol";
-            this.CRol.HeaderText = "ID_ROL";
-            this.CRol.MinimumWidth = 6;
-            this.CRol.Name = "CRol";
-            this.CRol.ReadOnly = true;
-            this.CRol.Width = 125;
-            // 
-            // CTelefono
-            // 
-            this.CTelefono.DataPropertyName = "Telefono";
-            this.CTelefono.HeaderText = "Telefono";
-            this.CTelefono.MinimumWidth = 6;
-            this.CTelefono.Name = "CTelefono";
-            this.CTelefono.ReadOnly = true;
-            this.CTelefono.Width = 125;
-            // 
-            // CFechaBaja
-            // 
-            this.CFechaBaja.DataPropertyName = "FechaBaja";
-            this.CFechaBaja.HeaderText = "Fecha_baja";
-            this.CFechaBaja.MinimumWidth = 6;
-            this.CFechaBaja.Name = "CFechaBaja";
-            this.CFechaBaja.ReadOnly = true;
-            this.CFechaBaja.Width = 125;
-            // 
-            // CEditar
-            // 
-            this.CEditar.HeaderText = "Editar";
-            this.CEditar.MinimumWidth = 6;
-            this.CEditar.Name = "CEditar";
-            this.CEditar.ReadOnly = true;
-            this.CEditar.Text = "Editar";
-            this.CEditar.Width = 125;
-            // 
-            // CEliminar
-            // 
-            this.CEliminar.HeaderText = "Eliminar";
-            this.CEliminar.MinimumWidth = 6;
-            this.CEliminar.Name = "CEliminar";
-            this.CEliminar.ReadOnly = true;
-            this.CEliminar.Text = "Eliminar";
-            this.CEliminar.Width = 125;
-            // 
-            // CReactivar
-            // 
-            this.CReactivar.HeaderText = "Reactivar";
-            this.CReactivar.MinimumWidth = 6;
-            this.CReactivar.Name = "CReactivar";
-            this.CReactivar.ReadOnly = true;
-            this.CReactivar.Width = 125;
-            // 
             // UC_Admin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.LightBlue;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(158)))), ((int)(((byte)(182)))), ((int)(((byte)(211)))));
             this.Controls.Add(this.label17);
             this.Controls.Add(this.TBBuscador);
             this.Controls.Add(this.label3);
