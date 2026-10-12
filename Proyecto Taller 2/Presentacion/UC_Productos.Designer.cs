@@ -160,7 +160,6 @@
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pictureBox1.BackColor = System.Drawing.Color.DarkGray;
-            this.pictureBox1.BackgroundImage = global::Proyecto_Taller_2.Properties.Resources.images1;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictureBox1.Location = new System.Drawing.Point(884, 56);
             this.pictureBox1.Name = "pictureBox1";
@@ -188,6 +187,7 @@
             // 
             this.BtnImagen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.BtnImagen.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.BtnImagen.ForeColor = System.Drawing.Color.Black;
             this.BtnImagen.Location = new System.Drawing.Point(32, 434);
             this.BtnImagen.Name = "BtnImagen";
             this.BtnImagen.Size = new System.Drawing.Size(391, 30);
@@ -268,6 +268,7 @@
             // CBTalle
             // 
             this.CBTalle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.CBTalle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CBTalle.FormattingEnabled = true;
             this.CBTalle.Items.AddRange(new object[] {
             "S",
@@ -295,6 +296,7 @@
             // CBCategoria
             // 
             this.CBCategoria.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.CBCategoria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CBCategoria.FormattingEnabled = true;
             this.CBCategoria.Items.AddRange(new object[] {
             "Normal",

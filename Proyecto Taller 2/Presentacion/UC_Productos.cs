@@ -33,7 +33,7 @@ namespace Proyecto_Taller_2
                 btnEliminar.Name = "btnColumnaEliminar";
                 btnEliminar.HeaderText = "Eliminar";
                 btnEliminar.Text = "Eliminar";
-                btnEliminar.UseColumnTextForButtonValue = true; 
+                btnEliminar.UseColumnTextForButtonValue = true;
 
                 DGVProductos.Columns.Add(btnEliminar);
             }
@@ -41,7 +41,7 @@ namespace Proyecto_Taller_2
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            
+
         }
 
         private void BtnAgregar_Click(object sender, EventArgs e)
@@ -73,24 +73,25 @@ namespace Proyecto_Taller_2
 
         private void DGVProductos_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-                if (e.RowIndex >= 0 && DGVProductos.Columns[e.RowIndex].Name == "btnColumnaEliminar")
+            // Corrección en el índice de la columna del botón de eliminar
+            if (e.RowIndex >= 0 && DGVProductos.Columns[e.ColumnIndex].Name == "btnColumnaEliminar")
+            {
+                Producto productoSeleccionado = (Producto)DGVProductos.Rows[e.RowIndex].DataBoundItem;
+
+                DialogResult confirmacion = MessageBox.Show(
+                    $"¿Estás seguro de que querés eliminar el producto '{productoSeleccionado.Nombre}'?",
+                    "Confirmar eliminación",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (confirmacion == DialogResult.Yes)
                 {
-                    Producto productoSeleccionado = (Producto)DGVProductos.Rows[e.RowIndex].DataBoundItem;
-
-                    DialogResult confirmacion = MessageBox.Show(
-                        $"¿Estás seguro de que querés eliminar el producto '{productoSeleccionado.Nombre}'?",
-                        "Confirmar eliminación",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question
-                    );
-
-                    if (confirmacion == DialogResult.Yes)
-                    {
-                        productoSeleccionado.Activo = false;
-                        productoSeleccionado.FechaBaja = DateTime.Now;
-                        DGVProductos.Refresh();
-                    }
+                    productoSeleccionado.Activo = false;
+                    productoSeleccionado.FechaBaja = DateTime.Now;
+                    DGVProductos.Refresh();
                 }
+            }
         }
 
 
@@ -108,7 +109,24 @@ namespace Proyecto_Taller_2
 
         private void UC_Productos_Load(object sender, EventArgs e)
         {
+            // Configuración de estilos y colores para asegurar legibilidad en el DataGridView
+            DGVProductos.EnableHeadersVisualStyles = false;
+            DGVProductos.BackgroundColor = Color.White;
+            DGVProductos.ForeColor = Color.FromArgb(44, 62, 80); // Gris oscuro corporativo
 
+            // Estilo para las celdas de datos
+            DGVProductos.DefaultCellStyle.BackColor = Color.White;
+            DGVProductos.DefaultCellStyle.ForeColor = Color.FromArgb(44, 62, 80);
+            DGVProductos.DefaultCellStyle.SelectionBackColor = Color.FromArgb(52, 152, 219);
+            DGVProductos.DefaultCellStyle.SelectionForeColor = Color.White;
+
+            // Estilo para la cabecera (Headers)
+            DGVProductos.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(52, 73, 94);
+            DGVProductos.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            DGVProductos.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+
+            // Filas alternadas para mayor prolijidad visual
+            DGVProductos.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 249, 250);
         }
 
         private void LPrecio_Click(object sender, EventArgs e)
@@ -186,10 +204,7 @@ namespace Proyecto_Taller_2
                 ofd.Filter = "Archivos de Imagen|*.jpg;*.jpeg;*.png;*.bmp";
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    // Guardar la ruta en nuestra variable
                     rutaImagenSeleccionada = ofd.FileName;
-
-                    // Cargar la imagen usando la ruta
                     pictureBox1.ImageLocation = rutaImagenSeleccionada;
                 }
             }
@@ -205,19 +220,18 @@ namespace Proyecto_Taller_2
             string connectionString =
             "Server=127.0.0.1;Port=3306;Database=esenciaretro;Uid=root;Pwd=puntoybarraroot;";
 
-                try
+            try
+            {
+                using (MySqlConnection conexion = new MySqlConnection(connectionString))
                 {
-                    using (MySqlConnection conexion = new MySqlConnection(connectionString))
-                    {
-                        conexion.Open();
-
-                        MessageBox.Show("¡Conexión exitosa!");
-                    }
+                    conexion.Open();
+                    MessageBox.Show("¡Conexión exitosa!");
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error de conexión: " + ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error de conexión: " + ex.Message);
+            }
         }
 
         private void label1_Click(object sender, EventArgs e)
