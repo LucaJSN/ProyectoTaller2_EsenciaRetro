@@ -56,8 +56,9 @@
             this.LTalle = new System.Windows.Forms.Label();
             this.CBTalle = new System.Windows.Forms.ComboBox();
             this.LClase = new System.Windows.Forms.Label();
-            this.CBCategoria = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.TBBuscador = new System.Windows.Forms.TextBox();
+            this.CBCategoria = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUDCosto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUDVenta)).BeginInit();
@@ -77,6 +78,7 @@
             this.BtnAgregar.TabIndex = 1;
             this.BtnAgregar.Text = "Agregar";
             this.BtnAgregar.UseVisualStyleBackColor = false;
+            this.BtnAgregar.Click += new System.EventHandler(this.BtnAgregar_Click);
             // 
             // TBNombre
             // 
@@ -260,6 +262,7 @@
             this.CImagen,
             this.CActivo});
             this.DGVProductos.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.DGVProductos.GridColor = System.Drawing.Color.Gray;
             this.DGVProductos.Location = new System.Drawing.Point(0, 670);
             this.DGVProductos.Name = "DGVProductos";
             this.DGVProductos.ReadOnly = true;
@@ -363,19 +366,6 @@
             this.LClase.Text = "Categoria";
             this.LClase.Click += new System.EventHandler(this.label1_Click);
             // 
-            // CBCategoria
-            // 
-            this.CBCategoria.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.CBCategoria.FormattingEnabled = true;
-            this.CBCategoria.Items.AddRange(new object[] {
-            "Normal",
-            "Epica",
-            "Legendaria"});
-            this.CBCategoria.Location = new System.Drawing.Point(688, 167);
-            this.CBCategoria.Name = "CBCategoria";
-            this.CBCategoria.Size = new System.Drawing.Size(121, 24);
-            this.CBCategoria.TabIndex = 30;
-            // 
             // label1
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -387,11 +377,34 @@
             this.label1.TabIndex = 32;
             this.label1.Text = "Imagen";
             // 
+            // TBBuscador
+            // 
+            this.TBBuscador.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.TBBuscador.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TBBuscador.Location = new System.Drawing.Point(122, 636);
+            this.TBBuscador.Name = "TBBuscador";
+            this.TBBuscador.Size = new System.Drawing.Size(222, 28);
+            this.TBBuscador.TabIndex = 34;
+            // 
+            // CBCategoria
+            // 
+            this.CBCategoria.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.CBCategoria.FormattingEnabled = true;
+            this.CBCategoria.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3"});
+            this.CBCategoria.Location = new System.Drawing.Point(688, 167);
+            this.CBCategoria.Name = "CBCategoria";
+            this.CBCategoria.Size = new System.Drawing.Size(121, 24);
+            this.CBCategoria.TabIndex = 30;
+            // 
             // UC_Productos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(158)))), ((int)(((byte)(182)))), ((int)(((byte)(211)))));
+            this.Controls.Add(this.TBBuscador);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.CBCategoria);
             this.Controls.Add(this.LClase);
@@ -447,7 +460,6 @@
         private System.Windows.Forms.Label LTalle;
         private System.Windows.Forms.ComboBox CBTalle;
         private System.Windows.Forms.Label LClase;
-        private System.Windows.Forms.ComboBox CBCategoria;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridViewTextBoxColumn CNombre;
         private System.Windows.Forms.DataGridViewTextBoxColumn CPrecio;
@@ -456,5 +468,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CEdicion;
         private System.Windows.Forms.DataGridViewImageColumn CImagen;
         private System.Windows.Forms.DataGridViewTextBoxColumn CActivo;
+        private System.Windows.Forms.TextBox TBBuscador;
+        private System.Windows.Forms.ComboBox CBCategoria;
     }
 }

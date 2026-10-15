@@ -16,7 +16,6 @@ namespace Proyecto_Taller_2
     public partial class UC_Productos : UserControl
     {
         private List<Producto> listaProductosGlobal = new List<Producto>();
-        private int idProductoSeleccionado = 0;
         public UC_Productos()
         {
             InitializeComponent();
@@ -47,7 +46,52 @@ namespace Proyecto_Taller_2
 
         private void UC_Productos_Load(object sender, EventArgs e)
         {
-            cargarProductosEnGrilla();
+            DGVProductos.DefaultCellStyle.ForeColor = Color.Black;
+            CargarProductosEnGrilla();
+        }
+
+        private void CargarProductosEnGrilla()
+        {
+            try
+            {
+                ProductoNegocio negocio = new ProductoNegocio();
+                listaProductosGlobal = negocio.ListarTodosLosProductos();
+                AplicarFiltros();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar productos: " + ex.Message);
+            }
+        }
+        private void AplicarFiltros()
+        {
+            if (listaProductosGlobal == null || listaProductosGlobal.Count == 0) return;
+
+            // Forzamos la memoria creando una lista real
+            List<Producto> listaFiltrada = listaProductosGlobal.ToList();
+
+            // B. FILTRO POR TEXTO DINÁMICO
+            string textoBusqueda = TBBuscador.Text.Trim();
+            if (!string.IsNullOrEmpty(textoBusqueda))
+            {
+                listaFiltrada = listaFiltrada.Where(p =>
+                    (p.nombre != null && p.nombre.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.descripcion != null && p.descripcion.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (p.talle != null && p.talle.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0)
+                ).ToList();
+            }
+
+            // C. ASIGNAR A LA GRILLA
+            DGVProductos.DataSource = null;
+            DGVProductos.DataSource = listaFiltrada;
+        }
+        private void TBBuscador_TextChanged(object sender, EventArgs e)
+        {
+            AplicarFiltros();
+        }
+        private void CBFiltroEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AplicarFiltros();
         }
 
         private void LPrecio_Click(object sender, EventArgs e)
@@ -164,46 +208,46 @@ namespace Proyecto_Taller_2
 
         }
 
-        private void cargarProductosEnGrilla()
+        private void BtnAgregar_Click(object sender, EventArgs e)
         {
             try
             {
-                DGVProductos.AutoGenerateColumns = false;
+                Producto producto = new Producto
+                {
+                    nombre = TBNombre.Text.Trim(),
+
+                    descripcion = TBDescripcion.Text.Trim(),
+
+                    precio = NUDCosto.Value,
+                    stock = (int)NUDCantidad.Value,
+
+
+                    talle = CBTalle.Text,
+
+                    edicion = "",
+
+                    id_categoria = Convert.ToInt32(CBCategoria.SelectedValue),
+
+                
+                    url_imagen = rutaImagen
+                };
+
+                // Instanciamos la capa de negocio y guardamos
                 ProductoNegocio negocio = new ProductoNegocio();
 
-                List<Producto> listaCompleta = negocio.ListarTodosLosProductos();
-                List<Producto> listaFiltrada = listaProductosGlobal.ToList();
+                if (negocio.InsertarProducto(producto))
+                {
+                    MessageBox.Show("Producto agregado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                //string filtro = CBFiltro.Text;
+                    // Recargamos la grilla para ver el nuevo producto
+                    CargarProductosEnGrilla();
 
-                //if (filtro == "Activos")
-                //{
-                //    listaFiltrada = listaCompleta.Where(u => !u.fecha_baja.HasValue).ToList();
-                //}
-                //else if (filtro == "Inactivos")
-                //{
-                //    listaFiltrada = listaCompleta.Where(u => u.fecha_baja.HasValue).ToList();
-                //}
-                //else
-                //{
-                //    listaFiltrada = listaCompleta;
-                //}
-                //string textoBusqueda = TBBuscador.Text.Trim();
-                //if (!string.IsNullOrEmpty(textoBusqueda))
-                //{
-                //    listaFiltrada = listaFiltrada.Where(u =>
-                //        (u.nombre != null && u.nombre.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                //        (u.apellido != null && u.apellido.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                //        (u.correo != null && u.correo.IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0)
-                //    ).ToList(); // <-- ¡El secreto está aquí! Ejecuta el filtro de texto inmediatamente
-                //}
-                //DGVUsuarios.DataSource = null;
-                //DGVUsuarios.DataSource = listaFiltrada;
-                DGVProductos.DataSource = listaCompleta;
+                    // Opcional: Crear un método LimpiarCampos() para vaciar los TextBox después de guardar
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar la grilla de usuarios: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al intentar guardar el producto: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using MySqlConnector;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MySqlConnector;
 using Proyecto_Taller_2.Entidades;
+using System;
+using System.Collections.Generic;
 
 namespace Proyecto_Taller_2.Datos
 {
     internal class ProductoDatos
     {
         private string connectionString = "Server=localhost;Port=33060;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";
+
         public List<Producto> ObtenerTodosLosProductos()
         {
             List<Producto> lista = new List<Producto>();
-
             using (MySqlConnection conexion = new MySqlConnection(connectionString))
             {
-                // 1. Agregamos 'u.password' al SELECT y usamos LEFT JOIN por mayor seguridad
-                string query = @"SELECT p.id_producto, p.nombre, p.descripcion, p.stock, p.precio, p.talle, p.edicion, p.url_imagen, p.fecha_baja, p.id_categoria FROM producto AS p";
+                string query = @"SELECT id_producto, nombre, descripcion, stock, precio, talle, edicion, url_imagen, fecha_baja, id_categoria FROM producto";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, conexion))
                 {
@@ -36,8 +32,9 @@ namespace Proyecto_Taller_2.Datos
                                 precio = Convert.ToDecimal(reader["precio"]),
                                 talle = reader["talle"].ToString(),
                                 edicion = reader["edicion"].ToString(),
-                                url_imagen = reader["telefono"].ToString(),
-                                fecha_baja = reader["fecha_baja"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["fecha_baja"])
+                                url_imagen = reader["url_imagen"] == DBNull.Value ? null : reader["url_imagen"].ToString(),
+                                fecha_baja = reader["fecha_baja"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["fecha_baja"]),
+                                id_categoria = Convert.ToInt32(reader["id_categoria"])
                             };
                             lista.Add(producto);
                         }
@@ -46,85 +43,111 @@ namespace Proyecto_Taller_2.Datos
             }
             return lista;
         }
-    }
 
-    public bool InsertarProducto(Producto producto)
-    {
-        using (MySqlConnection conexion = new MySqlConnection(connectionString))
+        public bool InsertarProducto(Producto producto)
         {
-            conexion.Open();
-
-            using (MySqlTransaction transaccion = conexion.BeginTransaction())
+            using (MySqlConnection conexion = new MySqlConnection(connectionString))
             {
-                try
+                conexion.Open();
+                using (MySqlTransaction transaccion = conexion.BeginTransaction())
                 {
-
-                    // ---INSERTAR  producto ---
-                    string query = @"INSERT INTO producto (nombre, descripcion, precio, stock, talle, edicion, url_imagen, id_categoria) 
-                                            VALUES (@nom, @desc, @pre, @stock, @tal, @edic, @img, @idCat);";
-                    -
-                    using (MySqlCommand cmdProd = new MySqlCommand(query, conexion, transaccion))
+                    try
                     {
-                        cmdProd.Parameters.AddWithValue("@nom", producto.nombre);
-                        cmdProd.Parameters.AddWithValue("@desc", producto.descripcion);
-                        cmdProd.Parameters.AddWithValue("@pre", producto.precio);
-                        cmdProd.Parameters.AddWithValue("@stock", producto.stock);
-                        cmdProd.Parameters.AddWithValue("@tal", producto.talle);
-                        cmdProd.Parameters.AddWithValue("@edic", producto.edicion);
-                        cmdProd.Parameters.AddWithValue("@img", producto.url_imagen);
-                        cmdProd.Parameters.AddWithValue("@idCat", producto.id_categoria)
+                        string query = @"INSERT INTO producto (nombre, descripcion, precio, stock, talle, edicion, url_imagen, id_categoria) 
+                                         VALUES (@nom, @desc, @pre, @stock, @tal, @edic, @img, @idCat);";
 
-                        cmdProd.ExecuteNonQuery();
+                        using (MySqlCommand cmdProd = new MySqlCommand(query, conexion, transaccion))
+                        {
+                            cmdProd.Parameters.AddWithValue("@nom", producto.nombre);
+                            cmdProd.Parameters.AddWithValue("@desc", producto.descripcion);
+                            cmdProd.Parameters.AddWithValue("@pre", producto.precio);
+                            cmdProd.Parameters.AddWithValue("@stock", producto.stock);
+                            cmdProd.Parameters.AddWithValue("@tal", producto.talle);
+                            cmdProd.Parameters.AddWithValue("@edic", producto.edicion);
+                            cmdProd.Parameters.AddWithValue("@img", producto.url_imagen ?? (object)DBNull.Value);
+                            cmdProd.Parameters.AddWithValue("@idCat", producto.id_categoria);
+
+                            cmdProd.ExecuteNonQuery();
+                        }
+                        transaccion.Commit();
+                        return true;
                     }
-
-                    transaccion.Commit();
-                    return true; // Todo salió bien
-                }
-                catch (Exception)
-                {
-                    transaccion.Rollback();
-                    throw; // ¡Importante! Lanzamos el error para que la capa de Presentación lo atrape y muestre el MessageBox
+                    catch (Exception)
+                    {
+                        transaccion.Rollback();
+                        throw;
+                    }
                 }
             }
         }
-    }
 
-    public bool ActualizarProducto(Producto producto)
-    {
-        using (MySqlConnection conexion = new MySqlConnection(connectionString))
+        public bool ActualizarProducto(Producto producto)
         {
-            conexion.Open();
-            using (MySqlTransaction transaccion = conexion.BeginTransaction())
+            using (MySqlConnection conexion = new MySqlConnection(connectionString))
             {
-                try
+                conexion.Open();
+                using (MySqlTransaction transaccion = conexion.BeginTransaction())
                 {
-
-
-                    // --- ACTUALIZAR  producto ---
-                    string queryProd = @"UPDATE producto 
-                                    SET nombre = @nom, descripcion = @desc, stock = @stock, precio = @prec, talle = @tal, edicion = @edi, url_imagen = @img, id_categoria = @idCat";
-
-                    using (MySqlCommand cmdProd = new MySqlCommand(queryProd, conexion, transaccion))
+                    try
                     {
-                        cmdProd.Parameters.AddWithValue("@nom", producto.nombre);
-                        cmdProd.Parameters.AddWithValue("@desc", producto.descripcion);
-                        cmdProd.Parameters.AddWithValue("@stock", producto.stock);
-                        cmdProd.Parameters.AddWithValue("prec", producto.precio);
-                        cmdProd.Parameters.AddWithValue("@tal", producto.talle);
-                        cmdProd.Parameters.AddWithValue("@edi", producto.edicion);
-                        cmdProd.Parameters.AddWithValue("@img", producto.url_imagen);
-                        cmdProd.Parameters.AddWithValue("@idCat", producto.id_categoria);
+                        // CORRECCIÓN CRÍTICA: Se agregó el WHERE id_producto = @idProd
+                        string queryProd = @"UPDATE producto 
+                                             SET nombre = @nom, descripcion = @desc, stock = @stock, 
+                                                 precio = @prec, talle = @tal, edicion = @edi, 
+                                                 url_imagen = @img, id_categoria = @idCat 
+                                             WHERE id_producto = @idProd";
 
-                        cmdProd.ExecuteNonQuery();
+                        using (MySqlCommand cmdProd = new MySqlCommand(queryProd, conexion, transaccion))
+                        {
+                            cmdProd.Parameters.AddWithValue("@nom", producto.nombre);
+                            cmdProd.Parameters.AddWithValue("@desc", producto.descripcion);
+                            cmdProd.Parameters.AddWithValue("@stock", producto.stock);
+                            cmdProd.Parameters.AddWithValue("@prec", producto.precio); // CORRECCIÓN: Faltaba el @
+                            cmdProd.Parameters.AddWithValue("@tal", producto.talle);
+                            cmdProd.Parameters.AddWithValue("@edi", producto.edicion);
+                            cmdProd.Parameters.AddWithValue("@img", producto.url_imagen ?? (object)DBNull.Value);
+                            cmdProd.Parameters.AddWithValue("@idCat", producto.id_categoria);
+                            cmdProd.Parameters.AddWithValue("@idProd", producto.id_producto);
+
+                            cmdProd.ExecuteNonQuery();
+                        }
+                        transaccion.Commit();
+                        return true;
                     }
-
-                    transaccion.Commit();
-                    return true;
+                    catch (Exception)
+                    {
+                        transaccion.Rollback();
+                        throw;
+                    }
                 }
-                catch (Exception)
+            }
+        }
+
+        // --- MÉTODOS NUEVOS PARA BAJA Y REACTIVACIÓN LÓGICA ---
+        public void BajaProducto(int idProducto)
+        {
+            using (MySqlConnection conexion = new MySqlConnection(connectionString))
+            {
+                string query = "UPDATE producto SET fecha_baja = NOW() WHERE id_producto = @id;";
+                using (MySqlCommand cmd = new MySqlCommand(query, conexion))
                 {
-                    transaccion.Rollback();
-                    throw;
+                    cmd.Parameters.AddWithValue("@id", idProducto);
+                    conexion.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void ActivarProducto(int idProducto)
+        {
+            using (MySqlConnection conexion = new MySqlConnection(connectionString))
+            {
+                string query = "UPDATE producto SET fecha_baja = NULL WHERE id_producto = @id;";
+                using (MySqlCommand cmd = new MySqlCommand(query, conexion))
+                {
+                    cmd.Parameters.AddWithValue("@id", idProducto);
+                    conexion.Open();
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
