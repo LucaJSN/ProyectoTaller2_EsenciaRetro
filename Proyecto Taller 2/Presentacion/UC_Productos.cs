@@ -109,7 +109,7 @@ namespace Proyecto_Taller_2
 
         private void UC_Productos_Load(object sender, EventArgs e)
         {
-            // Configuración de estilos y colores para asegurar legibilidad en el DataGridView
+            // Configuración de estilos y colores para asegurar legibilidad y uniformidad con las demás vistas
             DGVProductos.EnableHeadersVisualStyles = false;
             DGVProductos.BackgroundColor = Color.White;
             DGVProductos.ForeColor = Color.FromArgb(44, 62, 80); // Gris oscuro corporativo
@@ -117,11 +117,11 @@ namespace Proyecto_Taller_2
             // Estilo para las celdas de datos
             DGVProductos.DefaultCellStyle.BackColor = Color.White;
             DGVProductos.DefaultCellStyle.ForeColor = Color.FromArgb(44, 62, 80);
-            DGVProductos.DefaultCellStyle.SelectionBackColor = Color.FromArgb(52, 152, 219);
+            DGVProductos.DefaultCellStyle.SelectionBackColor = Color.FromArgb(52, 152, 219); // Azul moderno de selección
             DGVProductos.DefaultCellStyle.SelectionForeColor = Color.White;
 
             // Estilo para la cabecera (Headers)
-            DGVProductos.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(52, 73, 94);
+            DGVProductos.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(52, 73, 94); // Azul oscuro institucional
             DGVProductos.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             DGVProductos.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
 
@@ -235,6 +235,21 @@ namespace Proyecto_Taller_2
         }
 
         private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LNombre_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void LDescripcion_Click(object sender, EventArgs e)
         {
 
         }

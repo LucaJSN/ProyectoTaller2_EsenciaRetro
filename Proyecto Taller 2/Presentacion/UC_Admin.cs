@@ -44,9 +44,9 @@ namespace Proyecto_Taller_2
                     }
 
                     DialogResult resultado = MessageBox.Show("¿Estás seguro de dar de baja a este usuario?",
-                                                            "Confirmar baja",
-                                                            MessageBoxButtons.YesNo,
-                                                            MessageBoxIcon.Question);
+                                                "Confirmar baja",
+                                                MessageBoxButtons.YesNo,
+                                                MessageBoxIcon.Question);
 
                     if (resultado == DialogResult.Yes)
                     {
@@ -132,7 +132,7 @@ namespace Proyecto_Taller_2
                     }
                 }
             }
-        }   
+        }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -163,8 +163,26 @@ namespace Proyecto_Taller_2
 
         private void UC_Admin_Load(object sender, EventArgs e)
         {
-            // Forzar el texto en negro para que sea visible
-            DGVUsuarios.DefaultCellStyle.ForeColor = Color.Black;
+            // --- CONFIGURACIÓN DE ESTILOS DEL DATAGRIDVIEW ---
+            DGVUsuarios.EnableHeadersVisualStyles = false;
+            DGVUsuarios.BackgroundColor = Color.White;
+            DGVUsuarios.ForeColor = Color.FromArgb(44, 62, 80); // Gris oscuro corporativo
+
+            // Estilo para las celdas de datos
+            DGVUsuarios.DefaultCellStyle.BackColor = Color.White;
+            DGVUsuarios.DefaultCellStyle.ForeColor = Color.FromArgb(44, 62, 80);
+            DGVUsuarios.DefaultCellStyle.SelectionBackColor = Color.FromArgb(52, 152, 219); // Azul moderno al seleccionar
+            DGVUsuarios.DefaultCellStyle.SelectionForeColor = Color.White;
+
+            // Estilo para la cabecera (Headers)
+            DGVUsuarios.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(52, 73, 94); // Azul oscuro institucional
+            DGVUsuarios.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            DGVUsuarios.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+
+            // Filas alternadas para mayor prolijidad visual
+            DGVUsuarios.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 249, 250);
+            // -------------------------------------------------
+
             CargarRolesEnComboBox();
             CargarUsuariosEnGrilla();
         }
@@ -241,7 +259,7 @@ namespace Proyecto_Taller_2
                     apellido = TBApellido.Text.Trim(),
                     correo = TBCorreo.Text.Trim(),
                     telefono = TBTelefono.Text.Trim(),
-                    id_rol= Convert.ToInt32(CBRol.SelectedValue),
+                    id_rol = Convert.ToInt32(CBRol.SelectedValue),
                     password = TBContraseña.Text.Trim()
                 };
 
@@ -273,9 +291,9 @@ namespace Proyecto_Taller_2
                     usuario.id_direccion = idDireccionSeleccionada; //Y también el ID de direccion
 
                     DialogResult resultado = MessageBox.Show("¿Estás seguro que deseas guardar los cambios?",
-                                                            "Confirmar edición",
-                                                            MessageBoxButtons.YesNo,
-                                                            MessageBoxIcon.Question);
+                                                "Confirmar edición",
+                                                MessageBoxButtons.YesNo,
+                                                MessageBoxIcon.Question);
 
                     if (resultado == DialogResult.Yes)
                     {
@@ -299,7 +317,7 @@ namespace Proyecto_Taller_2
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Atencion", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -362,9 +380,9 @@ namespace Proyecto_Taller_2
             if (!Regex.IsMatch(TBCorreo.Text, patron))
             {
                 MessageBox.Show("El formato del correo es inválido. Debe ser ejemplo@dominio.com",
-                                "Correo Inválido",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Warning);
+                                        "Correo Inválido",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Warning);
 
                 TBCorreo.Focus(); // Opcional: Mantiene el cursor en el TextBox hasta que lo corrija
             }
@@ -372,7 +390,7 @@ namespace Proyecto_Taller_2
 
         private void TBProvincia_TextChanged(object sender, EventArgs e)
         {
-            
+
         }
         private void TBProvincia_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -498,6 +516,7 @@ namespace Proyecto_Taller_2
 
             // Devolvemos la variable global a su estado inicial de registro
             idUsuarioSeleccionado = 0;
+            idDireccionSeleccionada = 0;
         }
 
         private void CBFiltro_SelectedIndexChanged(object sender, EventArgs e)
