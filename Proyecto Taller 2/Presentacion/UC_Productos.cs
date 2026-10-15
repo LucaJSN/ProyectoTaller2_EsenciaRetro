@@ -15,6 +15,7 @@ namespace Proyecto_Taller_2
 {
     public partial class UC_Productos : UserControl
     {
+        private string rutaImagen = null;
         private List<Producto> listaProductosGlobal = new List<Producto>();
         public UC_Productos()
         {
@@ -46,8 +47,28 @@ namespace Proyecto_Taller_2
 
         private void UC_Productos_Load(object sender, EventArgs e)
         {
+            try
+            {
+
+                CategoriaNegocio negocioCat = new CategoriaNegocio();
+
+                // Asignamos la lista de la BD al ComboBox
+                CBCategoria.DataSource = negocioCat.ObtenerTodasLasCategorias();
+
+                // Le decimos qué propiedad de la clase Categoria debe mostrar visualmente
+                CBCategoria.DisplayMember = "nombre";
+
+                // Le decimos qué propiedad usar como valor interno (el que falla ahora)
+                CBCategoria.ValueMember = "id_categoria";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar las categorías: " + ex.Message);
+            }
+
             DGVProductos.DefaultCellStyle.ForeColor = Color.Black;
             CargarProductosEnGrilla();
+
         }
 
         private void CargarProductosEnGrilla()
@@ -166,14 +187,33 @@ namespace Proyecto_Taller_2
         {
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
-                ofd.Filter = "Archivos de Imagen|*.jpg;*.jpeg;*.png;*.bmp";
+                ofd.Filter = "Archivos de imagen|*.jpg;*.jpeg;*.png;*.bmp";
+
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    // Guardar la ruta en nuestra variable
-                    rutaImagenSeleccionada = ofd.FileName;
+                    rutaImagen = ofd.FileName;
 
-                    // Cargar la imagen usando la ruta
-                    pictureBox1.ImageLocation = rutaImagenSeleccionada;
+                    try
+                    {
+                        // Usar FileStream es más seguro y no bloquea el archivo original en el disco
+                        using (var stream = new System.IO.FileStream(rutaImagen, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+                        {
+                            pictureBox1.Image = System.Drawing.Image.FromStream(stream);
+                            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                        }
+                    }
+                    catch (OutOfMemoryException)
+                    {
+                        // Si el formato es inválido o no soportado, atrapamos el error engañoso aquí
+                        MessageBox.Show("El archivo seleccionado no es una imagen válida o el formato no es compatible con el sistema.", "Formato inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        rutaImagen = null; // Limpiamos la variable para que no guarde basura en la BD
+                        pictureBox1.Image = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Ocurrió un error al cargar la imagen: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        rutaImagen = null;
+                    }
                 }
             }
         }
