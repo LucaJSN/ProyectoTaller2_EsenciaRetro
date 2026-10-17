@@ -46,19 +46,18 @@
             this.NUDVenta = new System.Windows.Forms.NumericUpDown();
             this.NUDCantidad = new System.Windows.Forms.NumericUpDown();
             this.DGVProductos = new System.Windows.Forms.DataGridView();
-            this.CNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CPrecio = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CStock = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CTalle = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CEdicion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CImagen = new System.Windows.Forms.DataGridViewImageColumn();
-            this.CActivo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LTalle = new System.Windows.Forms.Label();
             this.CBTalle = new System.Windows.Forms.ComboBox();
             this.LClase = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.TBBuscador = new System.Windows.Forms.TextBox();
             this.CBCategoria = new System.Windows.Forms.ComboBox();
+            this.CNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CPrecio = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CStock = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CTalle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CEdicion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CImagen = new System.Windows.Forms.DataGridViewImageColumn();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUDCosto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUDVenta)).BeginInit();
@@ -259,74 +258,18 @@
             this.CStock,
             this.CTalle,
             this.CEdicion,
-            this.CImagen,
-            this.CActivo});
+            this.CImagen});
             this.DGVProductos.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.DGVProductos.GridColor = System.Drawing.Color.Gray;
-            this.DGVProductos.Location = new System.Drawing.Point(0, 670);
+            this.DGVProductos.Location = new System.Drawing.Point(0, 685);
             this.DGVProductos.Name = "DGVProductos";
             this.DGVProductos.ReadOnly = true;
             this.DGVProductos.RowHeadersWidth = 51;
-            this.DGVProductos.RowTemplate.Height = 24;
-            this.DGVProductos.Size = new System.Drawing.Size(1464, 155);
+            this.DGVProductos.RowTemplate.Height = 100;
+            this.DGVProductos.Size = new System.Drawing.Size(1464, 140);
             this.DGVProductos.TabIndex = 25;
             this.DGVProductos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGVProductos_CellContentClick);
-            // 
-            // CNombre
-            // 
-            this.CNombre.HeaderText = "Nombre";
-            this.CNombre.MinimumWidth = 6;
-            this.CNombre.Name = "CNombre";
-            this.CNombre.ReadOnly = true;
-            this.CNombre.Width = 125;
-            // 
-            // CPrecio
-            // 
-            this.CPrecio.HeaderText = "Precio";
-            this.CPrecio.MinimumWidth = 6;
-            this.CPrecio.Name = "CPrecio";
-            this.CPrecio.ReadOnly = true;
-            this.CPrecio.Width = 125;
-            // 
-            // CStock
-            // 
-            this.CStock.HeaderText = "Stock";
-            this.CStock.MinimumWidth = 6;
-            this.CStock.Name = "CStock";
-            this.CStock.ReadOnly = true;
-            this.CStock.Width = 125;
-            // 
-            // CTalle
-            // 
-            this.CTalle.HeaderText = "Talle";
-            this.CTalle.MinimumWidth = 6;
-            this.CTalle.Name = "CTalle";
-            this.CTalle.ReadOnly = true;
-            this.CTalle.Width = 125;
-            // 
-            // CEdicion
-            // 
-            this.CEdicion.HeaderText = "Edicion";
-            this.CEdicion.MinimumWidth = 6;
-            this.CEdicion.Name = "CEdicion";
-            this.CEdicion.ReadOnly = true;
-            this.CEdicion.Width = 125;
-            // 
-            // CImagen
-            // 
-            this.CImagen.HeaderText = "Imagen";
-            this.CImagen.MinimumWidth = 6;
-            this.CImagen.Name = "CImagen";
-            this.CImagen.ReadOnly = true;
-            this.CImagen.Width = 125;
-            // 
-            // CActivo
-            // 
-            this.CActivo.HeaderText = "Activo";
-            this.CActivo.MinimumWidth = 6;
-            this.CActivo.Name = "CActivo";
-            this.CActivo.ReadOnly = true;
-            this.CActivo.Width = 125;
+            this.DGVProductos.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DGVProductos_CellFormatting);
             // 
             // LTalle
             // 
@@ -399,6 +342,60 @@
             this.CBCategoria.Size = new System.Drawing.Size(121, 24);
             this.CBCategoria.TabIndex = 30;
             // 
+            // CNombre
+            // 
+            this.CNombre.DataPropertyName = "nombre";
+            this.CNombre.HeaderText = "Nombre";
+            this.CNombre.MinimumWidth = 6;
+            this.CNombre.Name = "CNombre";
+            this.CNombre.ReadOnly = true;
+            this.CNombre.Width = 125;
+            // 
+            // CPrecio
+            // 
+            this.CPrecio.DataPropertyName = "precio";
+            this.CPrecio.HeaderText = "Precio";
+            this.CPrecio.MinimumWidth = 6;
+            this.CPrecio.Name = "CPrecio";
+            this.CPrecio.ReadOnly = true;
+            this.CPrecio.Width = 125;
+            // 
+            // CStock
+            // 
+            this.CStock.DataPropertyName = "stock";
+            this.CStock.HeaderText = "Stock";
+            this.CStock.MinimumWidth = 6;
+            this.CStock.Name = "CStock";
+            this.CStock.ReadOnly = true;
+            this.CStock.Width = 125;
+            // 
+            // CTalle
+            // 
+            this.CTalle.DataPropertyName = "talle";
+            this.CTalle.HeaderText = "Talle";
+            this.CTalle.MinimumWidth = 6;
+            this.CTalle.Name = "CTalle";
+            this.CTalle.ReadOnly = true;
+            this.CTalle.Width = 125;
+            // 
+            // CEdicion
+            // 
+            this.CEdicion.DataPropertyName = "edicion";
+            this.CEdicion.HeaderText = "Edicion";
+            this.CEdicion.MinimumWidth = 6;
+            this.CEdicion.Name = "CEdicion";
+            this.CEdicion.ReadOnly = true;
+            this.CEdicion.Width = 125;
+            // 
+            // CImagen
+            // 
+            this.CImagen.HeaderText = "Imagen";
+            this.CImagen.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
+            this.CImagen.MinimumWidth = 6;
+            this.CImagen.Name = "CImagen";
+            this.CImagen.ReadOnly = true;
+            this.CImagen.Width = 125;
+            // 
             // UC_Productos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -461,14 +458,13 @@
         private System.Windows.Forms.ComboBox CBTalle;
         private System.Windows.Forms.Label LClase;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox TBBuscador;
+        private System.Windows.Forms.ComboBox CBCategoria;
         private System.Windows.Forms.DataGridViewTextBoxColumn CNombre;
         private System.Windows.Forms.DataGridViewTextBoxColumn CPrecio;
         private System.Windows.Forms.DataGridViewTextBoxColumn CStock;
         private System.Windows.Forms.DataGridViewTextBoxColumn CTalle;
         private System.Windows.Forms.DataGridViewTextBoxColumn CEdicion;
         private System.Windows.Forms.DataGridViewImageColumn CImagen;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CActivo;
-        private System.Windows.Forms.TextBox TBBuscador;
-        private System.Windows.Forms.ComboBox CBCategoria;
     }
 }

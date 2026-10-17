@@ -223,25 +223,7 @@ namespace Proyecto_Taller_2
             LimpiarFormulario();
         }
 
-        private void BtnConexion_Click(object sender, EventArgs e)
-        {
-            string connectionString =
-            "Server=127.0.0.1;Port=3306;Database=esenciaretro;Uid=root;Pwd=puntoybarraroot;";
 
-            try
-            {
-                using (MySqlConnection conexion = new MySqlConnection(connectionString))
-                {
-                    conexion.Open();
-
-                    MessageBox.Show("¡Conexión exitosa!");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error de conexión: " + ex.Message);
-            }
-        }
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -290,5 +272,42 @@ namespace Proyecto_Taller_2
                 MessageBox.Show("Error al intentar guardar el producto: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-    }
+
+        private void DGVProductos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            // 1. Verificamos que estemos dibujando la columna de la imagen
+            // REEMPLAZA "NombreDeTuColumnaImagen" por el Name real de tu columna en el DataGridView
+            if (DGVProductos.Columns[e.ColumnIndex].Name == "CImagen")
+                    {
+                        // 2. Obtenemos el producto de la fila que se está dibujando en este momento
+                        Producto prod = (Producto)DGVProductos.Rows[e.RowIndex].DataBoundItem;
+
+                        // 3. Verificamos que el producto exista y tenga una URL guardada
+                        if (prod != null && !string.IsNullOrEmpty(prod.url_imagen))
+                        {
+                            try
+                            {
+                                // Cargamos la imagen usando FileStream (igual que hicimos en el botón) 
+                                // para evitar bloquear el archivo y prevenir errores de memoria
+                                using (var stream = new System.IO.FileStream(prod.url_imagen, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+                                {
+                                    // Asignamos la imagen real al valor de la celda
+                                    e.Value = System.Drawing.Image.FromStream(stream);
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                // Si la imagen fue borrada del disco o hay un error, dejamos la celda vacía
+                                // (Opcional: aquí podrías poner una imagen genérica de "Imagen no encontrada")
+                                e.Value = null;
+                            }
+                        }
+                        else
+                        {
+                            // Si el producto no tiene foto, no mostramos nada
+                            e.Value = null;
+                        }
+                    }
+                }
+            }
 }
