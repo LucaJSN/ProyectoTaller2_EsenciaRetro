@@ -46,12 +46,6 @@
             this.NUDVenta = new System.Windows.Forms.NumericUpDown();
             this.NUDCantidad = new System.Windows.Forms.NumericUpDown();
             this.DGVProductos = new System.Windows.Forms.DataGridView();
-            this.LTalle = new System.Windows.Forms.Label();
-            this.CBTalle = new System.Windows.Forms.ComboBox();
-            this.LClase = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.TBBuscador = new System.Windows.Forms.TextBox();
-            this.CBCategoria = new System.Windows.Forms.ComboBox();
             this.CNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CPrecio = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -62,6 +56,12 @@
             this.CEditar = new System.Windows.Forms.DataGridViewButtonColumn();
             this.CEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
             this.CReactivar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.LTalle = new System.Windows.Forms.Label();
+            this.CBTalle = new System.Windows.Forms.ComboBox();
+            this.LClase = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.TBBuscador = new System.Windows.Forms.TextBox();
+            this.CBCategoria = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUDCosto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUDVenta)).BeginInit();
@@ -279,77 +279,6 @@
             this.DGVProductos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGVProductos_CellContentClick);
             this.DGVProductos.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DGVProductos_CellFormatting);
             // 
-            // LTalle
-            // 
-            this.LTalle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.LTalle.AutoSize = true;
-            this.LTalle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LTalle.Location = new System.Drawing.Point(496, 68);
-            this.LTalle.Name = "LTalle";
-            this.LTalle.Size = new System.Drawing.Size(55, 25);
-            this.LTalle.TabIndex = 27;
-            this.LTalle.Text = "Talle";
-            // 
-            // CBTalle
-            // 
-            this.CBTalle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.CBTalle.FormattingEnabled = true;
-            this.CBTalle.Items.AddRange(new object[] {
-            "S",
-            "M",
-            "L",
-            "XL",
-            "XXL"});
-            this.CBTalle.Location = new System.Drawing.Point(689, 70);
-            this.CBTalle.Name = "CBTalle";
-            this.CBTalle.Size = new System.Drawing.Size(120, 24);
-            this.CBTalle.TabIndex = 28;
-            // 
-            // LClase
-            // 
-            this.LClase.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.LClase.AutoSize = true;
-            this.LClase.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LClase.Location = new System.Drawing.Point(496, 167);
-            this.LClase.Name = "LClase";
-            this.LClase.Size = new System.Drawing.Size(97, 25);
-            this.LClase.TabIndex = 29;
-            this.LClase.Text = "Categoria";
-            this.LClase.Click += new System.EventHandler(this.label1_Click);
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(496, 366);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 25);
-            this.label1.TabIndex = 32;
-            this.label1.Text = "Imagen";
-            // 
-            // TBBuscador
-            // 
-            this.TBBuscador.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TBBuscador.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TBBuscador.Location = new System.Drawing.Point(122, 601);
-            this.TBBuscador.Name = "TBBuscador";
-            this.TBBuscador.Size = new System.Drawing.Size(222, 28);
-            this.TBBuscador.TabIndex = 34;
-            // 
-            // CBCategoria
-            // 
-            this.CBCategoria.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.CBCategoria.FormattingEnabled = true;
-            this.CBCategoria.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3"});
-            this.CBCategoria.Location = new System.Drawing.Point(688, 167);
-            this.CBCategoria.Name = "CBCategoria";
-            this.CBCategoria.Size = new System.Drawing.Size(121, 24);
-            this.CBCategoria.TabIndex = 30;
-            // 
             // CNombre
             // 
             this.CNombre.DataPropertyName = "nombre";
@@ -438,6 +367,77 @@
             this.CReactivar.Name = "CReactivar";
             this.CReactivar.ReadOnly = true;
             this.CReactivar.Width = 125;
+            // 
+            // LTalle
+            // 
+            this.LTalle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.LTalle.AutoSize = true;
+            this.LTalle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LTalle.Location = new System.Drawing.Point(496, 68);
+            this.LTalle.Name = "LTalle";
+            this.LTalle.Size = new System.Drawing.Size(55, 25);
+            this.LTalle.TabIndex = 27;
+            this.LTalle.Text = "Talle";
+            // 
+            // CBTalle
+            // 
+            this.CBTalle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.CBTalle.FormattingEnabled = true;
+            this.CBTalle.Items.AddRange(new object[] {
+            "S",
+            "M",
+            "L",
+            "XL",
+            "XXL"});
+            this.CBTalle.Location = new System.Drawing.Point(689, 70);
+            this.CBTalle.Name = "CBTalle";
+            this.CBTalle.Size = new System.Drawing.Size(120, 24);
+            this.CBTalle.TabIndex = 28;
+            // 
+            // LClase
+            // 
+            this.LClase.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.LClase.AutoSize = true;
+            this.LClase.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LClase.Location = new System.Drawing.Point(496, 167);
+            this.LClase.Name = "LClase";
+            this.LClase.Size = new System.Drawing.Size(97, 25);
+            this.LClase.TabIndex = 29;
+            this.LClase.Text = "Categoria";
+            this.LClase.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(496, 366);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(77, 25);
+            this.label1.TabIndex = 32;
+            this.label1.Text = "Imagen";
+            // 
+            // TBBuscador
+            // 
+            this.TBBuscador.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.TBBuscador.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TBBuscador.Location = new System.Drawing.Point(122, 601);
+            this.TBBuscador.Name = "TBBuscador";
+            this.TBBuscador.Size = new System.Drawing.Size(222, 28);
+            this.TBBuscador.TabIndex = 34;
+            // 
+            // CBCategoria
+            // 
+            this.CBCategoria.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.CBCategoria.FormattingEnabled = true;
+            this.CBCategoria.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3"});
+            this.CBCategoria.Location = new System.Drawing.Point(688, 167);
+            this.CBCategoria.Name = "CBCategoria";
+            this.CBCategoria.Size = new System.Drawing.Size(121, 24);
+            this.CBCategoria.TabIndex = 30;
             // 
             // UC_Productos
             // 
