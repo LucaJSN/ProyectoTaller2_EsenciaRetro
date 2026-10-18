@@ -20,8 +20,6 @@ namespace Proyecto_Taller_2.Entidades
         public DateTime fecha_modificacion { get; set; }
         public DateTime? fecha_baja { get; set; }
         public int id_categoria { get; set; }
-        public int id_detalle_venta { get; set; }
-        public int id_detalle_compra { get; set; }
 
 
         // Constructor
