@@ -124,7 +124,7 @@ namespace Proyecto_Taller_2.Datos
         }
 
         // --- MÉTODOS NUEVOS PARA BAJA Y REACTIVACIÓN LÓGICA ---
-        public void BajaProducto(int idProducto)
+        public bool BajaProducto(int idProducto)
         {
             using (MySqlConnection conexion = new MySqlConnection(connectionString))
             {
@@ -133,7 +133,8 @@ namespace Proyecto_Taller_2.Datos
                 {
                     cmd.Parameters.AddWithValue("@id", idProducto);
                     conexion.Open();
-                    cmd.ExecuteNonQuery();
+                    int filasAfectadas = cmd.ExecuteNonQuery();
+                    return filasAfectadas > 0;
                 }
             }
         }

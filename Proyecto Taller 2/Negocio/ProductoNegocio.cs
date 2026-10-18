@@ -25,9 +25,9 @@ namespace Proyecto_Taller_2.Negocio
             return datos.ActualizarProducto(producto);
         }
 
-        public void BajaProducto(int idProducto)
+        public bool BajaProducto(int idProducto)
         {
-            datos.BajaProducto(idProducto);
+            return datos.BajaProducto(idProducto);
         }
 
         public void ActivarProducto(int idProducto)

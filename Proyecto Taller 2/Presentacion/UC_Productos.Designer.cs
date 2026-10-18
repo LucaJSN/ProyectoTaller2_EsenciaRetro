@@ -53,11 +53,15 @@
             this.TBBuscador = new System.Windows.Forms.TextBox();
             this.CBCategoria = new System.Windows.Forms.ComboBox();
             this.CNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CPrecio = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CStock = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CTalle = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CEdicion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CImagen = new System.Windows.Forms.DataGridViewImageColumn();
+            this.CEditar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.CEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.CReactivar = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUDCosto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUDVenta)).BeginInit();
@@ -254,19 +258,23 @@
             this.DGVProductos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DGVProductos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.CNombre,
+            this.CID,
             this.CPrecio,
             this.CStock,
             this.CTalle,
             this.CEdicion,
-            this.CImagen});
+            this.CImagen,
+            this.CEditar,
+            this.CEliminar,
+            this.CReactivar});
             this.DGVProductos.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.DGVProductos.GridColor = System.Drawing.Color.Gray;
-            this.DGVProductos.Location = new System.Drawing.Point(0, 685);
+            this.DGVProductos.Location = new System.Drawing.Point(0, 649);
             this.DGVProductos.Name = "DGVProductos";
             this.DGVProductos.ReadOnly = true;
             this.DGVProductos.RowHeadersWidth = 51;
             this.DGVProductos.RowTemplate.Height = 100;
-            this.DGVProductos.Size = new System.Drawing.Size(1464, 140);
+            this.DGVProductos.Size = new System.Drawing.Size(1464, 176);
             this.DGVProductos.TabIndex = 25;
             this.DGVProductos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGVProductos_CellContentClick);
             this.DGVProductos.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DGVProductos_CellFormatting);
@@ -324,7 +332,7 @@
             // 
             this.TBBuscador.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TBBuscador.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TBBuscador.Location = new System.Drawing.Point(122, 636);
+            this.TBBuscador.Location = new System.Drawing.Point(122, 601);
             this.TBBuscador.Name = "TBBuscador";
             this.TBBuscador.Size = new System.Drawing.Size(222, 28);
             this.TBBuscador.TabIndex = 34;
@@ -350,6 +358,15 @@
             this.CNombre.Name = "CNombre";
             this.CNombre.ReadOnly = true;
             this.CNombre.Width = 125;
+            // 
+            // CID
+            // 
+            this.CID.DataPropertyName = "id_producto";
+            this.CID.HeaderText = "ID";
+            this.CID.MinimumWidth = 6;
+            this.CID.Name = "CID";
+            this.CID.ReadOnly = true;
+            this.CID.Width = 125;
             // 
             // CPrecio
             // 
@@ -395,6 +412,32 @@
             this.CImagen.Name = "CImagen";
             this.CImagen.ReadOnly = true;
             this.CImagen.Width = 125;
+            // 
+            // CEditar
+            // 
+            this.CEditar.HeaderText = "Editar";
+            this.CEditar.MinimumWidth = 6;
+            this.CEditar.Name = "CEditar";
+            this.CEditar.ReadOnly = true;
+            this.CEditar.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.CEditar.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.CEditar.Width = 125;
+            // 
+            // CEliminar
+            // 
+            this.CEliminar.HeaderText = "Eliminar";
+            this.CEliminar.MinimumWidth = 6;
+            this.CEliminar.Name = "CEliminar";
+            this.CEliminar.ReadOnly = true;
+            this.CEliminar.Width = 125;
+            // 
+            // CReactivar
+            // 
+            this.CReactivar.HeaderText = "Reactivar";
+            this.CReactivar.MinimumWidth = 6;
+            this.CReactivar.Name = "CReactivar";
+            this.CReactivar.ReadOnly = true;
+            this.CReactivar.Width = 125;
             // 
             // UC_Productos
             // 
@@ -461,10 +504,14 @@
         private System.Windows.Forms.TextBox TBBuscador;
         private System.Windows.Forms.ComboBox CBCategoria;
         private System.Windows.Forms.DataGridViewTextBoxColumn CNombre;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CID;
         private System.Windows.Forms.DataGridViewTextBoxColumn CPrecio;
         private System.Windows.Forms.DataGridViewTextBoxColumn CStock;
         private System.Windows.Forms.DataGridViewTextBoxColumn CTalle;
         private System.Windows.Forms.DataGridViewTextBoxColumn CEdicion;
         private System.Windows.Forms.DataGridViewImageColumn CImagen;
+        private System.Windows.Forms.DataGridViewButtonColumn CEditar;
+        private System.Windows.Forms.DataGridViewButtonColumn CEliminar;
+        private System.Windows.Forms.DataGridViewButtonColumn CReactivar;
     }
 }

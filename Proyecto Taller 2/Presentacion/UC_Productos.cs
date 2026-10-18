@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Mysqlx.Crud.Order.Types;
 
 namespace Proyecto_Taller_2
 {
@@ -17,6 +18,7 @@ namespace Proyecto_Taller_2
     {
         private string rutaImagen = null;
         private List<Producto> listaProductosGlobal = new List<Producto>();
+        private int idProductoSeleccionado = 0;
         public UC_Productos()
         {
             InitializeComponent();
@@ -29,7 +31,122 @@ namespace Proyecto_Taller_2
 
         private void DGVProductos_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            //validamos que el clic no sea en la cabecera de la tabla (fila -1)
+            if (e.RowIndex < 0) return;
 
+            if (DGVProductos.Columns[e.ColumnIndex].Name == "CEliminar")
+            {
+
+                int idProducto = Convert.ToInt32(DGVProductos.Rows[e.RowIndex].Cells["CID"].Value);
+                Producto productoSelec = DGVProductos.Rows[e.RowIndex].DataBoundItem as Producto;
+                
+                if (productoSelec != null)
+                {
+                    if (productoSelec.fecha_baja.HasValue)
+                    {
+                        MessageBox.Show("El producto que intenta eliminar ya ha sido eliminado", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    DialogResult resultado = MessageBox.Show("¿Estás seguro de dar de baja a este producto?",
+                                                            "Confirmar baja",
+                                                            MessageBoxButtons.YesNo,
+                                                            MessageBoxIcon.Question);
+
+                    if (resultado == DialogResult.Yes)
+                    {
+                        try
+                        {
+                            //llamamos a la capa de negocio para ejecutar la baja lógica
+                            ProductoNegocio negocio = new ProductoNegocio();
+                            bool exito = negocio.BajaProducto(productoSelec.id_producto); //metodo de capa de negocio
+
+                            if (exito)
+                            {
+                                MessageBox.Show("Producto dado de baja correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                CargarProductosEnGrilla();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Ocurrió un error al dar de baja: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            if (DGVProductos.Columns[e.ColumnIndex].Name == "CEditar")
+            {
+                //LCuestionario.Text = "Editar Producto";
+                Producto productoSelec = DGVProductos.Rows[e.RowIndex].DataBoundItem as Producto;
+                if (productoSelec != null)
+                {
+                    if (productoSelec.fecha_baja.HasValue)
+                    {
+                        MessageBox.Show("El Producto que intenta editar está dado de baja", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        //LCuestionario.Text = "Crear Producto";
+                        return;
+                    }
+
+                    // 1. Guardamos el ID globalmente para saber que estamos editando
+                    idProductoSeleccionado = productoSelec.id_producto;
+
+                    // 2. Cargamos los datos en los TextBox para que el producto los modifique
+                    TBNombre.Text = productoSelec.nombre;
+                    TBDescripcion.Text = productoSelec.descripcion;
+                    NUDCosto.Value = productoSelec.precio; //Fijate si este o el de precioVenta
+                    NUDCantidad.Value = productoSelec.stock;
+                    CBTalle.SelectedValue = productoSelec.talle;
+                    if (!string.IsNullOrEmpty(productoSelec.url_imagen))
+                    {
+                        try
+                        {
+                            // 2. Transformamos la ruta de texto en una imagen gráfica de forma segura
+                            using (var stream = new System.IO.FileStream(productoSelec.url_imagen, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+                            {
+                                pictureBox1.Image = System.Drawing.Image.FromStream(stream);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // Si la imagen fue movida o borrada de tu PC accidentalmente, dejamos el cuadro vacío
+                            pictureBox1.Image = null;
+                        }
+                    }
+                    else
+                    {
+                        // Si el producto no tiene foto en la base de datos, limpiamos el PictureBox
+                        pictureBox1.Image = null;
+                    }
+                }
+            }
+            if (DGVProductos.Columns[e.ColumnIndex].Name == "CReactivar") // Asumiendo que el botón se llama CActivar
+            {
+                Producto productoSelec = DGVProductos.Rows[e.RowIndex].DataBoundItem as Producto;
+
+                if (productoSelec != null)
+                {
+                    // Verificamos si realmente está inactivo antes de hacer el viaje a la BD
+                    if (productoSelec.fecha_baja.HasValue)
+                    {
+                        DialogResult respuesta = MessageBox.Show($"¿Deseas reactivar al Producto {productoSelec.nombre}?", "Confirmar activación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                        if (respuesta == DialogResult.Yes)
+                        {
+                            ProductoNegocio negocio = new ProductoNegocio();
+                            negocio.ActivarProducto(productoSelec.id_producto);
+
+                            MessageBox.Show("Producto reactivado con éxito.");
+
+                            // Recargamos la grilla para que el Producto vuelva a aparecer como Activo
+                            CargarProductosEnGrilla();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Este Producto ya se encuentra activo.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
         }
 
 
@@ -256,15 +373,47 @@ namespace Proyecto_Taller_2
 
                 // Instanciamos la capa de negocio y guardamos
                 ProductoNegocio negocio = new ProductoNegocio();
-
-                if (negocio.InsertarProducto(producto))
+                if(idProductoSeleccionado == 0)
                 {
-                    MessageBox.Show("Producto agregado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (negocio.InsertarProducto(producto))
+                    {
+                        MessageBox.Show("Producto agregado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // Recargamos la grilla para ver el nuevo producto
-                    CargarProductosEnGrilla();
+                        // Recargamos la grilla para ver el nuevo producto
+                        CargarProductosEnGrilla();
 
-                    // Opcional: Crear un método LimpiarCampos() para vaciar los TextBox después de guardar
+                        // Opcional: Crear un método LimpiarCampos() para vaciar los TextBox después de guardar
+                    }
+                }
+                else
+                {
+                    // --- EDICIÓN ---
+                    producto.id_producto = idProductoSeleccionado; // Asignamos el ID del producto que estamos modificando
+
+                    DialogResult resultado = MessageBox.Show("¿Estás seguro que deseas guardar los cambios?",
+                                                            "Confirmar edición",
+                                                            MessageBoxButtons.YesNo,
+                                                            MessageBoxIcon.Question);
+
+                    if (resultado == DialogResult.Yes)
+                    {
+                        try
+                        {
+                            bool exito = negocio.ActualizarProducto(producto);
+
+                            if (exito)
+                            {
+                                MessageBox.Show("producto editado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                CargarProductosEnGrilla();
+                                LimpiarFormulario();
+                                idProductoSeleccionado = 0; // Reiniciamos la variable para volver al modo registro
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Ocurrió un error al editar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
