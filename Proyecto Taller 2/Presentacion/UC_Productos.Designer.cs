@@ -46,9 +46,21 @@
             this.NUDVenta = new System.Windows.Forms.NumericUpDown();
             this.NUDCantidad = new System.Windows.Forms.NumericUpDown();
             this.DGVProductos = new System.Windows.Forms.DataGridView();
+            this.CNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CPrecio = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CStock = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CTalle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CEdicion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CImagen = new System.Windows.Forms.DataGridViewImageColumn();
+            this.CEditar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.CEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.CReactivar = new System.Windows.Forms.DataGridViewButtonColumn();
             this.LTalle = new System.Windows.Forms.Label();
             this.CBTalle = new System.Windows.Forms.ComboBox();
             this.LClase = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.TBBuscador = new System.Windows.Forms.TextBox();
             this.CBCategoria = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -174,7 +186,7 @@
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictureBox1.Location = new System.Drawing.Point(21, 18);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(317, 314);
+            this.pictureBox1.Size = new System.Drawing.Size(339, 323);
             this.pictureBox1.TabIndex = 16;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -202,7 +214,7 @@
             this.BtnImagen.ForeColor = System.Drawing.Color.White;
             this.BtnImagen.Location = new System.Drawing.Point(43, 436);
             this.BtnImagen.Name = "BtnImagen";
-            this.BtnImagen.Size = new System.Drawing.Size(391, 30);
+            this.BtnImagen.Size = new System.Drawing.Size(120, 30);
             this.BtnImagen.TabIndex = 18;
             this.BtnImagen.Text = "Imagen";
             this.BtnImagen.UseVisualStyleBackColor = false;
@@ -255,16 +267,119 @@
             // 
             // DGVProductos
             // 
+            this.DGVProductos.BackgroundColor = System.Drawing.Color.Lavender;
             this.DGVProductos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DGVProductos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.CNombre,
+            this.CID,
+            this.CPrecio,
+            this.CStock,
+            this.CTalle,
+            this.CEdicion,
+            this.CImagen,
+            this.CEditar,
+            this.CEliminar,
+            this.CReactivar});
             this.DGVProductos.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.DGVProductos.Location = new System.Drawing.Point(0, 670);
+            this.DGVProductos.GridColor = System.Drawing.Color.Gray;
+            this.DGVProductos.Location = new System.Drawing.Point(0, 649);
             this.DGVProductos.Name = "DGVProductos";
             this.DGVProductos.ReadOnly = true;
             this.DGVProductos.RowHeadersWidth = 51;
-            this.DGVProductos.RowTemplate.Height = 24;
-            this.DGVProductos.Size = new System.Drawing.Size(1464, 155);
+            this.DGVProductos.RowTemplate.Height = 100;
+            this.DGVProductos.Size = new System.Drawing.Size(1464, 176);
             this.DGVProductos.TabIndex = 25;
             this.DGVProductos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGVProductos_CellContentClick);
+            this.DGVProductos.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DGVProductos_CellFormatting);
+            // 
+            // CNombre
+            // 
+            this.CNombre.DataPropertyName = "nombre";
+            this.CNombre.HeaderText = "Nombre";
+            this.CNombre.MinimumWidth = 6;
+            this.CNombre.Name = "CNombre";
+            this.CNombre.ReadOnly = true;
+            this.CNombre.Width = 125;
+            // 
+            // CID
+            // 
+            this.CID.DataPropertyName = "id_producto";
+            this.CID.HeaderText = "ID";
+            this.CID.MinimumWidth = 6;
+            this.CID.Name = "CID";
+            this.CID.ReadOnly = true;
+            this.CID.Width = 125;
+            // 
+            // CPrecio
+            // 
+            this.CPrecio.DataPropertyName = "precio";
+            this.CPrecio.HeaderText = "Precio";
+            this.CPrecio.MinimumWidth = 6;
+            this.CPrecio.Name = "CPrecio";
+            this.CPrecio.ReadOnly = true;
+            this.CPrecio.Width = 125;
+            // 
+            // CStock
+            // 
+            this.CStock.DataPropertyName = "stock";
+            this.CStock.HeaderText = "Stock";
+            this.CStock.MinimumWidth = 6;
+            this.CStock.Name = "CStock";
+            this.CStock.ReadOnly = true;
+            this.CStock.Width = 125;
+            // 
+            // CTalle
+            // 
+            this.CTalle.DataPropertyName = "talle";
+            this.CTalle.HeaderText = "Talle";
+            this.CTalle.MinimumWidth = 6;
+            this.CTalle.Name = "CTalle";
+            this.CTalle.ReadOnly = true;
+            this.CTalle.Width = 125;
+            // 
+            // CEdicion
+            // 
+            this.CEdicion.DataPropertyName = "edicion";
+            this.CEdicion.HeaderText = "Edicion";
+            this.CEdicion.MinimumWidth = 6;
+            this.CEdicion.Name = "CEdicion";
+            this.CEdicion.ReadOnly = true;
+            this.CEdicion.Width = 125;
+            // 
+            // CImagen
+            // 
+            this.CImagen.HeaderText = "Imagen";
+            this.CImagen.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
+            this.CImagen.MinimumWidth = 6;
+            this.CImagen.Name = "CImagen";
+            this.CImagen.ReadOnly = true;
+            this.CImagen.Width = 125;
+            // 
+            // CEditar
+            // 
+            this.CEditar.HeaderText = "Editar";
+            this.CEditar.MinimumWidth = 6;
+            this.CEditar.Name = "CEditar";
+            this.CEditar.ReadOnly = true;
+            this.CEditar.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.CEditar.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.CEditar.Width = 125;
+            // 
+            // CEliminar
+            // 
+            this.CEliminar.HeaderText = "Eliminar";
+            this.CEliminar.MinimumWidth = 6;
+            this.CEliminar.Name = "CEliminar";
+            this.CEliminar.ReadOnly = true;
+            this.CEliminar.Width = 125;
+            // 
+            // CReactivar
+            // 
+            this.CReactivar.HeaderText = "Reactivar";
+            this.CReactivar.MinimumWidth = 6;
+            this.CReactivar.Name = "CReactivar";
+            this.CReactivar.ReadOnly = true;
+            this.CReactivar.Width = 125;
             // 
             // LTalle
             // 
@@ -291,7 +406,7 @@
             "XXL"});
             this.CBTalle.Location = new System.Drawing.Point(198, 175);
             this.CBTalle.Name = "CBTalle";
-            this.CBTalle.Size = new System.Drawing.Size(121, 24);
+            this.CBTalle.Size = new System.Drawing.Size(120, 24);
             this.CBTalle.TabIndex = 28;
             // 
             // LClase
@@ -306,6 +421,26 @@
             this.LClase.TabIndex = 29;
             this.LClase.Text = "Categoria";
             this.LClase.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(496, 366);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(77, 25);
+            this.label1.TabIndex = 32;
+            this.label1.Text = "Imagen";
+            // 
+            // TBBuscador
+            // 
+            this.TBBuscador.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.TBBuscador.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TBBuscador.Location = new System.Drawing.Point(122, 601);
+            this.TBBuscador.Name = "TBBuscador";
+            this.TBBuscador.Size = new System.Drawing.Size(222, 28);
+            this.TBBuscador.TabIndex = 34;
             // 
             // CBCategoria
             // 
@@ -401,6 +536,8 @@
         private System.Windows.Forms.Label LTalle;
         private System.Windows.Forms.ComboBox CBTalle;
         private System.Windows.Forms.Label LClase;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox TBBuscador;
         private System.Windows.Forms.ComboBox CBCategoria;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
