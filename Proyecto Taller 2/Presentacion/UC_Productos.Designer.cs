@@ -46,12 +46,23 @@
             this.NUDVenta = new System.Windows.Forms.NumericUpDown();
             this.NUDCantidad = new System.Windows.Forms.NumericUpDown();
             this.DGVProductos = new System.Windows.Forms.DataGridView();
+            this.CNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CPrecio = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CStock = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CTalle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CImagen = new System.Windows.Forms.DataGridViewImageColumn();
+            this.CEditar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.CEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.CReactivar = new System.Windows.Forms.DataGridViewButtonColumn();
             this.LTalle = new System.Windows.Forms.Label();
             this.CBTalle = new System.Windows.Forms.ComboBox();
             this.LClase = new System.Windows.Forms.Label();
             this.CBCategoria = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.TBBuscador = new System.Windows.Forms.TextBox();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUDCosto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUDVenta)).BeginInit();
@@ -256,6 +267,16 @@
             // DGVProductos
             // 
             this.DGVProductos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DGVProductos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.CNombre,
+            this.CID,
+            this.CPrecio,
+            this.CStock,
+            this.CTalle,
+            this.CImagen,
+            this.CEditar,
+            this.CEliminar,
+            this.CReactivar});
             this.DGVProductos.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.DGVProductos.Location = new System.Drawing.Point(0, 670);
             this.DGVProductos.Name = "DGVProductos";
@@ -265,6 +286,85 @@
             this.DGVProductos.Size = new System.Drawing.Size(1464, 155);
             this.DGVProductos.TabIndex = 25;
             this.DGVProductos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGVProductos_CellContentClick);
+            // 
+            // CNombre
+            // 
+            this.CNombre.DataPropertyName = "nombre";
+            this.CNombre.HeaderText = "Nombre";
+            this.CNombre.MinimumWidth = 6;
+            this.CNombre.Name = "CNombre";
+            this.CNombre.ReadOnly = true;
+            this.CNombre.Width = 125;
+            // 
+            // CID
+            // 
+            this.CID.DataPropertyName = "id_producto";
+            this.CID.HeaderText = "Id";
+            this.CID.MinimumWidth = 6;
+            this.CID.Name = "CID";
+            this.CID.ReadOnly = true;
+            this.CID.Width = 125;
+            // 
+            // CPrecio
+            // 
+            this.CPrecio.DataPropertyName = "precio";
+            this.CPrecio.HeaderText = "Precio";
+            this.CPrecio.MinimumWidth = 6;
+            this.CPrecio.Name = "CPrecio";
+            this.CPrecio.ReadOnly = true;
+            this.CPrecio.Width = 125;
+            // 
+            // CStock
+            // 
+            this.CStock.DataPropertyName = "stock";
+            this.CStock.HeaderText = "Stock";
+            this.CStock.MinimumWidth = 6;
+            this.CStock.Name = "CStock";
+            this.CStock.ReadOnly = true;
+            this.CStock.Width = 125;
+            // 
+            // CTalle
+            // 
+            this.CTalle.DataPropertyName = "talle";
+            this.CTalle.HeaderText = "Talle";
+            this.CTalle.MinimumWidth = 6;
+            this.CTalle.Name = "CTalle";
+            this.CTalle.ReadOnly = true;
+            this.CTalle.Width = 125;
+            // 
+            // CImagen
+            // 
+            this.CImagen.HeaderText = "Imagen";
+            this.CImagen.MinimumWidth = 6;
+            this.CImagen.Name = "CImagen";
+            this.CImagen.ReadOnly = true;
+            this.CImagen.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.CImagen.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.CImagen.Width = 125;
+            // 
+            // CEditar
+            // 
+            this.CEditar.HeaderText = "Editar";
+            this.CEditar.MinimumWidth = 6;
+            this.CEditar.Name = "CEditar";
+            this.CEditar.ReadOnly = true;
+            this.CEditar.Width = 125;
+            // 
+            // CEliminar
+            // 
+            this.CEliminar.HeaderText = "Eliminar";
+            this.CEliminar.MinimumWidth = 6;
+            this.CEliminar.Name = "CEliminar";
+            this.CEliminar.ReadOnly = true;
+            this.CEliminar.Width = 125;
+            // 
+            // CReactivar
+            // 
+            this.CReactivar.HeaderText = "Reactivar";
+            this.CReactivar.MinimumWidth = 6;
+            this.CReactivar.Name = "CReactivar";
+            this.CReactivar.ReadOnly = true;
+            this.CReactivar.Width = 125;
             // 
             // LTalle
             // 
@@ -356,11 +456,25 @@
             this.panel2.TabIndex = 33;
             this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
+            // TBBuscador
+            // 
+            this.TBBuscador.Location = new System.Drawing.Point(142, 625);
+            this.TBBuscador.Name = "TBBuscador";
+            this.TBBuscador.Size = new System.Drawing.Size(100, 22);
+            this.TBBuscador.TabIndex = 35;
+            // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(61, 4);
+            // 
             // UC_Productos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(158)))), ((int)(((byte)(182)))), ((int)(((byte)(211)))));
+            this.Controls.Add(this.TBBuscador);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.DGVProductos);
@@ -377,6 +491,7 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -404,5 +519,16 @@
         private System.Windows.Forms.ComboBox CBCategoria;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.TextBox TBBuscador;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CNombre;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CPrecio;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CStock;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CTalle;
+        private System.Windows.Forms.DataGridViewImageColumn CImagen;
+        private System.Windows.Forms.DataGridViewButtonColumn CEditar;
+        private System.Windows.Forms.DataGridViewButtonColumn CEliminar;
+        private System.Windows.Forms.DataGridViewButtonColumn CReactivar;
     }
 }

@@ -26,7 +26,7 @@
             this.txtDestino = new System.Windows.Forms.TextBox();
             this.btnSeleccionarCarpeta = new System.Windows.Forms.Button();
             this.btnGenerarBackup = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.DGVHistorial = new System.Windows.Forms.DataGridView();
             this.colFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colHora = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colTipo = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -35,9 +35,10 @@
             this.colAccion = new System.Windows.Forms.DataGridViewButtonColumn();
             this.lblTituloHistorial = new System.Windows.Forms.Label();
             this.btnExportarNube = new System.Windows.Forms.Button();
+            this.CLBTablas = new System.Windows.Forms.CheckedListBox();
             this.panelResumen.SuspendLayout();
             this.panelDestino.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DGVHistorial)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTituloPrincipal
@@ -115,6 +116,7 @@
             this.txtDestino.Size = new System.Drawing.Size(330, 30);
             this.txtDestino.TabIndex = 0;
             this.txtDestino.Text = "C:\\CopiasBase\\RetroCamisetas\\";
+            this.txtDestino.TextChanged += new System.EventHandler(this.txtDestino_TextChanged);
             // 
             // btnSeleccionarCarpeta
             // 
@@ -139,11 +141,11 @@
             this.btnGenerarBackup.TabIndex = 3;
             this.btnGenerarBackup.Text = "➕ Generar BACK-UP Completo";
             this.btnGenerarBackup.UseVisualStyleBackColor = false;
-            this.btnGenerarBackup.Click += new System.EventHandler(this.btnGenerarBackup_Click_1);
+            this.btnGenerarBackup.Click += new System.EventHandler(this.btnGenerarBackup_Click);
             // 
-            // dataGridView1
+            // DGVHistorial
             // 
-            this.dataGridView1.BackgroundColor = System.Drawing.Color.White;
+            this.DGVHistorial.BackgroundColor = System.Drawing.Color.White;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
@@ -151,9 +153,9 @@
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DGVHistorial.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.DGVHistorial.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DGVHistorial.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colFecha,
             this.colHora,
             this.colTipo,
@@ -167,17 +169,19 @@
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(153)))), ((int)(((byte)(255)))));
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
-            this.dataGridView1.EnableHeadersVisualStyles = false;
-            this.dataGridView1.Location = new System.Drawing.Point(63, 218);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersWidth = 51;
-            this.dataGridView1.RowTemplate.Height = 28;
-            this.dataGridView1.Size = new System.Drawing.Size(800, 397);
-            this.dataGridView1.TabIndex = 4;
+            this.DGVHistorial.DefaultCellStyle = dataGridViewCellStyle2;
+            this.DGVHistorial.EnableHeadersVisualStyles = false;
+            this.DGVHistorial.Location = new System.Drawing.Point(63, 218);
+            this.DGVHistorial.Name = "DGVHistorial";
+            this.DGVHistorial.RowHeadersWidth = 51;
+            this.DGVHistorial.RowTemplate.Height = 28;
+            this.DGVHistorial.Size = new System.Drawing.Size(800, 397);
+            this.DGVHistorial.TabIndex = 4;
+            this.DGVHistorial.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGVHistorial_CellContentClick);
             // 
             // colFecha
             // 
+            this.colFecha.DataPropertyName = "Fecha";
             this.colFecha.HeaderText = "Fecha";
             this.colFecha.MinimumWidth = 6;
             this.colFecha.Name = "colFecha";
@@ -185,6 +189,7 @@
             // 
             // colHora
             // 
+            this.colHora.DataPropertyName = "Hora";
             this.colHora.HeaderText = "Hora";
             this.colHora.MinimumWidth = 6;
             this.colHora.Name = "colHora";
@@ -192,6 +197,7 @@
             // 
             // colTipo
             // 
+            this.colTipo.DataPropertyName = "Tipo";
             this.colTipo.HeaderText = "Tipo";
             this.colTipo.MinimumWidth = 6;
             this.colTipo.Name = "colTipo";
@@ -199,6 +205,7 @@
             // 
             // colDestino
             // 
+            this.colDestino.DataPropertyName = "Destino";
             this.colDestino.HeaderText = "Destino";
             this.colDestino.MinimumWidth = 6;
             this.colDestino.Name = "colDestino";
@@ -206,6 +213,7 @@
             // 
             // colTamanio
             // 
+            this.colTamanio.DataPropertyName = "Tamanio";
             this.colTamanio.HeaderText = "Tamaño";
             this.colTamanio.MinimumWidth = 6;
             this.colTamanio.Name = "colTamanio";
@@ -213,6 +221,7 @@
             // 
             // colAccion
             // 
+            this.colAccion.DataPropertyName = "Acciones";
             this.colAccion.HeaderText = "Acciones";
             this.colAccion.MinimumWidth = 6;
             this.colAccion.Name = "colAccion";
@@ -241,14 +250,23 @@
             this.btnExportarNube.UseVisualStyleBackColor = false;
             this.btnExportarNube.Click += new System.EventHandler(this.btnExportarNube_Click);
             // 
+            // CLBTablas
+            // 
+            this.CLBTablas.FormattingEnabled = true;
+            this.CLBTablas.Location = new System.Drawing.Point(932, 236);
+            this.CLBTablas.Name = "CLBTablas";
+            this.CLBTablas.Size = new System.Drawing.Size(316, 157);
+            this.CLBTablas.TabIndex = 8;
+            // 
             // UC_BackUp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(158)))), ((int)(((byte)(182)))), ((int)(((byte)(211)))));
+            this.Controls.Add(this.CLBTablas);
             this.Controls.Add(this.btnExportarNube);
             this.Controls.Add(this.lblTituloHistorial);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.DGVHistorial);
             this.Controls.Add(this.btnGenerarBackup);
             this.Controls.Add(this.panelDestino);
             this.Controls.Add(this.panelResumen);
@@ -260,7 +278,7 @@
             this.panelResumen.PerformLayout();
             this.panelDestino.ResumeLayout(false);
             this.panelDestino.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DGVHistorial)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -275,14 +293,15 @@
         private System.Windows.Forms.TextBox txtDestino;
         private System.Windows.Forms.Button btnSeleccionarCarpeta;
         private System.Windows.Forms.Button btnGenerarBackup;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView DGVHistorial;
+        private System.Windows.Forms.Label lblTituloHistorial;
+        private System.Windows.Forms.Button btnExportarNube;
+        private System.Windows.Forms.CheckedListBox CLBTablas;
         private System.Windows.Forms.DataGridViewTextBoxColumn colFecha;
         private System.Windows.Forms.DataGridViewTextBoxColumn colHora;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTipo;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDestino;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTamanio;
         private System.Windows.Forms.DataGridViewButtonColumn colAccion;
-        private System.Windows.Forms.Label lblTituloHistorial;
-        private System.Windows.Forms.Button btnExportarNube;
     }
 }

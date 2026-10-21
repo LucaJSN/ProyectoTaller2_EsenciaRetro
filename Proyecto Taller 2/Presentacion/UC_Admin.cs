@@ -191,7 +191,7 @@ namespace Proyecto_Taller_2
         {
             try
             {
-                string connectionString = "Server=localhost;Port=3306;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";
+                string connectionString = "Server=localhost;Port=33060;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";
 
                 using (MySqlConnection conexion = new MySqlConnection(connectionString))
                 {

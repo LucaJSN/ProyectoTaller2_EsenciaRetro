@@ -9,10 +9,24 @@ namespace Proyecto_Taller_2.Negocio
 {
     internal class BackNegocio
     {
-        public bool GenerarBackup(string rutaArchivo)
+        private BackDatos datos = new BackDatos();
+
+        // Agregamos el List<string> aquí
+        public bool GenerarBackup(string rutaArchivo, List<string> tablasSeleccionadas)
         {
-            BackDatos datos = new BackDatos();
-            return datos.GenerarBackup(rutaArchivo);
+            // Le pasamos ambos parámetros a la capa de Datos
+            return datos.GenerarBackup(rutaArchivo, tablasSeleccionadas);
+        }
+
+        // Ya que estamos, agregamos los otros dos puentes que te van a hacer falta:
+        public List<string> ObtenerTablas()
+        {
+            return datos.ObtenerTablas();
+        }
+
+        public bool RestaurarBackup(string rutaArchivo)
+        {
+            return datos.RestaurarBackup(rutaArchivo);
         }
     }
 }

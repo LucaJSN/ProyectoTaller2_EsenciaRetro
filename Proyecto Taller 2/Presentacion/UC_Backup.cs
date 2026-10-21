@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Proyecto_Taller_2
@@ -12,12 +13,23 @@ namespace Proyecto_Taller_2
         public class BackupModel
         {
             public DateTime FechaHora { get; set; }
+            public string Fecha
+            {
+                get { return FechaHora.ToString("dd/MM/yyyy"); }
+            }
+
+            // 2. Nueva propiedad que extrae y formatea solo la Hora (Ej: 15:30)
+            public string Hora
+            {
+                get { return FechaHora.ToString("HH:mm"); }
+            }
             public string Tipo { get; set; }
             public string Destino { get; set; }
             public string Tamanio { get; set; }
         }
 
         private List<BackupModel> _historialBackups;
+        private BackNegocio negocio = new BackNegocio();
         private DataGridViewButtonColumn colEliminarExtra;
 
         public UC_BackUp()
@@ -40,17 +52,17 @@ namespace Proyecto_Taller_2
 
         private void ConfigurarUIBackUp()
         {
-            dataGridView1.ReadOnly = true;
-            dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.AllowUserToDeleteRows = false;
-            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView1.MultiSelect = false;
-            dataGridView1.RowHeadersVisible = false;
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView1.RowsDefaultCellStyle.ForeColor = Color.Black;
-            dataGridView1.RowsDefaultCellStyle.BackColor = Color.White;
-            dataGridView1.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 247, 250);
-            dataGridView1.AlternatingRowsDefaultCellStyle.ForeColor = Color.Black;
+            DGVHistorial.ReadOnly = true;
+            DGVHistorial.AllowUserToAddRows = false;
+            DGVHistorial.AllowUserToDeleteRows = false;
+            DGVHistorial.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DGVHistorial.MultiSelect = false;
+            DGVHistorial.RowHeadersVisible = false;
+            DGVHistorial.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            DGVHistorial.RowsDefaultCellStyle.ForeColor = Color.Black;
+            DGVHistorial.RowsDefaultCellStyle.BackColor = Color.White;
+            DGVHistorial.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 247, 250);
+            DGVHistorial.AlternatingRowsDefaultCellStyle.ForeColor = Color.Black;
 
             if (colAccion != null)
             {
@@ -59,7 +71,7 @@ namespace Proyecto_Taller_2
                 colAccion.UseColumnTextForButtonValue = true;
             }
 
-            if (dataGridView1.Columns["colEliminar"] == null)
+            if (DGVHistorial.Columns["colEliminar"] == null)
             {
                 colEliminarExtra = new DataGridViewButtonColumn
                 {
@@ -69,7 +81,7 @@ namespace Proyecto_Taller_2
                     UseColumnTextForButtonValue = true,
                     Width = 100
                 };
-                dataGridView1.Columns.Add(colEliminarExtra);
+                DGVHistorial.Columns.Add(colEliminarExtra);
             }
 
             if (txtDestino != null && string.IsNullOrWhiteSpace(txtDestino.Text))
@@ -95,20 +107,20 @@ namespace Proyecto_Taller_2
                 btnExportarNube.Click += btnExportarNube_Click;
             }
 
-            if (dataGridView1 != null)
+            if (DGVHistorial != null)
             {
-                dataGridView1.CellContentClick -= dataGridView1_CellContentClick;
-                dataGridView1.CellContentClick += dataGridView1_CellContentClick;
+                DGVHistorial.CellContentClick -= DGVHistorial_CellContentClick;
+                DGVHistorial.CellContentClick += DGVHistorial_CellContentClick;
             }
         }
 
         private void ActualizarGrillaHistorial()
         {
-            dataGridView1.Rows.Clear();
+            DGVHistorial.Rows.Clear();
 
             foreach (var item in _historialBackups)
             {
-                dataGridView1.Rows.Add(
+                DGVHistorial.Rows.Add(
                     item.FechaHora.ToString("dd/MM/yyyy"),
                     item.FechaHora.ToString("HH:mm"),
                     item.Tipo,
@@ -143,7 +155,7 @@ namespace Proyecto_Taller_2
             {
                 string destinoDir = txtDestino.Text.Trim();
 
-                // 1. Validar si el campo está vacío
+                //Valida si el campo está vacío
                 if (string.IsNullOrWhiteSpace(destinoDir))
                 {
                     MessageBox.Show("Debe especificar una ruta de destino.", "Carpeta Requerida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -151,7 +163,7 @@ namespace Proyecto_Taller_2
                     return;
                 }
 
-                // 2. Validar estrictamente si la carpeta existe físicamente en el equipo
+                //Valida si la carpeta existe físicamente en el equipo
                 if (!Directory.Exists(destinoDir))
                 {
                     MessageBox.Show("La carpeta especificada no existe. Por favor, ingrese o seleccione una ruta de carpeta válida.",
@@ -160,35 +172,42 @@ namespace Proyecto_Taller_2
                     return;
                 }
 
-                // 3. Crear el nombre del archivo y armar la ruta completa dentro de la carpeta elegida
-                string nombreArchivo = "Backup_Usuarios_" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm") + ".sql";
+                string nombreArchivo = "Backup_Datos_" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm") + ".sql";
                 string rutaCompleta = System.IO.Path.Combine(destinoDir, nombreArchivo);
 
-                // 4. Llamar a la capa de Negocio para generar y guardar el archivo físico real
+                // Lee las tablas que el usuario tildó en la vista
+                List<string> tablasSeleccionadas = new List<string>();
+
+                if (CLBTablas.CheckedItems.Count > 0)
+                {
+                    foreach (var item in CLBTablas.CheckedItems)
+                    {
+                        tablasSeleccionadas.Add(item.ToString());
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Debe seleccionar al menos una tabla para respaldar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return; // Detenemos el proceso si no eligió ninguna tabla
+                }
+
+
+                //Llama a la capa de Negocio 
                 BackNegocio negocio = new BackNegocio();
-                bool exito = negocio.GenerarBackup(rutaCompleta);
+                bool exito = negocio.GenerarBackup(rutaCompleta, tablasSeleccionadas);
 
                 if (exito)
                 {
-                    DateTime ahora = DateTime.Now;
-                    BackupModel nuevoBackup = new BackupModel
-                    {
-                        FechaHora = ahora,
-                        Tipo = "Manual",
-                        Destino = rutaCompleta,
-                        Tamanio = "1.4 GB" // O el tamaño que maneje tu sistema
-                    };
-
-                    _historialBackups.Insert(0, nuevoBackup);
-                    ActualizarGrillaHistorial();
-
                     MessageBox.Show($"¡Copia de seguridad generada y guardada con éxito!\nArchivo: {nombreArchivo}",
                                     "Back-Up Completo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CargarHistorialDesdeCarpeta();
                 }
+
                 else
                 {
                     MessageBox.Show("El proceso de negocio no pudo completar la creación del archivo.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+
             }
             catch (Exception ex)
             {
@@ -196,11 +215,99 @@ namespace Proyecto_Taller_2
             }
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+
+
+        private void btnExportarNube_Click(object sender, EventArgs e)
+        {
+            if (DGVHistorial.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Por favor, seleccione una copia de seguridad del historial para exportar a la nube.",
+                                "Selección Requerida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int index = DGVHistorial.SelectedRows[0].Index;
+            var copia = _historialBackups[index];
+
+            DialogResult dr = MessageBox.Show($"¿Desea exportar la copia del {copia.FechaHora:dd/MM/yyyy HH:mm} al servidor en la nube?",
+                                              "Exportar a la Nube", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dr == DialogResult.Yes)
+            {
+                MessageBox.Show("¡Exportada correctamente a la nube!", "Nube Sincronizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("No se realizó ninguna acción.", "Cancelado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void lblTituloPrincipal_Click(object sender, EventArgs e)
+        {
+            // Método requerido por el diseñador
+        }
+
+        private void UC_BackUp_Load(object sender, EventArgs e)
+        {
+            CargarHistorialDesdeCarpeta();
+
+            try
+            {
+                List<string> tablas = negocio.ObtenerTablas();
+                CLBTablas.Items.Clear();
+                foreach (string tabla in tablas)
+                {
+                    CLBTablas.Items.Add(tabla, true); // true = Aparecen tildadas por defecto
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al obtener tablas: " + ex.Message);
+            }
+        }
+
+        private void CargarHistorialDesdeCarpeta()
+        {
+            DGVHistorial.AutoGenerateColumns = false;
+            // Reemplaza por la ruta real donde guardas tus backups
+            string rutaCarpeta = @"I:\Users\lucaj\Desktop\Historial Base de Datos EsenciaRetro\";
+
+            // Verificamos si la carpeta existe; si no, no hacemos nada
+            if (!System.IO.Directory.Exists(rutaCarpeta)) return;
+
+            List<BackupModel> listaHistorial = new List<BackupModel>();
+            System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(rutaCarpeta);
+
+            // Buscamos todos los archivos que terminen en .sql
+            System.IO.FileInfo[] archivos = directorio.GetFiles("*.sql");
+
+            foreach (System.IO.FileInfo archivo in archivos)
+            {
+                // Calculamos el tamaño en MB para que se lea mejor
+                double tamanioMB = archivo.Length / (1024.0 * 1024.0);
+
+                listaHistorial.Add(new BackupModel
+                {
+                    FechaHora = archivo.CreationTime, // Fecha en que se creó el archivo
+                    Tipo = "Manual",
+                    Destino = archivo.FullName,       // La ruta completa del archivo
+                    Tamanio = tamanioMB.ToString("0.00") + " MB"
+                });
+            }
+
+            // Ordenamos la lista para que los backups más nuevos salgan arriba
+            listaHistorial = listaHistorial.OrderByDescending(b => b.FechaHora).ToList();
+
+            // Limpiamos y asignamos a la grilla
+
+            DGVHistorial.DataSource = null;
+            DGVHistorial.DataSource = listaHistorial;
+        }
+
+        private void DGVHistorial_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
 
-            string nombreColumna = dataGridView1.Columns[e.ColumnIndex].Name;
+            string nombreColumna = DGVHistorial.Columns[e.ColumnIndex].Name;
 
             if (nombreColumna == "colAccion")
             {
@@ -229,41 +336,7 @@ namespace Proyecto_Taller_2
             }
         }
 
-        private void btnExportarNube_Click(object sender, EventArgs e)
-        {
-            if (dataGridView1.SelectedRows.Count == 0)
-            {
-                MessageBox.Show("Por favor, seleccione una copia de seguridad del historial para exportar a la nube.",
-                                "Selección Requerida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            int index = dataGridView1.SelectedRows[0].Index;
-            var copia = _historialBackups[index];
-
-            DialogResult dr = MessageBox.Show($"¿Desea exportar la copia del {copia.FechaHora:dd/MM/yyyy HH:mm} al servidor en la nube?",
-                                              "Exportar a la Nube", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dr == DialogResult.Yes)
-            {
-                MessageBox.Show("¡Exportada correctamente a la nube!", "Nube Sincronizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                MessageBox.Show("No se realizó ninguna acción.", "Cancelado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
-        private void lblTituloPrincipal_Click(object sender, EventArgs e)
-        {
-            // Método requerido por el diseñador
-        }
-
-        private void UC_BackUp_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnGenerarBackup_Click_1(object sender, EventArgs e)
+        private void txtDestino_TextChanged(object sender, EventArgs e)
         {
 
         }
