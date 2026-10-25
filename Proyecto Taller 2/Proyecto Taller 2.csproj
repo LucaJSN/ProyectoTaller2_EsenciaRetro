@@ -116,19 +116,26 @@
   <ItemGroup>
     <Compile Include="Datos\BackDatos.cs" />
     <Compile Include="Datos\CategoriaDatos.cs" />
+    <Compile Include="Datos\MetodoPagoDatos.cs" />
     <Compile Include="Datos\ProductoDatos.cs" />
     <Compile Include="Datos\RolDatos.cs" />
     <Compile Include="Datos\UsuarioDatos.cs" />
     <Compile Include="Entidades\Categoria.cs" />
     <Compile Include="Entidades\Class1.cs" />
     <Compile Include="Datos\Conexion.cs" />
+    <Compile Include="Entidades\Cliente.cs" />
+    <Compile Include="Entidades\DetalleVenta.cs" />
+    <Compile Include="Entidades\MetodoPago.cs" />
     <Compile Include="Entidades\Producto.cs" />
+    <Compile Include="Entidades\Venta.cs" />
     <Compile Include="Negocio\BackNegocio.cs" />
     <Compile Include="Negocio\CategoriaNegocio.cs" />
     <Compile Include="Negocio\LoginNegocio.cs" />
+    <Compile Include="Negocio\MetodoPagoNegocio.cs" />
     <Compile Include="Negocio\ProductoNegocio.cs" />
     <Compile Include="Negocio\RolNegocio.cs" />
     <Compile Include="Negocio\UsuarioNegocio.cs" />
+    <Compile Include="Negocio\VentaNegocio.cs" />
     <Compile Include="Presentacion\Form1.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -4,6 +4,8 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Proyecto_Taller_2.Negocio;
+using TextBox = System.Windows.Forms.TextBox; // Soluciona el conflicto de nombres
 
 namespace Proyecto_Taller_2
 {
@@ -28,9 +30,12 @@ namespace Proyecto_Taller_2
         private void UC_Ventas_Load(object sender, EventArgs e)
         {
             ConfigurarGrid();
+            ConfigurarGridRegistro();
             ConfigurarComboBoxCantidad();
+            CargarComboBoxMetodoPago();
             VincularEventosYValidaciones();
             ActualizarTotalVenta();
+            CargarRegistroVentas();
         }
 
         private void ConfigurarComboBoxCantidad()
@@ -44,12 +49,29 @@ namespace Proyecto_Taller_2
             }
         }
 
+        private void CargarComboBoxMetodoPago()
+        {
+            if (cboMetodoPago != null)
+            {
+                try
+                {
+                    MetodoPagoNegocio negocioMetodoPago = new MetodoPagoNegocio();
+                    cboMetodoPago.DataSource = negocioMetodoPago.CargarMetodosPago();
+                    cboMetodoPago.DisplayMember = "Nombre";
+                    cboMetodoPago.ValueMember = "IdMetodoPago";
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudieron cargar los métodos de pago: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
         private void ConfigurarGrid()
         {
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.DataSource = listaCarrito;
 
-            // Bloqueo total de escritura manual y filas nuevas
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AllowUserToDeleteRows = false;
             dataGridView1.ReadOnly = true;
@@ -58,10 +80,8 @@ namespace Proyecto_Taller_2
             dataGridView1.MultiSelect = false;
             dataGridView1.RowHeadersVisible = false;
 
-            // Fondo blanco para la zona vacía de la grilla
             dataGridView1.BackgroundColor = Color.White;
 
-            // Estilo visual corporativo y fondo blanco en las celdas
             dataGridView1.EnableHeadersVisualStyles = false;
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(30, 40, 50);
             dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
@@ -82,36 +102,61 @@ namespace Proyecto_Taller_2
                 dataGridView1.Columns[3].DataPropertyName = "SubTotal";
             }
 
-            // Centrar el icono del tachito de eliminar en su respectiva columna si existe
-            foreach (DataGridViewColumn col in dataGridView1.Columns)
-            {
-                if (col.Name.ToLower().Contains("eliminar") || col.HeaderText.ToLower().Contains("eliminar"))
-                {
-                    col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                }
-            }
-
             dataGridView1.CellClick -= DataGridView1_CellClick;
             dataGridView1.CellClick += DataGridView1_CellClick;
         }
 
+        private void ConfigurarGridRegistro()
+        {
+            if (dataGridView2 == null) return;
+
+            dataGridView2.AutoGenerateColumns = false;
+            dataGridView2.AllowUserToAddRows = false;
+            dataGridView2.AllowUserToDeleteRows = false;
+            dataGridView2.ReadOnly = true;
+            dataGridView2.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dataGridView2.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView2.MultiSelect = false;
+            dataGridView2.RowHeadersVisible = false;
+            dataGridView2.BackgroundColor = Color.White;
+
+            dataGridView2.EnableHeadersVisualStyles = false;
+            dataGridView2.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(30, 40, 50);
+            dataGridView2.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dataGridView2.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+
+            dataGridView2.RowsDefaultCellStyle.ForeColor = Color.Black;
+            dataGridView2.RowsDefaultCellStyle.BackColor = Color.White;
+            dataGridView2.RowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(51, 153, 255);
+            dataGridView2.RowsDefaultCellStyle.SelectionForeColor = Color.White;
+
+            dataGridView2.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 247, 250);
+
+            if (dataGridView2.Columns.Count >= 5)
+            {
+                dataGridView2.Columns[0].DataPropertyName = "IdVenta";
+                dataGridView2.Columns[1].DataPropertyName = "Fecha";
+                dataGridView2.Columns[2].DataPropertyName = "Cliente";
+                dataGridView2.Columns[3].DataPropertyName = "Total";
+                dataGridView2.Columns[4].DataPropertyName = "MetodoPago";
+            }
+        }
+
         private void VincularEventosYValidaciones()
         {
-            // Vinculación de Botones
             if (button1 != null) { button1.Click -= ExecBuscarCliente; button1.Click += ExecBuscarCliente; }
             if (button2 != null) { button2.Click -= ExecBuscarProducto; button2.Click += ExecBuscarProducto; }
             if (button4 != null) { button4.Click -= ExecAgregarProducto; button4.Click += ExecAgregarProducto; }
             if (button5 != null) { button5.Click -= ExecRegistrarVenta; button5.Click += ExecRegistrarVenta; }
 
-            // Restricciones de teclado
-            if (textBox1 != null) AsignarSoloNumeros(textBox1);   // ID Cliente
-            if (textBox2 != null) AsignarSoloLetras(textBox2);    // Nombre Cliente
-            if (textBox3 != null) AsignarSoloNumeros(textBox3);   // DNI Cliente
+            if (textBox1 != null) AsignarSoloNumeros(textBox1);
+            if (textBox2 != null) AsignarSoloLetras(textBox2);
+            if (textBox3 != null) AsignarSoloNumeros(textBox3);
 
-            if (textBox5 != null) AsignarSoloNumeros(textBox5);   // Producto ID
-            if (textBox4 != null) AsignarSoloLetras(textBox4);    // Descripción
-            if (textBox6 != null) AsignarSoloNumeros(textBox6);   // Stock
-            if (textBox7 != null)                                 // Precio Venta
+            if (textBox5 != null) AsignarSoloNumeros(textBox5);
+            if (textBox4 != null) AsignarSoloLetras(textBox4);
+            if (textBox6 != null) AsignarSoloNumeros(textBox6);
+            if (textBox7 != null)
             {
                 textBox7.ReadOnly = false;
                 AsignarSoloDecimales(textBox7);
@@ -123,7 +168,6 @@ namespace Proyecto_Taller_2
                 comboBox1.KeyPress += SoloNumeros_KeyPress;
             }
 
-            // Limpieza de placeholder al hacer click o entrar a las cajas de texto
             TextBox[] todosLosTextBox = { textBox1, textBox2, textBox3, textBox4, textBox5, textBox6, textBox7 };
             foreach (var txt in todosLosTextBox)
             {
@@ -284,7 +328,7 @@ namespace Proyecto_Taller_2
 
         private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0 && btnEliminarCol != null && e.ColumnIndex == btnEliminarCol.Index)
+            if (e.RowIndex >= 0 && dataGridView1.Columns[e.ColumnIndex].Name.ToLower().Contains("eliminar"))
             {
                 if (dataGridView1.Rows[e.RowIndex].DataBoundItem is DetalleVentaItem item)
                 {
@@ -299,19 +343,17 @@ namespace Proyecto_Taller_2
 
         private void ExecRegistrarVenta(object sender, EventArgs e)
         {
-            // 1. Validar que existan productos en el carrito
             if (listaCarrito.Count == 0)
             {
                 MessageBox.Show("No hay productos en la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // 2. VALIDACIÓN OBLIGATORIA DE NOMBRE Y DNI
             string nombreIngresado = textBox2 != null ? textBox2.Text.Trim() : "";
             string dniIngresado = textBox3 != null ? textBox3.Text.Trim() : "";
 
-            bool nombreInvalido = string.IsNullOrWhiteSpace(nombreIngresado) || nombreIngresado.Equals("nombre", StringComparison.OrdinalIgnoreCase);
-            bool dniInvalido = string.IsNullOrWhiteSpace(dniIngresado) || dniIngresado.Equals("dni", StringComparison.OrdinalIgnoreCase);
+            bool nombreInvalido = string.IsNullOrWhiteSpace(nombreIngresado) || string.Equals(nombreIngresado, "nombre", StringComparison.OrdinalIgnoreCase);
+            bool dniInvalido = string.IsNullOrWhiteSpace(dniIngresado) || string.Equals(dniIngresado, "dni", StringComparison.OrdinalIgnoreCase);
 
             if (nombreInvalido || dniInvalido)
             {
@@ -320,19 +362,79 @@ namespace Proyecto_Taller_2
                 return;
             }
 
-            // 3. Registrar Venta si pasa las validaciones
+            int idMetodoPagoSeleccionado = 1;
+            if (cboMetodoPago != null && cboMetodoPago.SelectedValue != null)
+            {
+                int.TryParse(cboMetodoPago.SelectedValue.ToString(), out idMetodoPagoSeleccionado);
+            }
+
             decimal total = listaCarrito.Sum(x => x.SubTotal);
 
-            MessageBox.Show($"¡Venta registrada con éxito!\n\nCliente: {nombreIngresado}\nDNI: {dniIngresado}\nTotal: $ {total:N2}",
-                            "Venta Finalizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                // GUARDAR REALMENTE EN LA BASE DE DATOS (Pasamos el ID 6 del vendedor actual)
+                int idUsuarioActual = 1;
+                VentaNegocio negocio = new VentaNegocio();
+                negocio.RegistrarVentaBD(total, idMetodoPagoSeleccionado, idUsuarioActual);
 
-            // Reiniciar estado post-venta
-            listaCarrito.Clear();
-            ActualizarTotalVenta();
+                MessageBox.Show($"¡Venta registrada y guardada en la Base de Datos!\n\nCliente: {nombreIngresado}\nDNI: {dniIngresado}\nMétodo de Pago: {cboMetodoPago.Text}\nTotal: $ {total:N2}",
+                                "Venta Finalizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            if (textBox1 != null) textBox1.Text = "";
-            if (textBox2 != null) textBox2.Text = "nombre";
-            if (textBox3 != null) textBox3.Text = "dni";
+                // Limpiar carrito y controles
+                listaCarrito.Clear();
+                ActualizarTotalVenta();
+
+                if (textBox1 != null) textBox1.Text = "";
+                if (textBox2 != null) textBox2.Text = "nombre";
+                if (textBox3 != null) textBox3.Text = "dni";
+                if (cboMetodoPago != null && cboMetodoPago.Items.Count > 0) cboMetodoPago.SelectedIndex = 0;
+
+                // RECARGAR EL GRID DESDE LA BASE DE DATOS
+                CargarRegistroVentas();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al guardar la venta en la base de datos: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void CargarRegistroVentas(DateTime? fechaDesde = null, DateTime? fechaHasta = null)
+        {
+            try
+            {
+                VentaNegocio negocio = new VentaNegocio();
+                DataTable dtVentas = negocio.ObtenerHistorialVentas();
+
+                // Enlazamos los datos reales de la BD al DataGridView2
+                dataGridView2.DataSource = dtVentas;
+
+                decimal totalFacturado = 0;
+                int cantidadVentas = dtVentas.Rows.Count;
+
+                foreach (DataRow row in dtVentas.Rows)
+                {
+                    if (row["Total"] != DBNull.Value)
+                    {
+                        decimal.TryParse(row["Total"].ToString(), out decimal subTotal);
+                        totalFacturado += subTotal;
+                    }
+                }
+
+                // Actualización directa y precisa utilizando los nombres exactos asignados en el diseñador
+                if (lblTotalFacturado != null)
+                {
+                    lblTotalFacturado.Text = $"$ {totalFacturado:N2}";
+                }
+
+                if (lblCantidadVentas != null)
+                {
+                    lblCantidadVentas.Text = cantidadVentas.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar el registro de ventas: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void ActualizarTotalVenta()
@@ -403,9 +505,11 @@ namespace Proyecto_Taller_2
 
         #endregion
 
-        private void panel4_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
+        private void panel4_Paint(object sender, PaintEventArgs e) { }
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+        private void panel6_Paint(object sender, PaintEventArgs e) { }
+        private void cboMetodoPago_SelectedIndexChanged(object sender, EventArgs e) { }
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e) { }
+        private void label20_Click(object sender, EventArgs e) { }
     }
 }
