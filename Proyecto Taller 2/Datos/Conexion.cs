@@ -9,9 +9,10 @@ namespace Proyecto_Taller_2
 {
     public static class Conexion
     {
-        
-        private static string cadenaConexion = "Server=localhost;Port=33060;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";
+        // 1. La hacemos PÚBLICA y ESTÁTICA para que todo el proyecto use esta única instancia de la cadena
+        public static readonly string cadenaConexion = "Server=localhost;Port=3306;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";
 
+        // 2. Método estático para obtener la conexión ya lista
         public static MySqlConnection ObtenerConexion()
         {
             return new MySqlConnection(cadenaConexion);
@@ -70,7 +71,7 @@ namespace Proyecto_Taller_2
                 }
             }
 
-            return usuario; // Retorna null si las credenciales son incorrectas
+            return usuario;
         }
     }
 }

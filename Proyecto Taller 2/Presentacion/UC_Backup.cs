@@ -269,7 +269,7 @@ namespace Proyecto_Taller_2
         {
             DGVHistorial.AutoGenerateColumns = false;
             // Reemplaza por la ruta real donde guardas tus backups
-            string rutaCarpeta = @"I:\Users\lucaj\Desktop\Historial Base de Datos EsenciaRetro\";
+            string rutaCarpeta = @"C:\Users\samue\OneDrive\Desktop\Para buck";
 
             // Verificamos si la carpeta existe; si no, no hacemos nada
             if (!System.IO.Directory.Exists(rutaCarpeta)) return;
