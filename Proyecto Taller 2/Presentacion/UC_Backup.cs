@@ -1,4 +1,5 @@
-﻿using Proyecto_Taller_2.Negocio;
+﻿using Org.BouncyCastle.Pqc.Crypto.Lms;
+using Proyecto_Taller_2.Negocio;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -31,7 +32,7 @@ namespace Proyecto_Taller_2
         private List<BackupModel> _historialBackups;
         private BackNegocio negocio = new BackNegocio();
         private DataGridViewButtonColumn colEliminarExtra;
-
+        private BackNegocio negocio = new BackNegocio();
         public UC_BackUp()
         {
             InitializeComponent();
@@ -86,7 +87,7 @@ namespace Proyecto_Taller_2
 
             if (txtDestino != null && string.IsNullOrWhiteSpace(txtDestino.Text))
             {
-                txtDestino.Text = @"C:\CopiasBase\RetroCamisetas\";
+                txtDestino.Text = @"C:\ Carpeta_Ejemplo";
             }
 
             if (btnGenerarBackup != null)
@@ -207,14 +208,13 @@ namespace Proyecto_Taller_2
                 {
                     MessageBox.Show("El proceso de negocio no pudo completar la creación del archivo.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-
+                
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error al generar la copia: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
 
 
         private void btnExportarNube_Click(object sender, EventArgs e)
@@ -339,6 +339,92 @@ namespace Proyecto_Taller_2
         private void txtDestino_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void DGVHistorial_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            //Evita que tire error si el usuario hace clic en los títulos de las columnas (RowIndex -1)
+            if (e.RowIndex < 0)
+            {
+                return;
+            }
+            //Verifica si la columna donde se hizo clic es exactamente la del botón Restaurar
+            if (DGVHistorial.Columns[e.ColumnIndex].Name == "colAccion")
+            {
+                //Obtiene la ruta del archivo leyendo la celda "Destino" de esa misma fila
+                string rutaArchivo = DGVHistorial.Rows[e.RowIndex].Cells["colDestino"].Value.ToString();
+
+                // 4. Verificamos si el archivo físico aún existe en la computadora
+                if (!System.IO.File.Exists(rutaArchivo))
+                {
+                    MessageBox.Show("No se encontró el archivo de backup en la ruta especificada. Puede que haya sido movido o eliminado.", "Archivo Inexistente", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // 5. Confirmación Crítica: Restaurar sobreescribe datos irrevocablemente
+                DialogResult respuesta = MessageBox.Show(
+                    "¿Estás seguro de que deseas restaurar este backup?\n\n¡ATENCIÓN! Todos los datos actuales de la base de datos se borrarán y se reemplazarán por los de este archivo.",
+                    "Confirmación de Restauración",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+
+                if (respuesta == DialogResult.Yes)
+                {
+                    try
+                    {
+                        // 6. Llamamos a nuestra capa de Negocio
+                        BackNegocio negocio = new BackNegocio();
+                        bool exito = negocio.RestaurarBackup(rutaArchivo);
+
+                        if (exito)
+                        {
+                            MessageBox.Show("¡Base de datos restaurada con éxito! Es muy recomendable cerrar e iniciar sesión nuevamente en el sistema.", "Restauración Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Ocurrió un error al intentar restaurar la base de datos: " + ex.Message, "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void CargarHistorialDesdeCarpeta()
+        {
+            DGVHistorial.AutoGenerateColumns = false;
+            // Reemplaza por la ruta real donde guardas tus backups
+            string rutaCarpeta = @"I:\Users\lucaj\Desktop\Historial Base de Datos EsenciaRetro\";
+
+            // Verificamos si la carpeta existe; si no, no hacemos nada
+            if (!System.IO.Directory.Exists(rutaCarpeta)) return;
+
+            List<BackupModel> listaHistorial = new List<BackupModel>();
+            System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(rutaCarpeta);
+
+            // Buscamos todos los archivos que terminen en .sql
+            System.IO.FileInfo[] archivos = directorio.GetFiles("*.sql");
+
+            foreach (System.IO.FileInfo archivo in archivos)
+            {
+                // Calculamos el tamaño en MB para que se lea mejor
+                double tamanioMB = archivo.Length / (1024.0 * 1024.0);
+
+                listaHistorial.Add(new BackupModel
+                {
+                    FechaHora = archivo.CreationTime, // Fecha en que se creó el archivo
+                    Tipo = "Manual",
+                    Destino = archivo.FullName,       // La ruta completa del archivo
+                    Tamanio = tamanioMB.ToString("0.00") + " MB"
+                });
+            }
+
+            // Ordenamos la lista para que los backups más nuevos salgan arriba
+            listaHistorial = listaHistorial.OrderByDescending(b => b.FechaHora).ToList();
+
+            // Limpiamos y asignamos a la grilla
+
+            DGVHistorial.DataSource = null;
+            DGVHistorial.DataSource = listaHistorial;
         }
     }
 }

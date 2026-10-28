@@ -19,6 +19,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.lblTituloPrincipal = new System.Windows.Forms.Label();
             this.panelResumen = new System.Windows.Forms.Panel();
+            this.CLBTablas = new System.Windows.Forms.CheckedListBox();
             this.lblEstado = new System.Windows.Forms.Label();
             this.lblUltimaCopia = new System.Windows.Forms.Label();
             this.lblDatosIncluir = new System.Windows.Forms.Label();
@@ -56,20 +57,31 @@
             // 
             this.panelResumen.BackColor = System.Drawing.Color.Lavender;
             this.panelResumen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelResumen.Controls.Add(this.CLBTablas);
             this.panelResumen.Controls.Add(this.lblEstado);
             this.panelResumen.Controls.Add(this.lblUltimaCopia);
             this.panelResumen.Controls.Add(this.lblDatosIncluir);
             this.panelResumen.Location = new System.Drawing.Point(63, 60);
             this.panelResumen.Name = "panelResumen";
-            this.panelResumen.Size = new System.Drawing.Size(430, 95);
+            this.panelResumen.Size = new System.Drawing.Size(430, 200);
             this.panelResumen.TabIndex = 1;
+            // 
+            // CLBTablas
+            // 
+            this.CLBTablas.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CLBTablas.FormattingEnabled = true;
+            this.CLBTablas.Location = new System.Drawing.Point(19, 36);
+            this.CLBTablas.Name = "CLBTablas";
+            this.CLBTablas.Size = new System.Drawing.Size(389, 92);
+            this.CLBTablas.TabIndex = 3;
+            this.CLBTablas.SelectedIndexChanged += new System.EventHandler(this.CLBTablas_SelectedIndexChanged);
             // 
             // lblEstado
             // 
             this.lblEstado.AutoSize = true;
             this.lblEstado.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblEstado.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lblEstado.Location = new System.Drawing.Point(15, 62);
+            this.lblEstado.Location = new System.Drawing.Point(15, 160);
             this.lblEstado.Name = "lblEstado";
             this.lblEstado.Size = new System.Drawing.Size(126, 23);
             this.lblEstado.TabIndex = 2;
@@ -80,7 +92,7 @@
             this.lblUltimaCopia.AutoSize = true;
             this.lblUltimaCopia.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.lblUltimaCopia.ForeColor = System.Drawing.Color.Black;
-            this.lblUltimaCopia.Location = new System.Drawing.Point(15, 37);
+            this.lblUltimaCopia.Location = new System.Drawing.Point(15, 130);
             this.lblUltimaCopia.Name = "lblUltimaCopia";
             this.lblUltimaCopia.Size = new System.Drawing.Size(260, 21);
             this.lblUltimaCopia.TabIndex = 1;
@@ -93,9 +105,10 @@
             this.lblDatosIncluir.ForeColor = System.Drawing.Color.Black;
             this.lblDatosIncluir.Location = new System.Drawing.Point(15, 12);
             this.lblDatosIncluir.Name = "lblDatosIncluir";
-            this.lblDatosIncluir.Size = new System.Drawing.Size(348, 21);
+            this.lblDatosIncluir.Size = new System.Drawing.Size(140, 21);
             this.lblDatosIncluir.TabIndex = 0;
-            this.lblDatosIncluir.Text = "👥 Datos a Incluir: Todos (Ventas, Stock, Clientes)";
+            this.lblDatosIncluir.Text = "👥 Tablas a Incluir:";
+            this.lblDatosIncluir.Click += new System.EventHandler(this.lblDatosIncluir_Click);
             // 
             // panelDestino
             // 
@@ -272,7 +285,7 @@
             this.Controls.Add(this.panelResumen);
             this.Controls.Add(this.lblTituloPrincipal);
             this.Name = "UC_BackUp";
-            this.Size = new System.Drawing.Size(1317, 719);
+            this.Size = new System.Drawing.Size(1321, 736);
             this.Load += new System.EventHandler(this.UC_BackUp_Load);
             this.panelResumen.ResumeLayout(false);
             this.panelResumen.PerformLayout();

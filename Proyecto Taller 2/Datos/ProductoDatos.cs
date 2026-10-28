@@ -7,7 +7,7 @@ namespace Proyecto_Taller_2.Datos
 {
     internal class ProductoDatos
     {
-        private string connectionString = "Server=localhost;Port=3306;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";
+        private string connectionString = "Server=localhost;Port=33060;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";
 
         public List<Producto> ObtenerTodosLosProductos()
         {
