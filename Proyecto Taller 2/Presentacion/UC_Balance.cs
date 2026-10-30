@@ -454,5 +454,10 @@ namespace Proyecto_Taller_2
         }
 
         #endregion
+
+        private void UC_Balance_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

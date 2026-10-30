@@ -28,6 +28,20 @@ namespace Proyecto_Taller_2.Negocio
             }
         }
 
+        public void EliminarVentaBD(int idVenta)
+        {
+            using (MySqlConnection conexion = Conexion.ObtenerConexion())
+            {
+                conexion.Open();
+                string query = "DELETE FROM venta WHERE id_venta = @id";
+                using (MySqlCommand cmd = new MySqlCommand(query, conexion))
+                {
+                    cmd.Parameters.AddWithValue("@id", idVenta);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public DataTable ObtenerHistorialVentas()
         {
             DataTable dt = new DataTable();
