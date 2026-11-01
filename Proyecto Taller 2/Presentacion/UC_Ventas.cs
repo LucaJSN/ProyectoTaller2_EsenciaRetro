@@ -72,6 +72,8 @@ namespace Proyecto_Taller_2
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.DataSource = listaCarrito;
 
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AllowUserToDeleteRows = false;
             dataGridView1.ReadOnly = true;
@@ -111,6 +113,8 @@ namespace Proyecto_Taller_2
             if (dataGridView2 == null) return;
 
             dataGridView2.AutoGenerateColumns = false;
+            dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
             dataGridView2.AllowUserToAddRows = false;
             dataGridView2.AllowUserToDeleteRows = false;
             dataGridView2.ReadOnly = true;
@@ -140,6 +144,9 @@ namespace Proyecto_Taller_2
                 dataGridView2.Columns[3].DataPropertyName = "Total";
                 dataGridView2.Columns[4].DataPropertyName = "MetodoPago";
             }
+
+            dataGridView2.CellClick -= DataGridView2_CellClick;
+            dataGridView2.CellClick += DataGridView2_CellClick;
         }
 
         private void VincularEventosYValidaciones()
@@ -341,6 +348,55 @@ namespace Proyecto_Taller_2
             }
         }
 
+        private void DataGridView2_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dataGridView2.Rows[e.RowIndex];
+                string nombreColumna = dataGridView2.Columns[e.ColumnIndex].Name.ToLower();
+
+                bool esColumnaEliminar = nombreColumna.Contains("eliminar") || nombreColumna.Contains("btneliminar");
+                bool esColumnaFacturacion = nombreColumna.Contains("factur") || nombreColumna.Contains("btnfacturacion");
+
+                if (esColumnaEliminar)
+                {
+                    if (row.Cells[0].Value != null && int.TryParse(row.Cells[0].Value.ToString(), out int idVenta))
+                    {
+                        if (MessageBox.Show($"¿Desea eliminar la venta con ID {idVenta} de la base de datos?", "Confirmar Eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        {
+                            try
+                            {
+                                VentaNegocio negocio = new VentaNegocio();
+                                negocio.EliminarVentaBD(idVenta);
+                                MessageBox.Show("Venta eliminada correctamente de la base de datos.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                CargarRegistroVentas();
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Error al eliminar la venta: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                }
+                else if (esColumnaFacturacion)
+                {
+                    DialogResult resultado = MessageBox.Show(
+                        "Seleccione el tipo de factura a emitir:\n\n[Sí] = Factura A\n[No] = Factura B\n[Cancelar] = Cancelar operación",
+                        "Generar Factura",
+                        MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Question);
+
+                    if (resultado == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+
+                    string tipoFactura = resultado == DialogResult.Yes ? "A" : "B";
+                    MessageBox.Show($"¡Factura {tipoFactura} generada con éxito!", "Facturación", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
         private void ExecRegistrarVenta(object sender, EventArgs e)
         {
             if (listaCarrito.Count == 0)
@@ -372,7 +428,6 @@ namespace Proyecto_Taller_2
 
             try
             {
-                // GUARDAR REALMENTE EN LA BASE DE DATOS (Pasamos el ID 6 del vendedor actual)
                 int idUsuarioActual = 1;
                 VentaNegocio negocio = new VentaNegocio();
                 negocio.RegistrarVentaBD(total, idMetodoPagoSeleccionado, idUsuarioActual);
@@ -380,7 +435,6 @@ namespace Proyecto_Taller_2
                 MessageBox.Show($"¡Venta registrada y guardada en la Base de Datos!\n\nCliente: {nombreIngresado}\nDNI: {dniIngresado}\nMétodo de Pago: {cboMetodoPago.Text}\nTotal: $ {total:N2}",
                                 "Venta Finalizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Limpiar carrito y controles
                 listaCarrito.Clear();
                 ActualizarTotalVenta();
 
@@ -389,7 +443,6 @@ namespace Proyecto_Taller_2
                 if (textBox3 != null) textBox3.Text = "dni";
                 if (cboMetodoPago != null && cboMetodoPago.Items.Count > 0) cboMetodoPago.SelectedIndex = 0;
 
-                // RECARGAR EL GRID DESDE LA BASE DE DATOS
                 CargarRegistroVentas();
             }
             catch (Exception ex)
@@ -405,7 +458,6 @@ namespace Proyecto_Taller_2
                 VentaNegocio negocio = new VentaNegocio();
                 DataTable dtVentas = negocio.ObtenerHistorialVentas();
 
-                // Enlazamos los datos reales de la BD al DataGridView2
                 dataGridView2.DataSource = dtVentas;
 
                 decimal totalFacturado = 0;
@@ -420,7 +472,6 @@ namespace Proyecto_Taller_2
                     }
                 }
 
-                // Actualización directa y precisa utilizando los nombres exactos asignados en el diseñador
                 if (lblTotalFacturado != null)
                 {
                     lblTotalFacturado.Text = $"$ {totalFacturado:N2}";
@@ -511,5 +562,10 @@ namespace Proyecto_Taller_2
         private void cboMetodoPago_SelectedIndexChanged(object sender, EventArgs e) { }
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e) { }
         private void label20_Click(object sender, EventArgs e) { }
+
+        private void tabPage3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
