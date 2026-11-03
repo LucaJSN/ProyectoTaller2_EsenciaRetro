@@ -11,8 +11,8 @@ namespace Proyecto_Taller_2.Datos
     internal class BackDatos
     {
         // Nota: Cuando pases definitivamente a la nube, recuerda cambiar esta línea por la de Railway
-        private string connectionString = "Server=localhost;Port=3306;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";
-
+        private string connectionString = "Server=localhost;Port=33060;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;"; //Luca
+        //private string connectionString = "Server=localhost;Port=33060;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";//Samu
         // 1. NUEVO: Obtener todas las tablas dinámicamente
         public List<string> ObtenerTablas()
         {

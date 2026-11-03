@@ -21,7 +21,7 @@ namespace Proyecto_Taller_2
             // 2. Nueva propiedad que extrae y formatea solo la Hora (Ej: 15:30)
             public string Hora
             {
-                get { return FechaHora.ToString("HH:mm"); }
+                get { return FechaHora.ToString("HH:mm:ss"); }
             }
             public string Tipo { get; set; }
             public string Destino { get; set; }
@@ -86,7 +86,7 @@ namespace Proyecto_Taller_2
 
             if (txtDestino != null && string.IsNullOrWhiteSpace(txtDestino.Text))
             {
-                txtDestino.Text = @"C:\CopiasBase\RetroCamisetas\";
+                txtDestino.Text = @"I:\Users\lucaj\Desktop\Historial Base de Datos EsenciaRetro";
             }
 
             if (btnGenerarBackup != null)
@@ -122,7 +122,7 @@ namespace Proyecto_Taller_2
             {
                 DGVHistorial.Rows.Add(
                     item.FechaHora.ToString("dd/MM/yyyy"),
-                    item.FechaHora.ToString("HH:mm"),
+                    item.FechaHora.ToString("HH:mm:ss"),
                     item.Tipo,
                     item.Destino,
                     item.Tamanio,
@@ -134,7 +134,7 @@ namespace Proyecto_Taller_2
             if (lblUltimaCopia != null && _historialBackups.Count > 0)
             {
                 var ultima = _historialBackups[0];
-                lblUltimaCopia.Text = $"🕒 Última Copia: {ultima.FechaHora:dd/MM/yyyy HH:mm}";
+                lblUltimaCopia.Text = $"🕒 Última Copia: {ultima.FechaHora:dd/MM/yyyy HH:mm:ss}";
             }
         }
 
@@ -172,7 +172,7 @@ namespace Proyecto_Taller_2
                     return;
                 }
 
-                string nombreArchivo = "Backup_Datos_" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm") + ".sql";
+                string nombreArchivo = "Backup_Datos_" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss") + ".sql";
                 string rutaCompleta = System.IO.Path.Combine(destinoDir, nombreArchivo);
 
                 // Lee las tablas que el usuario tildó en la vista
@@ -269,7 +269,8 @@ namespace Proyecto_Taller_2
         {
             DGVHistorial.AutoGenerateColumns = false;
             // Reemplaza por la ruta real donde guardas tus backups
-            string rutaCarpeta = @"C:\Users\samue\OneDrive\Desktop\Para buck";
+            //string rutaCarpeta = @"C:\Users\samue\OneDrive\Desktop\Para buck"; //De SAMU
+            string rutaCarpeta = @"I:\Users\lucaj\Desktop\Historial Base de Datos EsenciaRetro";
 
             // Verificamos si la carpeta existe; si no, no hacemos nada
             if (!System.IO.Directory.Exists(rutaCarpeta)) return;
