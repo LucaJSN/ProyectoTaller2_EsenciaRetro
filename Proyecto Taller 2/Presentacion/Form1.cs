@@ -14,17 +14,29 @@ namespace Proyecto_Taller_2
     public partial class Form1 : Form
     {
         private Usuario usuarioActivo;
+        public bool CerroSesionParaReingresar { get; private set; } = false;
 
         public Form1(Usuario usuario)
         {
             InitializeComponent();
+
+            // 1. Cargamos y mostramos los datos del usuario inicial
+            ActualizarDatosUsuario(usuario);
+
+            // 2. Carga la pantalla de inicio al iniciar
+            AbrirModulo(new UC_Dashboard());
+        }
+
+        /// <summary>
+        /// Reasigna el usuario activo y refresca la barra superior y título del formulario.
+        /// </summary>
+        public void ActualizarDatosUsuario(Usuario usuario)
+        {
             usuarioActivo = usuario;
 
             string tipoRol = usuarioActivo?.rol?.tipo ?? "Sin Rol";
-            this.Text = $"Sistema de Gestión - Usuario: {usuarioActivo?.nombre} {usuarioActivo?.apellido} ({tipoRol})";
 
-            // Carga la pantalla de inicio al iniciar
-            AbrirModulo(new UC_Dashboard());
+            this.Text = $"Sistema de Gestión - Usuario: {usuarioActivo?.nombre} {usuarioActivo?.apellido} ({tipoRol})";
         }
 
         public Form1()
@@ -118,6 +130,13 @@ namespace Proyecto_Taller_2
                             MessageBoxIcon.Stop);
         }
 
+
+        private void BtnCerrarSesion_Click(object sender, EventArgs e)
+        {
+            CerroSesionParaReingresar = true;
+            this.Close(); // Cierra FormPrincipal y el ciclo 'while' de Program.cs vuelve a pedir Login
+        }
+
         #region --- EVENTOS DE BOTONES DEL MENÚ ---
 
         private void btnInicio_Click(object sender, EventArgs e)
@@ -183,6 +202,33 @@ namespace Proyecto_Taller_2
         private void BtnAdmin_Click_1(object sender, EventArgs e)
         {
 
+        }
+
+        private void BtnSalir_Click(object sender, EventArgs e)
+        {
+            // 1. Ocultamos la ventana principal
+            this.Hide();
+
+            // 2. Abrimos una instancia limpia del Login
+            using (FormLogin login = new FormLogin())
+            {
+                if (login.ShowDialog() == DialogResult.OK)
+                {
+                    // 3. Actualizamos los datos del usuario activo
+                    ActualizarDatosUsuario(login.UsuarioAutenticado);
+
+                    // 4. Mostramos nuevamente la ventana principal
+                    this.Show();
+
+                    // 5. Cargamos el Dashboard
+                    AbrirModulo(new UC_Dashboard());
+                }
+                else
+                {
+                    // Si cancela o cierra el Login, cerramos la aplicación
+                    this.Close();
+                }
+            }
         }
     }
 }
