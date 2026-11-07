@@ -38,7 +38,8 @@ namespace Proyecto_Taller_2
 
                     descripcion = TBDescripcion.Text.Trim(),
 
-                    precio = NUDCosto.Value,
+                    precio_costo = NUDCosto.Value,
+                    precio_venta = NUDVenta.Value,
                     stock = (int)NUDCantidad.Value,
 
 
@@ -63,7 +64,7 @@ namespace Proyecto_Taller_2
                         // Recargamos la grilla para ver el nuevo producto
                         CargarProductosEnGrilla();
 
-                        // Opcional: Crear un método LimpiarCampos() para vaciar los TextBox después de guardar
+                        LimpiarFormulario();
                     }
                 }
                 else
@@ -119,11 +120,27 @@ namespace Proyecto_Taller_2
         {
             if (listaProductosGlobal == null || listaProductosGlobal.Count == 0) return;
 
+            ProductoNegocio negocio = new ProductoNegocio();
             // Forzamos la memoria creando una lista real
+            List<Producto> listaCompleta = negocio.ListarTodosLosProductos();
             List<Producto> listaFiltrada = listaProductosGlobal.ToList();
 
-            // B. FILTRO POR TEXTO DINÁMICO
+            string filtro = CBFiltro.Text;
+
+            if (filtro == "Activos")
+            {
+                listaFiltrada = listaCompleta.Where(p => !p.fecha_baja.HasValue).ToList();
+            }
+            else if (filtro == "Inactivos")
+            {
+                listaFiltrada = listaCompleta.Where(p => p.fecha_baja.HasValue).ToList();
+            }
+            else
+            {
+                listaFiltrada = listaCompleta;
+            }
             string textoBusqueda = TBBuscador.Text.Trim();
+
             if (!string.IsNullOrEmpty(textoBusqueda))
             {
                 listaFiltrada = listaFiltrada.Where(p =>
@@ -201,7 +218,8 @@ namespace Proyecto_Taller_2
                     // 2. Cargamos los datos en los TextBox para que el producto los modifique
                     TBNombre.Text = productoSelec.nombre;
                     TBDescripcion.Text = productoSelec.descripcion;
-                    NUDCosto.Value = productoSelec.precio; //Fijate si este o el de precioVenta
+                    NUDCosto.Value = productoSelec.precio_costo;
+                    NUDVenta.Value = productoSelec.precio_venta;
                     NUDCantidad.Value = productoSelec.stock;
                     CBTalle.SelectedValue = productoSelec.talle;
                     if (!string.IsNullOrEmpty(productoSelec.url_imagen))
@@ -415,25 +433,6 @@ namespace Proyecto_Taller_2
             LimpiarFormulario();
         }
 
-        //private void BtnConexion_Click(object sender, EventArgs e) //WTF IS THIS
-        //{
-        //    string connectionString =
-        //    "Server=127.0.0.1;Port=33060;Database=esenciaretro;Uid=root;Pwd=puntoybarraroot;";
-
-        //    try
-        //    {
-        //        using (MySqlConnection conexion = new MySqlConnection(connectionString))
-        //        {
-        //            conexion.Open();
-        //            MessageBox.Show("¡Conexión exitosa!");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Error de conexión: " + ex.Message);
-        //    }
-        //}
-
         private void DGVProductos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             // 1. Verificamos que estemos dibujando la columna de la imagen
@@ -489,6 +488,16 @@ namespace Proyecto_Taller_2
         private void LDescripcion_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void TBBuscador_TextChanged(object sender, EventArgs e)
+        {
+            CargarProductosEnGrilla();
+        }
+
+        private void CBFiltro_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarProductosEnGrilla();
         }
     }
 }

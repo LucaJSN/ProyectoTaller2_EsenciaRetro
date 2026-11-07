@@ -15,7 +15,7 @@ namespace Proyecto_Taller_2.Datos
             List<Producto> lista = new List<Producto>();
             using (MySqlConnection conexion = new MySqlConnection(connectionString))
             {
-                string query = @"SELECT id_producto, nombre, descripcion, stock, precio, talle, edicion, url_imagen, fecha_baja, id_categoria FROM producto";
+                string query = @"SELECT id_producto, nombre, descripcion, stock, precio_costo, precio_venta, talle, edicion, url_imagen, fecha_baja, id_categoria FROM producto";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, conexion))
                 {
@@ -30,7 +30,8 @@ namespace Proyecto_Taller_2.Datos
                                 nombre = reader["nombre"].ToString(),
                                 descripcion = reader["descripcion"].ToString(),
                                 stock = Convert.ToInt32(reader["stock"]),
-                                precio = Convert.ToDecimal(reader["precio"]),
+                                precio_costo = Convert.ToDecimal(reader["precio_costo"]),
+                                precio_venta = Convert.ToDecimal(reader["precio_venta"]),
                                 talle = reader["talle"].ToString(),
                                 edicion = reader["edicion"].ToString(),
                                 url_imagen = reader["url_imagen"] == DBNull.Value ? null : reader["url_imagen"].ToString(),
@@ -54,14 +55,15 @@ namespace Proyecto_Taller_2.Datos
                 {
                     try
                     {
-                        string query = @"INSERT INTO producto (nombre, descripcion, precio, stock, talle, edicion, url_imagen, id_categoria) 
-                                         VALUES (@nom, @desc, @pre, @stock, @tal, @edic, @img, @idCat);";
+                        string query = @"INSERT INTO producto (nombre, descripcion, precio_costo, precio_venta, stock, talle, edicion, url_imagen, id_categoria) 
+                                         VALUES (@nom, @desc, @preCos, @preVen, @stock, @tal, @edic, @img, @idCat);";
 
                         using (MySqlCommand cmdProd = new MySqlCommand(query, conexion, transaccion))
                         {
                             cmdProd.Parameters.AddWithValue("@nom", producto.nombre);
                             cmdProd.Parameters.AddWithValue("@desc", producto.descripcion);
-                            cmdProd.Parameters.AddWithValue("@pre", producto.precio);
+                            cmdProd.Parameters.AddWithValue("@preCos", producto.precio_costo);
+                            cmdProd.Parameters.AddWithValue("@preVen", producto.precio_venta);
                             cmdProd.Parameters.AddWithValue("@stock", producto.stock);
                             cmdProd.Parameters.AddWithValue("@tal", producto.talle);
                             cmdProd.Parameters.AddWithValue("@edic", producto.edicion);
@@ -94,7 +96,7 @@ namespace Proyecto_Taller_2.Datos
                         // CORRECCIÓN CRÍTICA: Se agregó el WHERE id_producto = @idProd
                         string queryProd = @"UPDATE producto 
                                              SET nombre = @nom, descripcion = @desc, stock = @stock, 
-                                                 precio = @prec, talle = @tal, edicion = @edi, 
+                                                 precio_costo = @preCos, precio_venta = @preVen, talle = @tal, edicion = @edi, 
                                                  url_imagen = @img, id_categoria = @idCat 
                                              WHERE id_producto = @idProd";
 
@@ -103,7 +105,8 @@ namespace Proyecto_Taller_2.Datos
                             cmdProd.Parameters.AddWithValue("@nom", producto.nombre);
                             cmdProd.Parameters.AddWithValue("@desc", producto.descripcion);
                             cmdProd.Parameters.AddWithValue("@stock", producto.stock);
-                            cmdProd.Parameters.AddWithValue("@prec", producto.precio); // CORRECCIÓN: Faltaba el @
+                            cmdProd.Parameters.AddWithValue("@preCos", producto.precio_costo);
+                            cmdProd.Parameters.AddWithValue("@preVen", producto.precio_venta);
                             cmdProd.Parameters.AddWithValue("@tal", producto.talle);
                             cmdProd.Parameters.AddWithValue("@edi", producto.edicion);
                             cmdProd.Parameters.AddWithValue("@img", producto.url_imagen ?? (object)DBNull.Value);

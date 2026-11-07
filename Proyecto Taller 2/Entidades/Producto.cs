@@ -11,7 +11,8 @@ namespace Proyecto_Taller_2.Entidades
         public int id_producto { get; set; }
         public string nombre { get; set; }
         public string descripcion { get; set; }
-        public decimal precio { get; set; }
+        public decimal precio_costo { get; set; }
+        public decimal precio_venta { get; set; }
         public int stock { get; set; }
         public string talle { get; set; } 
         public string edicion { get; set; }
@@ -29,7 +30,8 @@ namespace Proyecto_Taller_2.Entidades
         {
             nombre = string.Empty;
             descripcion = string.Empty;
-            precio = 0.0m;
+            precio_costo = 0.0m;
+            precio_venta = 0.0m;
             stock = 0;
             talle = string.Empty;
             edicion = string.Empty;
