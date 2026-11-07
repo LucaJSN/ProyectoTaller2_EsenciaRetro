@@ -17,7 +17,37 @@ namespace Proyecto_Taller_2.Negocio
         }
         public bool InsertarProducto(Producto producto)
         {
-            return datos.InsertarProducto(producto);
+            if (string.IsNullOrWhiteSpace(producto.nombre))
+            {
+                throw new Exception("El nombre del producto no puede estar vacío.");
+            }
+
+            if (string.IsNullOrWhiteSpace(producto.descripcion))
+            {
+                producto.descripcion = "Sin Descripción";
+            }
+
+            if (string.IsNullOrWhiteSpace(producto.talle))
+            {
+                throw new Exception("El talle del producto no puede estar vacío.");
+            }
+
+            if (producto.precio_costo <= 0)
+            {
+                throw new Exception("El precio de costo no puede ser 0.");
+            }
+
+            if (producto.precio_venta <= 0)
+            {
+                throw new Exception("El precio de Venta no puede ser 0");
+            }
+
+            if (producto.precio_costo >= producto.precio_venta)
+            {
+                throw new Exception("El precio de Costo no puede ser igual o superior al precio de venta");
+            }
+
+                return datos.InsertarProducto(producto);
         }
 
         public bool ActualizarProducto(Producto producto)

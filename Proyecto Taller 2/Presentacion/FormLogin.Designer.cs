@@ -36,9 +36,9 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnMostrarContraseña = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.btnMostrarContraseña = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -116,11 +116,11 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Castellar", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.BlanchedAlmond;
             this.label1.Location = new System.Drawing.Point(95, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(313, 40);
+            this.label1.Size = new System.Drawing.Size(236, 38);
             this.label1.TabIndex = 0;
             this.label1.Text = "Esencia Retro";
             // 
@@ -140,6 +140,20 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(472, 279);
             this.panel2.TabIndex = 6;
+            // 
+            // btnMostrarContraseña
+            // 
+            this.btnMostrarContraseña.BackColor = System.Drawing.Color.White;
+            this.btnMostrarContraseña.FlatAppearance.BorderSize = 0;
+            this.btnMostrarContraseña.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMostrarContraseña.ForeColor = System.Drawing.Color.Black;
+            this.btnMostrarContraseña.Location = new System.Drawing.Point(299, 156);
+            this.btnMostrarContraseña.Name = "btnMostrarContraseña";
+            this.btnMostrarContraseña.Size = new System.Drawing.Size(31, 27);
+            this.btnMostrarContraseña.TabIndex = 7;
+            this.btnMostrarContraseña.Text = "👁";
+            this.btnMostrarContraseña.UseVisualStyleBackColor = false;
+            this.btnMostrarContraseña.Click += new System.EventHandler(this.btnMostrarContraseña_Click);
             // 
             // pictureBox2
             // 
@@ -165,20 +179,6 @@
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
-            // 
-            // btnMostrarContraseña
-            // 
-            this.btnMostrarContraseña.BackColor = System.Drawing.Color.White;
-            this.btnMostrarContraseña.FlatAppearance.BorderSize = 0;
-            this.btnMostrarContraseña.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMostrarContraseña.ForeColor = System.Drawing.Color.Black;
-            this.btnMostrarContraseña.Location = new System.Drawing.Point(299, 156);
-            this.btnMostrarContraseña.Name = "btnMostrarContraseña";
-            this.btnMostrarContraseña.Size = new System.Drawing.Size(31, 27);
-            this.btnMostrarContraseña.TabIndex = 7;
-            this.btnMostrarContraseña.Text = "👁";
-            this.btnMostrarContraseña.UseVisualStyleBackColor = false;
-            this.btnMostrarContraseña.Click += new System.EventHandler(this.btnMostrarContraseña_Click);
             // 
             // FormLogin
             // 
