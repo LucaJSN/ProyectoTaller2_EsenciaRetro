@@ -51,15 +51,15 @@ namespace Proyecto_Taller_2.Negocio
                 throw new Exception("Debe seleccionar un rol válido.");
             }
 
-            if (string.IsNullOrWhiteSpace(direccion.provincia))
-            {
-                throw new Exception("Debe ingresar una Provincia");
-            }
+            //if (string.IsNullOrWhiteSpace(direccion.provincia))
+            //{
+            //    throw new Exception("Debe ingresar una Provincia");
+            //}
 
-            if (string.IsNullOrWhiteSpace(direccion.ciudad))
-            {
-                throw new Exception("Debe ingresar una Ciudad");
-            }
+            //if (string.IsNullOrWhiteSpace(direccion.ciudad))
+            //{
+            //    throw new Exception("Debe ingresar una Ciudad");
+            //}
 
             if (string.IsNullOrWhiteSpace(direccion.calle))
             {
@@ -125,10 +125,10 @@ namespace Proyecto_Taller_2.Negocio
                     throw new Exception("Debe seleccionar un rol válido.");
                 }
 
-                if (string.IsNullOrWhiteSpace(direccion.provincia))
-                {
-                    throw new Exception("Debe ingresar una Provincia");
-                }
+                //if (string.IsNullOrWhiteSpace(direccion.provincia))
+                //{
+                //    throw new Exception("Debe ingresar una Provincia");
+                //}
 
                 // Llamas al método que actualiza en la base de datos y retornas el resultado
                 return datos.ActualizarUsuarioYDireccion(usuario, direccion);

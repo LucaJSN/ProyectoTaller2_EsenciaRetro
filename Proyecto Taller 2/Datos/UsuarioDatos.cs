@@ -26,14 +26,13 @@ namespace Proyecto_Taller_2.Datos
                     try
                     {
                         // --- PASO 1: INSERTAR DIRECCIÓN ---
-                        string queryDir = @"INSERT INTO direccion (provincia, ciudad, calle, altura) 
-                                            VALUES (@prov, @ciud, @calle, @alt);
+                        string queryDir = @"INSERT INTO direccion (id_ciudad, calle, altura) 
+                                            VALUES (@IdCiud, @calle, @alt);
                                             SELECT LAST_INSERT_ID();";
 
                         using (MySqlCommand cmdDir = new MySqlCommand(queryDir, conexion, transaccion))
                         {
-                            cmdDir.Parameters.AddWithValue("@prov", direccion.provincia);
-                            cmdDir.Parameters.AddWithValue("@ciud", direccion.ciudad);
+                            cmdDir.Parameters.AddWithValue("@IdCiud", direccion.id_ciudad);
                             cmdDir.Parameters.AddWithValue("@calle", direccion.calle);
                             cmdDir.Parameters.AddWithValue("@alt", direccion.altura);
 
@@ -101,13 +100,13 @@ namespace Proyecto_Taller_2.Datos
                     {
                         // --- PASO 1: ACTUALIZAR DIRECCIÓN ---
                         string queryDir = @"UPDATE direccion 
-                                    SET provincia = @prov, ciudad = @ciud, calle = @calle, altura = @alt 
+                                    SET id_ciudad = @ciud, calle = @calle, altura = @alt 
                                     WHERE id_direccion = @dirId;";
 
                         using (MySqlCommand cmdDir = new MySqlCommand(queryDir, conexion, transaccion))
                         {
-                            cmdDir.Parameters.AddWithValue("@prov", direccion.provincia);
-                            cmdDir.Parameters.AddWithValue("@ciud", direccion.ciudad);
+                            //cmdDir.Parameters.AddWithValue("@prov", direccion.provincia);
+                            cmdDir.Parameters.AddWithValue("@ciud", direccion.id_ciudad);
                             cmdDir.Parameters.AddWithValue("@calle", direccion.calle);
                             cmdDir.Parameters.AddWithValue("@alt", direccion.altura);
                             cmdDir.Parameters.AddWithValue("@dirId", usuario.id_direccion); // El ID de la dirección de ese usuario
@@ -184,16 +183,22 @@ namespace Proyecto_Taller_2.Datos
 
             using (MySqlConnection conexion = new MySqlConnection(connectionString))
             {
-                // 1. Agregamos 'u.password' al SELECT y usamos LEFT JOIN por mayor seguridad
-                string query = @"SELECT u.id_usuario, u.nombre, u.apellido, u.correo, u.password, u.telefono, u.id_rol, u.fecha_baja, 
-                                u.fecha_alta, u.fecha_modificacion,
-                                d.id_direccion, d.provincia, d.ciudad, d.calle, d.altura 
-                         FROM usuario u
-                         LEFT JOIN direccion d ON u.id_direccion = d.id_direccion";
+                string query = @"
+            SELECT 
+                u.id_usuario, u.nombre, u.apellido, u.correo, u.password,
+                u.telefono, u.id_rol, u.fecha_baja, u.fecha_alta,
+                u.fecha_modificacion, u.id_direccion,
+
+                d.id_direccion, d.id_ciudad, d.calle, d.altura
+
+            FROM usuario u
+            LEFT JOIN direccion d 
+                ON u.id_direccion = d.id_direccion";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, conexion))
                 {
                     conexion.Open();
+
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -204,23 +209,29 @@ namespace Proyecto_Taller_2.Datos
                                 nombre = reader["nombre"].ToString(),
                                 apellido = reader["apellido"].ToString(),
                                 correo = reader["correo"].ToString(),
-                                password = reader["password"].ToString(), // <-- AQUÍ CARGAMOS LA CONTRASEÑA
+                                password = reader["password"].ToString(),
                                 telefono = reader["telefono"].ToString(),
                                 id_rol = Convert.ToInt32(reader["id_rol"]),
-                                fecha_baja = reader["fecha_baja"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["fecha_baja"]),
+
+                                fecha_baja = reader["fecha_baja"] == DBNull.Value
+                                    ? (DateTime?)null
+                                    : Convert.ToDateTime(reader["fecha_baja"]),
+
                                 fecha_alta = Convert.ToDateTime(reader["fecha_alta"]),
                                 fecha_modificacion = Convert.ToDateTime(reader["fecha_modificacion"]),
-                                id_direccion = reader["id_direccion"] == DBNull.Value ? 0 : Convert.ToInt32(reader["id_direccion"])
+
+                                id_direccion = reader["id_direccion"] == DBNull.Value
+                                    ? 0
+                                    : Convert.ToInt32(reader["id_direccion"])
                             };
 
-                            // 2. Validamos que la dirección no sea nula en la BD antes de crear el objeto
-                            if (reader["provincia"] != DBNull.Value)
+                            // Si el usuario tiene una dirección asociada
+                            if (reader["id_direccion"] != DBNull.Value)
                             {
                                 usu.direccion = new Direccion
                                 {
                                     id_direccion = Convert.ToInt32(reader["id_direccion"]),
-                                    provincia = reader["provincia"].ToString(),
-                                    ciudad = reader["ciudad"].ToString(),
+                                    id_ciudad = Convert.ToInt32(reader["id_ciudad"]),
                                     calle = reader["calle"].ToString(),
                                     altura = Convert.ToInt32(reader["altura"])
                                 };
@@ -231,6 +242,7 @@ namespace Proyecto_Taller_2.Datos
                     }
                 }
             }
+
             return lista;
         }
 

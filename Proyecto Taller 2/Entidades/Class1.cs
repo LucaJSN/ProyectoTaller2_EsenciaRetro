@@ -50,8 +50,7 @@ namespace Proyecto_Taller_2
     public class Direccion
     {
         public int id_direccion { get; set; }
-        public string provincia { get; set; }
-        public string ciudad { get; set; }
+        public int id_ciudad { get; set; }
         public string calle { get; set; }
         public int altura { get; set; }
     }

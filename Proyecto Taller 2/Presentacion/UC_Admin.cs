@@ -1,5 +1,6 @@
 ﻿using MySqlConnector;
 using Proyecto_Taller_2.Datos;
+using Proyecto_Taller_2.Entidades;
 using Proyecto_Taller_2.Negocio;
 using System;
 using System.Collections.Generic;
@@ -24,115 +25,161 @@ namespace Proyecto_Taller_2
             InitializeComponent();
         }
 
+
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            //validamos que el clic no sea en la cabecera de la tabla (fila -1)
-            if (e.RowIndex < 0) return;
+            // Evitar clics en encabezados o fuera de las columnas
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
-            if (DGVUsuarios.Columns[e.ColumnIndex].Name == "CEliminar")
+            string columna = DGVUsuarios.Columns[e.ColumnIndex].Name;
+            Usuario usuarioSelec = DGVUsuarios.Rows[e.RowIndex].DataBoundItem as Usuario;
+
+            if (usuarioSelec == null) return;
+
+            // =========================
+            // ELIMINAR USUARIO
+            // =========================
+            if (columna == "CEliminar")
             {
-
-                int idUsuario = Convert.ToInt32(DGVUsuarios.Rows[e.RowIndex].Cells["CID"].Value);
-                Usuario usuarioSelec = DGVUsuarios.Rows[e.RowIndex].DataBoundItem as Usuario;
-
-                if (usuarioSelec != null)
+                if (usuarioSelec.fecha_baja.HasValue)
                 {
-                    if (usuarioSelec.fecha_baja.HasValue)
+                    MessageBox.Show("El usuario que intenta eliminar ya ha sido eliminado.",
+                        "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                DialogResult resultado = MessageBox.Show(
+                    "¿Estás seguro de dar de baja a este usuario?",
+                    "Confirmar baja",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (resultado == DialogResult.Yes)
+                {
+                    try
                     {
-                        MessageBox.Show("El usuario que intenta eliminar ya ha sido eliminado", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
+                        UsuarioNegocio negocio = new UsuarioNegocio();
+                        bool exito = negocio.DarDeBajaUsuario(usuarioSelec.id_usuario);
+
+                        if (exito)
+                        {
+                            MessageBox.Show("Usuario dado de baja correctamente.",
+                                "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            CargarUsuariosEnGrilla();
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Ocurrió un error al dar de baja: " + ex.Message,
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
 
-                    DialogResult resultado = MessageBox.Show("¿Estás seguro de dar de baja a este usuario?",
-                                                "Confirmar baja",
-                                                MessageBoxButtons.YesNo,
-                                                MessageBoxIcon.Question);
+            // =========================
+            // EDITAR USUARIO
+            // =========================
+            if (columna == "CEditar")
+            {
+                if (usuarioSelec.fecha_baja.HasValue)
+                {
+                    MessageBox.Show("El usuario que intenta editar está dado de baja.",
+                        "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    if (resultado == DialogResult.Yes)
+                    LCuestionario.Text = "Crear Usuario";
+                    return;
+                }
+
+                LCuestionario.Text = "Editar Usuario";
+
+                // Guardamos los identificadores
+                idUsuarioSeleccionado = usuarioSelec.id_usuario;
+
+                // Cargamos los datos personales
+                TBNombre.Text = usuarioSelec.nombre;
+                TBApellido.Text = usuarioSelec.apellido;
+                TBCorreo.Text = usuarioSelec.correo;
+                TBTelefono.Text = usuarioSelec.telefono;
+                CBRol.SelectedValue = usuarioSelec.id_rol;
+                TBContraseña.Text = usuarioSelec.password;
+
+                // Cargamos la dirección y sus relaciones
+                if (usuarioSelec.direccion != null)
+                {
+                    CiudadNegocio ciudadNegocio = new CiudadNegocio();
+                    idDireccionSeleccionada = usuarioSelec.direccion.id_direccion;
+                    TBCalle.Text = usuarioSelec.direccion.calle;
+                    TBAltura.Text = usuarioSelec.direccion.altura.ToString();
+
+                    // Consultamos la ciudad para obtener también su provincia
+                    Ciudad ciudad = ciudadNegocio.obtenerCiudad(
+                        usuarioSelec.direccion.id_ciudad
+                    );
+
+                    if (ciudad != null)
+                    {
+                        // 1. Seleccionamos la provincia
+                        CBProvincia.SelectedValue = ciudad.id_provincia;
+
+                        // 2. Cargamos las ciudades de esa provincia
+                        CargarCiudades(ciudad.id_provincia);
+
+                        // 3. Seleccionamos la ciudad correspondiente
+                        CBCiudad.SelectedValue = ciudad.id_ciudad;
+                    }
+                }
+                else
+                {
+                    idDireccionSeleccionada = 0;
+
+                    // if (CBProvincia != null) CBProvincia.SelectedIndex = -1;
+                    CBCiudad.SelectedIndex = -1;
+
+                    TBCalle.Clear();
+                    TBAltura.Clear();
+                }
+            }
+
+            // =========================
+            // REACTIVAR USUARIO
+            // =========================
+            if (columna == "CReactivar")
+            {
+                if (usuarioSelec.fecha_baja.HasValue)
+                {
+                    DialogResult respuesta = MessageBox.Show(
+                        $"¿Deseas reactivar al usuario {usuarioSelec.nombre}?",
+                        "Confirmar activación",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question);
+
+                    if (respuesta == DialogResult.Yes)
                     {
                         try
-                        {
-                            //llamamos a la capa de negocio para ejecutar la baja lógica
-                            UsuarioNegocio negocio = new UsuarioNegocio();
-                            bool exito = negocio.DarDeBajaUsuario(usuarioSelec.id_usuario); //metodo de capa de negocio
-
-                            if (exito)
-                            {
-                                MessageBox.Show("Usuario dado de baja correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                CargarUsuariosEnGrilla();
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("Ocurrió un error al dar de baja: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                }
-            }
-            if (DGVUsuarios.Columns[e.ColumnIndex].Name == "CEditar")
-            {
-                LCuestionario.Text = "Editar Usuario";
-                Usuario usuarioSelec = DGVUsuarios.Rows[e.RowIndex].DataBoundItem as Usuario;
-                if (usuarioSelec != null)
-                {
-                    if (usuarioSelec.fecha_baja.HasValue)
-                    {
-                        MessageBox.Show("El usuario que intenta editar está dado de baja", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        LCuestionario.Text = "Crear Usuario";
-                        return;
-                    }
-
-                    // 1. Guardamos el ID globalmente para saber que estamos editando
-                    idUsuarioSeleccionado = usuarioSelec.id_usuario;
-                    idDireccionSeleccionada = usuarioSelec.direccion.id_direccion;
-
-                    // 2. Cargamos los datos en los TextBox para que el usuario los modifique
-                    TBNombre.Text = usuarioSelec.nombre;
-                    TBApellido.Text = usuarioSelec.apellido;
-                    TBCorreo.Text = usuarioSelec.correo;
-                    TBTelefono.Text = usuarioSelec.telefono;
-                    CBRol.SelectedValue = usuarioSelec.id_rol;
-                    TBContraseña.Text = usuarioSelec.password;
-
-                    // Validar que el objeto Dirección no sea nulo antes de leerlo
-                    if (usuarioSelec.direccion != null)
-                    {
-                        TBProvincia.Text = usuarioSelec.direccion.provincia;
-                        TBCiudad.Text = usuarioSelec.direccion.ciudad;
-                        TBCalle.Text = usuarioSelec.direccion.calle;
-                        TBAltura.Text = usuarioSelec.direccion.altura.ToString();
-                    }
-                }
-            }
-            if (DGVUsuarios.Columns[e.ColumnIndex].Name == "CReactivar") // Asumiendo que el botón se llama CActivar
-            {
-                Usuario usuarioSelec = DGVUsuarios.Rows[e.RowIndex].DataBoundItem as Usuario;
-
-                if (usuarioSelec != null)
-                {
-                    // Verificamos si realmente está inactivo antes de hacer el viaje a la BD
-                    if (usuarioSelec.fecha_baja.HasValue)
-                    {
-                        DialogResult respuesta = MessageBox.Show($"¿Deseas reactivar al usuario {usuarioSelec.nombre}?", "Confirmar activación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-                        if (respuesta == DialogResult.Yes)
                         {
                             UsuarioNegocio negocio = new UsuarioNegocio();
                             negocio.ActivarUsuario(usuarioSelec.id_usuario);
 
-                            MessageBox.Show("Usuario reactivado con éxito.");
+                            MessageBox.Show("Usuario reactivado con éxito.",
+                                "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                            // Recargamos la grilla para que el usuario vuelva a aparecer como Activo
                             CargarUsuariosEnGrilla();
                         }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Ocurrió un error al reactivar: " + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
-                    else
-                    {
-                        MessageBox.Show("Este usuario ya se encuentra activo.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
+                }
+                else
+                {
+                    MessageBox.Show("Este usuario ya se encuentra activo.",
+                        "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
+
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -185,8 +232,31 @@ namespace Proyecto_Taller_2
 
             CargarRolesEnComboBox();
             CargarUsuariosEnGrilla();
+            CargarProvinciasEnComboBox();
         }
+        private void CargarProvinciasEnComboBox()
+        {
+            try
+            {
+                // 1. Instanciamos la capa de negocio para traer las provincias
+                ProvinciaNegocio negocio = new ProvinciaNegocio();
+                List<Provincia> listaProvincias = negocio.ObtenerProvincias();
 
+                // 2. Mapeamos las propiedades de la entidad Provincia al ComboBox
+                CBProvincia.DisplayMember = "nombre";      // Lo que ve el usuario en la lista
+                CBProvincia.ValueMember = "id_provincia";  // El ID que se guarda en la base de datos
+
+                // 3. Asignamos la fuente de datos
+                CBProvincia.DataSource = listaProvincias;
+
+                // 4. Iniciamos el ComboBox sin ninguna provincia seleccionada por defecto
+                CBProvincia.SelectedIndex = -1;
+            }
+            catch (Exception ex) // Se agrega (Exception ex) para que funcione ex.Message
+            {
+                MessageBox.Show("Error al cargar las provincias: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
         private void CargarRolesEnComboBox()
         {
             try
@@ -265,8 +335,8 @@ namespace Proyecto_Taller_2
 
                 Direccion direccion = new Direccion
                 {
-                    provincia = TBProvincia.Text.Trim(),
-                    ciudad = TBCiudad.Text.Trim(),
+                    //provincia = CBProvincia.Text.Trim(),
+                    id_ciudad = Convert.ToInt32(CBCiudad.Text.Trim()),
                     calle = TBCalle.Text.Trim(),
                     altura = int.TryParse(TBAltura.Text.Trim(), out int alt) ? alt : 0
                 };
@@ -498,23 +568,35 @@ namespace Proyecto_Taller_2
         }
         private void LimpiarControles()
         {
+            // Datos personales
             TBNombre.Clear();
             TBApellido.Clear();
             TBCorreo.Clear();
             TBTelefono.Clear();
-            TBProvincia.Clear();
-            TBCiudad.Clear();
-            TBCalle.Clear();
-            TBAltura.Clear();
             TBContraseña.Clear();
 
-            // Si el ComboBox tiene elementos, lo devolvemos al inicio (índice 0 o -1)
+            // Dirección
+            TBCalle.Clear();
+            TBAltura.Clear();
+
+            // Provincia
+            if (CBProvincia.Items.Count > 0)
+            {
+                CBProvincia.SelectedIndex = -1;
+            }
+
+            // Ciudad
+            CBCiudad.DataSource = null;
+            CBCiudad.Items.Clear();
+            CBCiudad.SelectedIndex = -1;
+
+            // Rol
             if (CBRol.Items.Count > 0)
             {
                 CBRol.SelectedIndex = -1;
             }
 
-            // Devolvemos la variable global a su estado inicial de registro
+            // Reiniciamos los identificadores
             idUsuarioSeleccionado = 0;
             idDireccionSeleccionada = 0;
         }
@@ -538,5 +620,44 @@ namespace Proyecto_Taller_2
         {
 
         }
+
+        private void CBCiudad_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CBProvincia_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (CBProvincia.SelectedValue == null)
+                return;
+
+            if (int.TryParse(CBProvincia.SelectedValue.ToString(), out int idProvincia))
+            {
+                CargarCiudades(idProvincia);
+            }
+        }
+        private void CargarCiudades(int idProvincia)
+        {
+            try
+            {
+                CiudadNegocio negocio = new CiudadNegocio();
+
+                List<Ciudad> ciudades = negocio.ListarCiudadesPorProvincia(idProvincia);
+
+                CBCiudad.DataSource = null;
+                CBCiudad.DataSource = ciudades;
+
+                CBCiudad.DisplayMember = "nombre";
+                CBCiudad.ValueMember = "id_ciudad";
+
+                CBCiudad.SelectedIndex = -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar ciudades: " + ex.Message);
+            }
+        }
+
+
     }
 }

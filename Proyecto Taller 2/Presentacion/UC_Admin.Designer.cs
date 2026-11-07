@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.DGVUsuarios = new System.Windows.Forms.DataGridView();
             this.CID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -62,10 +62,8 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.TBCiudad = new System.Windows.Forms.TextBox();
             this.TBAltura = new System.Windows.Forms.TextBox();
             this.TBCalle = new System.Windows.Forms.TextBox();
-            this.TBProvincia = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.BtnAgregar = new System.Windows.Forms.Button();
@@ -78,6 +76,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.CBCiudad = new System.Windows.Forms.ComboBox();
+            this.CBProvincia = new System.Windows.Forms.ComboBox();
             this.panel4 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.DGVUsuarios)).BeginInit();
             this.panel1.SuspendLayout();
@@ -97,14 +97,14 @@
             // DGVUsuarios
             // 
             this.DGVUsuarios.BackgroundColor = System.Drawing.Color.Teal;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DGVUsuarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DGVUsuarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.DGVUsuarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DGVUsuarios.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.CID,
@@ -414,15 +414,6 @@
             this.label14.TabIndex = 21;
             this.label14.Text = "Altura";
             // 
-            // TBCiudad
-            // 
-            this.TBCiudad.Location = new System.Drawing.Point(121, 149);
-            this.TBCiudad.Name = "TBCiudad";
-            this.TBCiudad.Size = new System.Drawing.Size(126, 22);
-            this.TBCiudad.TabIndex = 22;
-            this.TBCiudad.TextChanged += new System.EventHandler(this.TBCiudad_TextChanged);
-            this.TBCiudad.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TBCiudad_KeyPress);
-            // 
             // TBAltura
             // 
             this.TBAltura.Location = new System.Drawing.Point(363, 152);
@@ -440,15 +431,6 @@
             this.TBCalle.TabIndex = 24;
             this.TBCalle.TextChanged += new System.EventHandler(this.TBCalle_TextChanged);
             this.TBCalle.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TBCalle_KeyPress);
-            // 
-            // TBProvincia
-            // 
-            this.TBProvincia.Location = new System.Drawing.Point(121, 75);
-            this.TBProvincia.Name = "TBProvincia";
-            this.TBProvincia.Size = new System.Drawing.Size(126, 22);
-            this.TBProvincia.TabIndex = 25;
-            this.TBProvincia.TextChanged += new System.EventHandler(this.TBProvincia_TextChanged);
-            this.TBProvincia.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TBProvincia_KeyPress);
             // 
             // label15
             // 
@@ -585,11 +567,11 @@
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(245)))), ((int)(((byte)(243)))));
+            this.panel3.Controls.Add(this.CBCiudad);
+            this.panel3.Controls.Add(this.CBProvincia);
             this.panel3.Controls.Add(this.label10);
             this.panel3.Controls.Add(this.label11);
-            this.panel3.Controls.Add(this.TBProvincia);
             this.panel3.Controls.Add(this.label12);
-            this.panel3.Controls.Add(this.TBCiudad);
             this.panel3.Controls.Add(this.label13);
             this.panel3.Controls.Add(this.TBCalle);
             this.panel3.Controls.Add(this.label14);
@@ -598,6 +580,26 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(502, 219);
             this.panel3.TabIndex = 41;
+            // 
+            // CBCiudad
+            // 
+            this.CBCiudad.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBCiudad.FormattingEnabled = true;
+            this.CBCiudad.Location = new System.Drawing.Point(121, 149);
+            this.CBCiudad.Name = "CBCiudad";
+            this.CBCiudad.Size = new System.Drawing.Size(126, 24);
+            this.CBCiudad.TabIndex = 29;
+            this.CBCiudad.SelectedIndexChanged += new System.EventHandler(this.CBCiudad_SelectedIndexChanged);
+            // 
+            // CBProvincia
+            // 
+            this.CBProvincia.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBProvincia.FormattingEnabled = true;
+            this.CBProvincia.Location = new System.Drawing.Point(121, 78);
+            this.CBProvincia.Name = "CBProvincia";
+            this.CBProvincia.Size = new System.Drawing.Size(126, 24);
+            this.CBProvincia.TabIndex = 28;
+            this.CBProvincia.SelectedIndexChanged += new System.EventHandler(this.CBProvincia_SelectedIndexChanged);
             // 
             // panel4
             // 
@@ -667,10 +669,8 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.TextBox TBCiudad;
         private System.Windows.Forms.TextBox TBAltura;
         private System.Windows.Forms.TextBox TBCalle;
-        private System.Windows.Forms.TextBox TBProvincia;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Button BtnAgregar;
@@ -680,6 +680,10 @@
         private System.Windows.Forms.TextBox TBBuscador;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.DataGridViewTextBoxColumn CID;
         private System.Windows.Forms.DataGridViewTextBoxColumn CNombre;
         private System.Windows.Forms.DataGridViewTextBoxColumn CApellido;
@@ -690,9 +694,7 @@
         private System.Windows.Forms.DataGridViewButtonColumn CEditar;
         private System.Windows.Forms.DataGridViewButtonColumn CEliminar;
         private System.Windows.Forms.DataGridViewButtonColumn CReactivar;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.ComboBox CBCiudad;
+        private System.Windows.Forms.ComboBox CBProvincia;
     }
 }
