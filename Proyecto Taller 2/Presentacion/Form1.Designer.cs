@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.BtnAdmin = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.BtnSalir = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnBackUp = new System.Windows.Forms.Button();
@@ -39,7 +40,6 @@
             this.btnInicio = new System.Windows.Forms.Button();
             this.btnProductos = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.BtnSalir = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -74,6 +74,20 @@
             this.panel1.Size = new System.Drawing.Size(200, 1033);
             this.panel1.TabIndex = 0;
             // 
+            // BtnSalir
+            // 
+            this.BtnSalir.FlatAppearance.BorderSize = 3;
+            this.BtnSalir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnSalir.Font = new System.Drawing.Font("Century Gothic", 12F);
+            this.BtnSalir.ForeColor = System.Drawing.Color.White;
+            this.BtnSalir.Location = new System.Drawing.Point(3, 775);
+            this.BtnSalir.Name = "BtnSalir";
+            this.BtnSalir.Size = new System.Drawing.Size(191, 56);
+            this.BtnSalir.TabIndex = 7;
+            this.BtnSalir.Text = " ⏻  SALIR";
+            this.BtnSalir.UseVisualStyleBackColor = true;
+            this.BtnSalir.Click += new System.EventHandler(this.BtnSalir_Click);
+            // 
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
@@ -106,9 +120,9 @@
             this.btnBackUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBackUp.Font = new System.Drawing.Font("Century Gothic", 12F);
             this.btnBackUp.ForeColor = System.Drawing.Color.White;
-            this.btnBackUp.Location = new System.Drawing.Point(3, 675);
+            this.btnBackUp.Location = new System.Drawing.Point(3, 668);
             this.btnBackUp.Name = "btnBackUp";
-            this.btnBackUp.Size = new System.Drawing.Size(191, 56);
+            this.btnBackUp.Size = new System.Drawing.Size(191, 55);
             this.btnBackUp.TabIndex = 0;
             this.btnBackUp.Text = "💾    BACK-UP";
             this.btnBackUp.UseVisualStyleBackColor = true;
@@ -179,20 +193,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1702, 60);
             this.panel2.TabIndex = 2;
-            // 
-            // BtnSalir
-            // 
-            this.BtnSalir.FlatAppearance.BorderSize = 3;
-            this.BtnSalir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnSalir.Font = new System.Drawing.Font("Century Gothic", 12F);
-            this.BtnSalir.ForeColor = System.Drawing.Color.White;
-            this.BtnSalir.Location = new System.Drawing.Point(3, 778);
-            this.BtnSalir.Name = "BtnSalir";
-            this.BtnSalir.Size = new System.Drawing.Size(191, 56);
-            this.BtnSalir.TabIndex = 7;
-            this.BtnSalir.Text = " ⏻  SALIR";
-            this.BtnSalir.UseVisualStyleBackColor = true;
-            this.BtnSalir.Click += new System.EventHandler(this.BtnSalir_Click);
             // 
             // Form1
             // 

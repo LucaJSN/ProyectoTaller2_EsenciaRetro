@@ -336,7 +336,7 @@ namespace Proyecto_Taller_2
                 Direccion direccion = new Direccion
                 {
                     //provincia = CBProvincia.Text.Trim(),
-                    id_ciudad = Convert.ToInt32(CBCiudad.Text.Trim()),
+                    id_ciudad = Convert.ToInt32(CBCiudad.SelectedValue),
                     calle = TBCalle.Text.Trim(),
                     altura = int.TryParse(TBAltura.Text.Trim(), out int alt) ? alt : 0
                 };

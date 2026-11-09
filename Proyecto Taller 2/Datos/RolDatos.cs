@@ -10,7 +10,7 @@ namespace Proyecto_Taller_2.Datos
     internal class RolDatos
     {
         private string connectionString = "Server=localhost;Port=33060;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;"; //Luca
-        //private string connectionString = "Server=localhost;Port=33060;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";//Samu
+        //private string connectionString = "Server=localhost;Port=3306;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";//Samu
 
         List<Rol> listaRoles = new List<Rol>();
 
