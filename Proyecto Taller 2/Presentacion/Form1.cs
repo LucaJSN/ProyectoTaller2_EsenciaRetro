@@ -37,6 +37,7 @@ namespace Proyecto_Taller_2
             string tipoRol = usuarioActivo?.rol?.tipo ?? "Sin Rol";
 
             this.Text = $"Sistema de Gestión - Usuario: {usuarioActivo?.nombre} {usuarioActivo?.apellido} ({tipoRol})";
+            AplicarPermisos();
         }
 
         public Form1()
@@ -47,16 +48,38 @@ namespace Proyecto_Taller_2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (button1 != null)
-            {
-                button1.Enabled = true;
-                button1.ForeColor = Color.White;
-            }
+            //if (button1 != null)
+            //{
+            //    button1.Enabled = true;
+            //    button1.ForeColor = Color.White;
+            //}
 
-            if (btnProductos != null)
+            //if (btnProductos != null)
+            //{
+            //    btnProductos.Enabled = true;
+            //    btnProductos.ForeColor = Color.White;
+            //}
+            AplicarPermisos();
+        }
+
+        //Probando deshbabilitar boton segun el rol del usuario
+        private void AplicarPermisos()
+        {
+            if (usuarioActivo == null || usuarioActivo.rol == null) return;
+
+            string tipoRol = usuarioActivo.rol.tipo;
+
+            // Opción A: Evaluando con condicionales directos
+            if (tipoRol == "Vendedor")
             {
-                btnProductos.Enabled = true;
-                btnProductos.ForeColor = Color.White;
+                button1.Enabled = false;
+                btnProductos.Enabled = false;
+                btnBackUp.Enabled = false;
+            }
+            if(tipoRol == "Supervisor")
+            {
+                button1.Enabled = false;
+                btnBackUp.Enabled = false;
             }
         }
 
