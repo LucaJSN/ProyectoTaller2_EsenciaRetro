@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using MySqlConnector;
 
@@ -6,23 +8,68 @@ namespace Proyecto_Taller_2.Negocio
 {
     public class VentaNegocio
     {
-        public void RegistrarVentaBD(decimal totalVenta, int idMetodoPago, int idUsuario = 1)
+        
+        public void RegistrarVentaConDetalles(decimal totalVenta, int idMetodoPago, int idCliente, int idUsuario, BindingList<UC_Ventas.DetalleVentaItem> carrito)
         {
             using (MySqlConnection conexion = Conexion.ObtenerConexion())
             {
                 conexion.Open();
-                string query = @"INSERT INTO venta (fecha_venta, hora_venta, total_venta, id_metodo_pago, metodo_pago, id_usuario) 
-                                VALUES (@fecha, @hora, @total, @metodo, @metodo, @usuario)";
-
-                using (MySqlCommand cmd = new MySqlCommand(query, conexion))
+                using (MySqlTransaction transaccion = conexion.BeginTransaction())
                 {
-                    cmd.Parameters.AddWithValue("@fecha", DateTime.Now.ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@hora", DateTime.Now.ToString("HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@total", totalVenta);
-                    cmd.Parameters.AddWithValue("@metodo", idMetodoPago);
-                    cmd.Parameters.AddWithValue("@usuario", idUsuario);
+                    try
+                    {
+                        // 1. Insertar cabecera en la tabla 'venta'
+                        string queryVenta = @"INSERT INTO venta (fecha_venta, hora_venta, total_venta, id_metodo_pago, metodo_pago, id_usuario) 
+                                    VALUES (@fecha, @hora, @total, @metodo, @metodo, @usuario)";
 
-                    cmd.ExecuteNonQuery();
+                        long idVentaGenerada = 0;
+                        using (MySqlCommand cmdVenta = new MySqlCommand(queryVenta, conexion, transaccion))
+                        {
+                            cmdVenta.Parameters.AddWithValue("@fecha", DateTime.Now.ToString("yyyy-MM-dd"));
+                            cmdVenta.Parameters.AddWithValue("@hora", DateTime.Now.ToString("HH:mm:ss"));
+                            cmdVenta.Parameters.AddWithValue("@total", totalVenta);
+                            cmdVenta.Parameters.AddWithValue("@metodo", idMetodoPago);
+                            cmdVenta.Parameters.AddWithValue("@usuario", idUsuario);
+
+                            cmdVenta.ExecuteNonQuery();
+                            idVentaGenerada = cmdVenta.LastInsertedId;
+                        }
+
+                        // 2. Insertar cada producto del carrito en 'detalleventa' y descontar stock
+                        foreach (var item in carrito)
+                        {
+                            string queryDetalle = @"INSERT INTO detalleventa (id_venta, id_producto, descripcion, cantidad, precio_unitario, subtotal) 
+                                          VALUES (@idVenta, @idProducto, @descripcion, @cantidad, @precioUnitario, @subtotal)";
+
+                            using (MySqlCommand cmdDetalle = new MySqlCommand(queryDetalle, conexion, transaccion))
+                            {
+                                cmdDetalle.Parameters.AddWithValue("@idVenta", idVentaGenerada);
+                                cmdDetalle.Parameters.AddWithValue("@idProducto", Convert.ToInt32(item.IdProducto));
+                                cmdDetalle.Parameters.AddWithValue("@descripcion", item.Descripcion);
+                                cmdDetalle.Parameters.AddWithValue("@cantidad", item.Cantidad);
+                                cmdDetalle.Parameters.AddWithValue("@precioUnitario", item.PrecioUnitario);
+                                cmdDetalle.Parameters.AddWithValue("@subtotal", item.SubTotal);
+
+                                cmdDetalle.ExecuteNonQuery();
+                            }
+
+                            // 3. Descontar stock del producto en la tabla 'producto'
+                            string queryStock = "UPDATE producto SET stock = stock - @cantidad WHERE id_producto = @idProducto";
+                            using (MySqlCommand cmdStock = new MySqlCommand(queryStock, conexion, transaccion))
+                            {
+                                cmdStock.Parameters.AddWithValue("@cantidad", item.Cantidad);
+                                cmdStock.Parameters.AddWithValue("@idProducto", Convert.ToInt32(item.IdProducto));
+                                cmdStock.ExecuteNonQuery();
+                            }
+                        }
+
+                        transaccion.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaccion.Rollback();
+                        throw new Exception("Error en la transacción de venta: " + ex.Message);
+                    }
                 }
             }
         }
@@ -108,11 +155,6 @@ namespace Proyecto_Taller_2.Negocio
             return dt;
         }
 
-        /// <summary>
-        /// Verifica en la base de datos si una venta ya fue facturada previamente.
-        /// </summary>
-        /// <param name="idVenta">ID de la venta a consultar</param>
-        /// <returns>True si ya posee factura, False en caso contrario.</returns>
         public bool VentaYaFacturada(int idVenta)
         {
             using (MySqlConnection conexion = Conexion.ObtenerConexion())
@@ -127,6 +169,44 @@ namespace Proyecto_Taller_2.Negocio
                     return count > 0;
                 }
             }
+        }
+
+        public DataTable ObtenerClientePorId(int idCliente)
+        {
+            DataTable dt = new DataTable();
+            using (MySqlConnection conexion = Conexion.ObtenerConexion())
+            {
+                conexion.Open();
+                string query = "SELECT nombre, apellido, dni FROM cliente WHERE id_cliente = @id";
+                using (MySqlCommand cmd = new MySqlCommand(query, conexion))
+                {
+                    cmd.Parameters.AddWithValue("@id", idCliente);
+                    using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+                }
+            }
+            return dt;
+        }
+
+        public DataTable ObtenerProductoPorId(int idProducto)
+        {
+            DataTable dt = new DataTable();
+            using (MySqlConnection conexion = Conexion.ObtenerConexion())
+            {
+                conexion.Open();
+                string query = "SELECT nombre, descripcion, stock, precio FROM producto WHERE id_producto = @id";
+                using (MySqlCommand cmd = new MySqlCommand(query, conexion))
+                {
+                    cmd.Parameters.AddWithValue("@id", idProducto);
+                    using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+                }
+            }
+            return dt;
         }
     }
 }
