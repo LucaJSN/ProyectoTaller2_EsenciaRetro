@@ -10,8 +10,8 @@ namespace Proyecto_Taller_2
     public static class Conexion
     {
 
-        //public static readonly string connectionString = "Server=localhost;Port=33060;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;"; //Luca
-        public static readonly string connectionString = "Server=localhost;Port=3306;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";//Samu
+        public static readonly string connectionString = "Server=localhost;Port=33060;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;"; //Luca
+        //public static readonly string connectionString = "Server=localhost;Port=3306;Database=esenciaretro2.0;Uid=root;Pwd=puntoybarraroot;";//Samu
 
         // 2. Método estático para obtener la conexión ya lista
         public static MySqlConnection ObtenerConexion()

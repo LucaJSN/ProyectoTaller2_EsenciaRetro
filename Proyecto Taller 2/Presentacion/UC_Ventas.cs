@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Proyecto_Taller_2.Entidades;
+using Proyecto_Taller_2.Negocio;
+using Proyecto_Taller_2.Presentacion;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Proyecto_Taller_2.Negocio;
-using Proyecto_Taller_2.Entidades;
 using TextBox = System.Windows.Forms.TextBox;
 
 namespace Proyecto_Taller_2
@@ -62,6 +63,48 @@ namespace Proyecto_Taller_2
 
         private bool cargandoDatos = false;
 
+        private void ComboBox2_DropDown(object sender, EventArgs e)
+        {
+            // Al abrir el combo de nombres, quitamos el filtro de nombres para mostrar todos
+            bsNombre.Filter = string.Empty;
+        }
+
+        private void ComboBox3_DropDown(object sender, EventArgs e)
+        {
+            // Al abrir el combo de apellidos, quitamos el filtro de apellidos para mostrar todos
+            bsApellido.Filter = string.Empty;
+        }
+
+        private void button2_Click_1(object sender, EventArgs e) 
+        {
+            using (FormBuscarProducto modal = new FormBuscarProducto())
+            {
+                // Abrimos la ventana de búsqueda como diálogo modal
+                if (modal.ShowDialog() == DialogResult.OK && modal.FilaProductoSeleccionada != null)
+                {
+                    DataRow producto = modal.FilaProductoSeleccionada;
+
+                    // Cargar los controles visuales del Formulario Principal
+                    int idProducto = Convert.ToInt32(producto["id_producto"]); //[cite: 4]
+                    int stockDisponible = Convert.ToInt32(producto["stock"]); //[cite: 4]
+                    decimal precioVenta = Convert.ToDecimal(producto["precio_venta"]); //[cite: 4]
+
+                    textBox5.Text = idProducto.ToString(); //
+                    //txtNombreProducto.Text = $"{producto["nombre"]} ({producto["edicion"]} - Talle {producto["talle"]})"; //[cite: 3, 4]
+                    textBox2.Text = producto["descripcion"]?.ToString() ?? ""; //[cite: 3, 4]
+                    textBox6.Text = stockDisponible.ToString(); //
+                    textBox7.Text = precioVenta.ToString("N2"); //
+                    comboBox1.Text = stockDisponible.ToString();
+
+                    //// Si usas un NumericUpDown para la cantidad, ajustamos el límite máximo según el stock real
+                    //if (numericUpDownCantidad != null)
+                    //{
+                    //    numericUpDownCantidad.Maximum = stockDisponible > 0 ? stockDisponible : 1;
+                    //    numericUpDownCantidad.Value = stockDisponible > 0 ? 1 : 0;
+                    //}
+                }
+            }
+        }
         private void CargarDatosComboBox()
         {
             try
@@ -69,12 +112,14 @@ namespace Proyecto_Taller_2
                 cargandoDatos = true;
                 VentaNegocio negocio = new VentaNegocio();
 
-                DataTable dtClientes1 = negocio.ObtenerClientes();
-                DataTable dtClientes2 = negocio.ObtenerClientes();
+                // 1. Cargar tabla de clientes
+                DataTable dtClientes = negocio.ObtenerClientes();
 
-                if (dtClientes1 != null && dtClientes1.Rows.Count > 0)
+                if (dtClientes != null && dtClientes.Rows.Count > 0)
                 {
-                    bsNombre.DataSource = dtClientes1;
+                    bsNombre.DataSource = dtClientes;
+                    bsApellido.DataSource = dtClientes;
+
                     if (comboBox2 != null)
                     {
                         comboBox2.DataSource = bsNombre;
@@ -85,7 +130,6 @@ namespace Proyecto_Taller_2
                         comboBox2.AutoCompleteSource = AutoCompleteSource.ListItems;
                     }
 
-                    bsApellido.DataSource = dtClientes2;
                     if (comboBox3 != null)
                     {
                         comboBox3.DataSource = bsApellido;
@@ -97,6 +141,7 @@ namespace Proyecto_Taller_2
                     }
                 }
 
+                // 2. Cargar tabla de productos (comboBox4)
                 DataTable dtProductos = negocio.ObtenerProductos();
                 if (dtProductos != null && dtProductos.Rows.Count > 0)
                 {
@@ -112,14 +157,28 @@ namespace Proyecto_Taller_2
                     }
                 }
 
-                if (comboBox2 != null) comboBox2.SelectedIndex = -1;
-                if (comboBox3 != null) comboBox3.SelectedIndex = -1;
+                // 3. Suscribir eventos y limpiar selecciones por defecto
+                if (comboBox2 != null)
+                {
+                    comboBox2.SelectedIndexChanged -= ComboBox2_SelectedIndexChanged;
+                    comboBox2.SelectedIndexChanged += ComboBox2_SelectedIndexChanged;
+                    comboBox2.SelectedIndex = -1;
+                }
+
+                if (comboBox3 != null)
+                {
+                    comboBox3.SelectedIndexChanged -= ComboBox3_SelectedIndexChanged;
+                    comboBox3.SelectedIndexChanged += ComboBox3_SelectedIndexChanged;
+                    comboBox3.SelectedIndex = -1;
+                }
+
                 if (comboBox4 != null)
                 {
                     comboBox4.SelectedIndexChanged -= ComboBox4_SelectedIndexChanged;
                     comboBox4.SelectedIndexChanged += ComboBox4_SelectedIndexChanged;
                     comboBox4.KeyUp -= ComboBox4_KeyUp;
                     comboBox4.KeyUp += ComboBox4_KeyUp;
+                    comboBox4.SelectedIndex = -1;
                 }
             }
             catch (Exception ex)
@@ -160,40 +219,126 @@ namespace Proyecto_Taller_2
             }
         }
 
-        private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cargandoDatos) return;
-            if (comboBox2 != null && comboBox2.SelectedItem is DataRowView row)
-            {
-                cargandoDatos = true;
-                idClienteSeleccionado = Convert.ToInt32(row["id_cliente"]);
-
-                if (comboBox3 != null) comboBox3.SelectedValue = idClienteSeleccionado;
-                if (textBox1 != null) textBox1.Text = idClienteSeleccionado.ToString();
-                if (label35 != null) label35.Text = row["documento"]?.ToString() ?? "";
-
-                clienteValidado = true;
-                cargandoDatos = false;
-            }
-        }
-
         private void ComboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cargandoDatos) return;
+
             if (comboBox3 != null && comboBox3.SelectedItem is DataRowView row)
             {
                 cargandoDatos = true;
-                idClienteSeleccionado = Convert.ToInt32(row["id_cliente"]);
+                try
+                {
+                    string apellidoSeleccionado = row["apellido"]?.ToString() ?? "";
+                    int idCliente = Convert.ToInt32(row["id_cliente"]);
 
-                if (comboBox2 != null) comboBox2.SelectedValue = idClienteSeleccionado;
-                if (textBox1 != null) textBox1.Text = idClienteSeleccionado.ToString();
-                if (label35 != null) label35.Text = row["documento"]?.ToString() ?? "";
+                    // 1. Apagamos autocompletado del combo 2 para que el control nativo Win32 no intente leer memoria destruida
+                    if (comboBox2 != null) comboBox2.AutoCompleteMode = AutoCompleteMode.None;
 
-                clienteValidado = true;
-                cargandoDatos = false;
+                    // 2. Creamos una vista filtrada de los nombres correspondientes a este apellido
+                    DataTable dtOriginal = (DataTable)bsNombre.DataSource;
+                    if (dtOriginal != null)
+                    {
+                        DataView dvNombres = new DataView(dtOriginal);
+                        dvNombres.RowFilter = $"apellido = '{apellidoSeleccionado.Replace("'", "''")}'";
+
+                        if (comboBox2 != null)
+                        {
+                            comboBox2.DataSource = dvNombres;
+                            comboBox2.DisplayMember = "nombre";
+                            comboBox2.ValueMember = "id_cliente";
+
+                            // Si hay varios (ej: Pérez Juan y Pérez Pedro), desmarcamos para requerir la selección de nombre
+                            if (dvNombres.Count > 1)
+                            {
+                                comboBox2.SelectedIndex = -1;
+                                idClienteSeleccionado = 0;
+                                if (textBox1 != null) textBox1.Text = string.Empty;
+                                if (label35 != null) label35.Text = string.Empty;
+                                clienteValidado = false;
+                            }
+                            else if (dvNombres.Count == 1)
+                            {
+                                comboBox2.SelectedValue = idCliente;
+                                AsignarDatosCliente(row);
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    // 3. Reactivamos el autocompletado de forma segura
+                    if (comboBox2 != null) comboBox2.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                    cargandoDatos = false;
+                }
             }
         }
 
+        private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cargandoDatos) return;
+
+            if (comboBox2 != null && comboBox2.SelectedItem is DataRowView row)
+            {
+                cargandoDatos = true;
+                try
+                {
+                    string nombreSeleccionado = row["nombre"]?.ToString() ?? "";
+                    int idCliente = Convert.ToInt32(row["id_cliente"]);
+
+                    if (comboBox3 != null) comboBox3.AutoCompleteMode = AutoCompleteMode.None;
+
+                    DataTable dtOriginal = (DataTable)bsApellido.DataSource;
+                    if (dtOriginal != null)
+                    {
+                        DataView dvApellidos = new DataView(dtOriginal);
+                        dvApellidos.RowFilter = $"nombre = '{nombreSeleccionado.Replace("'", "''")}'";
+
+                        if (comboBox3 != null)
+                        {
+                            comboBox3.DataSource = dvApellidos;
+                            comboBox3.DisplayMember = "apellido";
+                            comboBox3.ValueMember = "id_cliente";
+
+                            if (dvApellidos.Count > 1 && comboBox3.SelectedIndex == -1)
+                            {
+                                // Si hay múltiples (ej: Juan Pérez y Juan Domingo), dejamos que elija apellido
+                                comboBox3.SelectedIndex = -1;
+                            }
+                            else
+                            {
+                                comboBox3.SelectedValue = idCliente;
+                            }
+                        }
+                    }
+
+                    AsignarDatosCliente(row);
+                }
+                finally
+                {
+                    if (comboBox3 != null) comboBox3.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                    cargandoDatos = false;
+                }
+            }
+        }
+
+        private void AsignarDatosCliente(DataRowView row)
+        {
+            idClienteSeleccionado = Convert.ToInt32(row["id_cliente"]);
+            if (textBox1 != null) textBox1.Text = idClienteSeleccionado.ToString();
+            if (label35 != null) label35.Text = row["documento"]?.ToString() ?? "";
+            clienteValidado = true;
+        }
+
+        // Método auxiliar opcional para mantener limpio el estado cuando la selección está incompleta
+        private void LimpiarDatosCliente()
+        {
+            idClienteSeleccionado = 0;
+            if (comboBox2 != null) comboBox2.Text = null;
+            if (comboBox3 != null) comboBox3.Text = null;
+            if (textBox1 != null) textBox1.Text = string.Empty;
+            if (label35 != null) label35.Text = string.Empty;
+            clienteValidado = false;
+        }
         private void ComboBox4_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cargandoDatos) return;
@@ -824,7 +969,7 @@ namespace Proyecto_Taller_2
         private void button1_Click_1(object sender, EventArgs e) { }
         private void textBox1_TextChanged(object sender, EventArgs e) { }
         private void label2_Click(object sender, EventArgs e) { }
-        private void button2_Click_1(object sender, EventArgs e) { }
+
         private void button4_Click(object sender, EventArgs e) { }
         private void textBox6_TextChanged(object sender, EventArgs e) { }
         private void label1_Click_1(object sender, EventArgs e) { }
@@ -848,5 +993,66 @@ namespace Proyecto_Taller_2
         private void panel5_Paint(object sender, PaintEventArgs e) { }
         private void panel11_Paint(object sender, PaintEventArgs e) { }
         #endregion
+
+        private void BtnLimpiarCliente_Click(object sender, EventArgs e)
+        {
+            cargandoDatos = true;
+            try
+            {
+                if (comboBox2 != null)
+                {
+                    comboBox2.DataSource = bsNombre;
+                    comboBox2.DisplayMember = "nombre";
+                    comboBox2.ValueMember = "id_cliente";
+                    comboBox2.SelectedIndex = -1;
+                }
+
+                if (comboBox3 != null)
+                {
+                    comboBox3.DataSource = bsApellido;
+                    comboBox3.DisplayMember = "apellido";
+                    comboBox3.ValueMember = "id_cliente";
+                    comboBox3.SelectedIndex = -1;
+                }
+
+                idClienteSeleccionado = 0;
+                if (textBox1 != null) textBox1.Text = string.Empty;
+                if (label35 != null) label35.Text = string.Empty;
+                clienteValidado = false;
+            }
+            finally
+            {
+                cargandoDatos = false;
+            }
+        }
+
+        private void LimpiarSeleccionCliente()
+        {
+            cargandoDatos = true;
+            try
+            {
+                // 1. Quitar filtros
+                if (bsNombre != null) bsNombre.Filter = string.Empty;
+                if (bsApellido != null) bsApellido.Filter = string.Empty;
+
+                // 2. Desmarcar selecciones
+                if (comboBox2 != null) comboBox2.SelectedIndex = -1;
+                if (comboBox3 != null) comboBox3.SelectedIndex = -1;
+
+                // 3. Resetear datos
+                ResetearDatosCliente();
+            }
+            finally
+            {
+                cargandoDatos = false;
+            }
+        }
+        private void ResetearDatosCliente()
+        {
+            idClienteSeleccionado = 0;
+            if (textBox1 != null) textBox1.Text = string.Empty;
+            if (label35 != null) label35.Text = string.Empty;
+            clienteValidado = false;
+        }
     }
 }

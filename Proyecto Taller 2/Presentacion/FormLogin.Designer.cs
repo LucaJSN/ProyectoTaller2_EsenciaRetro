@@ -62,23 +62,21 @@
             // TBCorreo
             // 
             this.TBCorreo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.TBCorreo.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TBCorreo.Location = new System.Drawing.Point(164, 70);
-            this.TBCorreo.Multiline = true;
+            this.TBCorreo.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TBCorreo.Location = new System.Drawing.Point(142, 70);
             this.TBCorreo.Name = "TBCorreo";
-            this.TBCorreo.Size = new System.Drawing.Size(166, 27);
+            this.TBCorreo.Size = new System.Drawing.Size(237, 27);
             this.TBCorreo.TabIndex = 1;
             this.TBCorreo.TextChanged += new System.EventHandler(this.TBCorreo_TextChanged);
             // 
             // TBPassword
             // 
             this.TBPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.TBPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TBPassword.Location = new System.Drawing.Point(164, 156);
-            this.TBPassword.Multiline = true;
+            this.TBPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TBPassword.Location = new System.Drawing.Point(142, 156);
             this.TBPassword.Name = "TBPassword";
             this.TBPassword.PasswordChar = '●';
-            this.TBPassword.Size = new System.Drawing.Size(138, 27);
+            this.TBPassword.Size = new System.Drawing.Size(208, 27);
             this.TBPassword.TabIndex = 2;
             // 
             // LCorreo
@@ -147,7 +145,7 @@
             this.btnMostrarContraseña.FlatAppearance.BorderSize = 0;
             this.btnMostrarContraseña.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMostrarContraseña.ForeColor = System.Drawing.Color.Black;
-            this.btnMostrarContraseña.Location = new System.Drawing.Point(299, 156);
+            this.btnMostrarContraseña.Location = new System.Drawing.Point(348, 156);
             this.btnMostrarContraseña.Name = "btnMostrarContraseña";
             this.btnMostrarContraseña.Size = new System.Drawing.Size(31, 27);
             this.btnMostrarContraseña.TabIndex = 7;
@@ -160,7 +158,7 @@
             this.pictureBox2.BackColor = System.Drawing.Color.White;
             this.pictureBox2.Enabled = false;
             this.pictureBox2.Image = global::Proyecto_Taller_2.Properties.Resources.contraseña;
-            this.pictureBox2.Location = new System.Drawing.Point(124, 156);
+            this.pictureBox2.Location = new System.Drawing.Point(102, 156);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(40, 27);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -172,9 +170,9 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.Image = global::Proyecto_Taller_2.Properties.Resources.foto_correo;
-            this.pictureBox1.Location = new System.Drawing.Point(122, 70);
+            this.pictureBox1.Location = new System.Drawing.Point(97, 70);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(42, 27);
+            this.pictureBox1.Size = new System.Drawing.Size(45, 27);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
