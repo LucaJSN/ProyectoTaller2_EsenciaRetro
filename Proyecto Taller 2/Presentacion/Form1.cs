@@ -229,6 +229,19 @@ namespace Proyecto_Taller_2
 
         private void BtnSalir_Click(object sender, EventArgs e)
         {
+            // Confirmación al usuario antes de salir/cerrar sesión
+            DialogResult confirmacion = MessageBox.Show(
+                "¿Está seguro de que desea cerrar la sesión actual?",
+                "Confirmar salida",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            // Si el usuario presiona "No", cancelamos el proceso y nos mantenemos en la pantalla actual
+            if (confirmacion != DialogResult.Yes)
+            {
+                return;
+            }
+
             // 1. Ocultamos la ventana principal
             this.Hide();
 
