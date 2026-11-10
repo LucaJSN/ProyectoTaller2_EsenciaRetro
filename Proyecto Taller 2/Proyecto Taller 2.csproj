@@ -118,6 +118,7 @@
     <Compile Include="Datos\BalanceDatos.cs" />
     <Compile Include="Datos\CategoriaDatos.cs" />
     <Compile Include="Datos\CiudadDatos.cs" />
+    <Compile Include="Datos\DashboardDatos.cs" />
     <Compile Include="Datos\MetodoPagoDatos.cs" />
     <Compile Include="Datos\ProductoDatos.cs" />
     <Compile Include="Datos\ProvinciaDatos.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Negocio\BalanceNegocio.cs" />
     <Compile Include="Negocio\CategoriaNegocio.cs" />
     <Compile Include="Negocio\CiudadNegocio.cs" />
+    <Compile Include="Negocio\DashboardNegocio.cs" />
     <Compile Include="Negocio\LoginNegocio.cs" />
     <Compile Include="Negocio\MetodoPagoNegocio.cs" />
     <Compile Include="Negocio\ProductoNegocio.cs" />

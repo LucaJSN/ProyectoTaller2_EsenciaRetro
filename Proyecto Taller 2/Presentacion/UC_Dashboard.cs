@@ -7,11 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Proyecto_Taller_2.Negocio;
 
 namespace Proyecto_Taller_2
 {
     public partial class UC_Dashboard : UserControl
     {
+        private DashboardNegocio negocio = new DashboardNegocio();
+
         public UC_Dashboard()
         {
             InitializeComponent();
@@ -19,7 +22,7 @@ namespace Proyecto_Taller_2
             try
             {
                 ConfigurarUIDashboard();
-                CargarDatosEstaticosYCalcularMetricas();
+                CargarDatosDesdeBaseDeDatos();
             }
             catch (Exception ex)
             {
@@ -39,6 +42,15 @@ namespace Proyecto_Taller_2
                 dataGridView1.RowHeadersVisible = false;
                 dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
+                // Mapeamos las columnas existentes del diseñador para que no se dupliquen
+                dataGridView1.AutoGenerateColumns = false;
+                if (idVenta != null) idVenta.DataPropertyName = "ID Venta";
+                if (descripcion != null) descripcion.DataPropertyName = "Nombre";
+                if (cantidad != null) cantidad.DataPropertyName = "Cantidad";
+                if (Column2 != null) Column2.DataPropertyName = "Cliente";
+                if (Column1 != null) Column1.DataPropertyName = "Metodo de Pago";
+                if (Column3 != null) Column3.DataPropertyName = "Sub Total";
+
                 // Estilo visual corporativo idéntico al resto del sistema
                 dataGridView1.EnableHeadersVisualStyles = false;
                 dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(30, 40, 50);
@@ -54,63 +66,34 @@ namespace Proyecto_Taller_2
             }
         }
 
-        private void CargarDatosEstaticosYCalcularMetricas()
+        private void CargarDatosDesdeBaseDeDatos()
         {
-            if (dataGridView1 != null)
+            try
             {
-                dataGridView1.Rows.Clear();
+                // 1. Obtenemos las métricas reales del día
+                decimal recaudacion = negocio.ObtenerRecaudacionDelDia();
+                int camisetas = negocio.ObtenerCamisetasVendidasDelDia();
 
-                // Si la grilla no tiene columnas creadas en el diseñador, las creamos por seguridad
-                if (dataGridView1.Columns.Count == 0)
+                // 2. Actualizamos las tarjetas métricas superiores
+                ActualizarTarjetasMetricas(recaudacion, camisetas);
+
+                // 3. Cargamos el DataGridView usando el mapeo de columnas
+                if (dataGridView1 != null)
                 {
-                    dataGridView1.Columns.Add("colIdVenta", "ID Venta");
-                    dataGridView1.Columns.Add("colDescripcion", "Descripción Remera Retro");
-                    dataGridView1.Columns.Add("colCantidad", "Cantidad");
-                    dataGridView1.Columns.Add("colSubtotal", "SubTotal");
-                }
+                    DataTable dtVentas = negocio.ObtenerVentasDelDiaParaGrilla();
+                    dataGridView1.DataSource = dtVentas;
 
-                // Inserción de datos estáticos limpios de remeras retro
-                dataGridView1.Rows.Add("01", "Remera Argentina '86 (Mundiales)", 1, "$ 35.000,00");
-                dataGridView1.Rows.Add("02", "Remera Real Madrid (Champions)", 2, "$ 70.000,00");
-                dataGridView1.Rows.Add("03", "Remera Boca Jrs (Libertadores)", 1, "$ 32.000,00");
-
-                // Variables para las sumas automáticas
-                int totalCantidad = 0;
-                decimal totalRecaudacion = 0;
-
-                // Recorremos cada fila utilizando los índices de columna (0: ID, 1: Descripción, 2: Cantidad, 3: Subtotal)
-                foreach (DataGridViewRow row in dataGridView1.Rows)
-                {
-                    if (row.Cells.Count >= 4)
+                    // Formato de moneda para la columna Sub Total
+                    if (dataGridView1.Columns.Contains("Column3") && dataGridView1.Columns["Column3"] != null)
                     {
-                        // Sumar cantidad (Columna 2)
-                        if (row.Cells[2].Value != null)
-                        {
-                            if (int.TryParse(row.Cells[2].Value.ToString(), out int cantidad))
-                            {
-                                totalCantidad += cantidad;
-                            }
-                        }
-
-                        // Sumar subtotal (Columna 3)
-                        if (row.Cells[3].Value != null)
-                        {
-                            string subTotalStr = row.Cells[3].Value.ToString()
-                                .Replace("$", "")
-                                .Replace(".", "")
-                                .Replace(",", ".")
-                                .Trim();
-
-                            if (decimal.TryParse(subTotalStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal subtotal))
-                            {
-                                totalRecaudacion += subtotal;
-                            }
-                        }
+                        dataGridView1.Columns["Column3"].DefaultCellStyle.Format = "C2";
                     }
                 }
-
-                // Actualizamos las etiquetas con los resultados calculados
-                ActualizarTarjetasMetricas(totalRecaudacion, totalCantidad);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar los datos del dashboard desde la base de datos: " + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -125,12 +108,10 @@ namespace Proyecto_Taller_2
             {
                 if (ctrl is Label lbl)
                 {
-                    // Detecta el label de recaudación
                     if (lbl.Text.Contains("$") || lbl.Text == "$ 0.00" || lbl.Text == "$0.00")
                     {
                         lbl.Text = $"$ {recaudacion:N2}";
                     }
-                    // Detecta el label de cantidad de camisetas
                     else if (lbl.Text == "0")
                     {
                         lbl.Text = cantidad.ToString();

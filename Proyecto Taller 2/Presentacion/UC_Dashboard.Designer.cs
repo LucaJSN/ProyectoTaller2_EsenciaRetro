@@ -40,7 +40,9 @@
             this.idVenta = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.descripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.subTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -146,7 +148,9 @@
             this.idVenta,
             this.descripcion,
             this.cantidad,
-            this.subTotal});
+            this.Column2,
+            this.Column1,
+            this.Column3});
             this.dataGridView1.Location = new System.Drawing.Point(145, 436);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
@@ -164,7 +168,7 @@
             // 
             // descripcion
             // 
-            this.descripcion.HeaderText = "Descripcion Mistery Box";
+            this.descripcion.HeaderText = "Nombre";
             this.descripcion.MinimumWidth = 6;
             this.descripcion.Name = "descripcion";
             this.descripcion.Width = 125;
@@ -176,12 +180,26 @@
             this.cantidad.Name = "cantidad";
             this.cantidad.Width = 125;
             // 
-            // subTotal
+            // Column2
             // 
-            this.subTotal.HeaderText = "SubTotal";
-            this.subTotal.MinimumWidth = 6;
-            this.subTotal.Name = "subTotal";
-            this.subTotal.Width = 125;
+            this.Column2.HeaderText = "Cliente";
+            this.Column2.MinimumWidth = 6;
+            this.Column2.Name = "Column2";
+            this.Column2.Width = 125;
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Metodo de Pago";
+            this.Column1.MinimumWidth = 6;
+            this.Column1.Name = "Column1";
+            this.Column1.Width = 125;
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "Sub Total";
+            this.Column3.MinimumWidth = 6;
+            this.Column3.Name = "Column3";
+            this.Column3.Width = 125;
             // 
             // UC_Dashboard
             // 
@@ -217,6 +235,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn idVenta;
         private System.Windows.Forms.DataGridViewTextBoxColumn descripcion;
         private System.Windows.Forms.DataGridViewTextBoxColumn cantidad;
-        private System.Windows.Forms.DataGridViewTextBoxColumn subTotal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
     }
 }
