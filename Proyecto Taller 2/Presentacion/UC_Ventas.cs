@@ -6,29 +6,24 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Proyecto_Taller_2.Negocio;
+using Proyecto_Taller_2.Entidades;
 using TextBox = System.Windows.Forms.TextBox;
 
 namespace Proyecto_Taller_2
 {
     public partial class UC_Ventas : UserControl
     {
-        public class DetalleVentaItem
-        {
-            public string IdProducto { get; set; }
-            public string Nombre { get; set; }
-            public string Descripcion { get; set; }
-            public int Cantidad { get; set; }
-            public decimal PrecioUnitario { get; set; }
-            public decimal SubTotal => Cantidad * PrecioUnitario;
-        }
+        private BindingList<DetalleVenta> listaCarrito = new BindingList<DetalleVenta>();
 
-        private BindingList<DetalleVentaItem> listaCarrito = new BindingList<DetalleVentaItem>();
-
-        public string NombreUsuarioLogueado { get; set; } = "Samuel Ibarra (Administrador)";
-
+        private int idUsuarioActual = 7;
         private bool clienteValidado = false;
         private bool productoValidado = false;
         private int stockActualProducto = 0;
+        private int idClienteSeleccionado = 0;
+
+        private BindingSource bsNombre = new BindingSource();
+        private BindingSource bsApellido = new BindingSource();
+        private BindingSource bsProducto = new BindingSource();
 
         public UC_Ventas()
         {
@@ -39,78 +34,226 @@ namespace Proyecto_Taller_2
         {
             ConfigurarGrid();
             ConfigurarGridRegistro();
-            ConfigurarGridFacturacion();
             ConfigurarComboBoxCantidad();
             CargarComboBoxMetodoPago();
+            CargarDatosComboBox();
             ConfigurarFiltrosFechas();
             ConfigurarCamposEstaticos();
-            MostrarVendedorActual();
             VincularEventosYValidaciones();
+            LimpiarCamposInicio();
             ActualizarTotalVenta();
             CargarRegistroVentas();
-            CargarRegistroFacturas();
         }
 
-        private void MostrarVendedorActual()
+        private void LimpiarCamposInicio()
         {
-            if (label3 != null)
+            if (textBox1 != null) textBox1.Text = "";
+            if (textBox5 != null) textBox5.Text = "";
+            if (textBox2 != null) textBox2.Text = "";
+            if (textBox6 != null) textBox6.Text = "";
+            if (textBox7 != null) textBox7.Text = "";
+
+            if (comboBox2 != null) { comboBox2.SelectedIndex = -1; comboBox2.Text = ""; }
+            if (comboBox3 != null) { comboBox3.SelectedIndex = -1; comboBox3.Text = ""; }
+            if (comboBox4 != null) { comboBox4.SelectedIndex = -1; comboBox4.Text = ""; }
+
+            if (label35 != null) label35.Text = "";
+        }
+
+        private bool cargandoDatos = false;
+
+        private void CargarDatosComboBox()
+        {
+            try
             {
-                label3.Text = NombreUsuarioLogueado;
+                cargandoDatos = true;
+                VentaNegocio negocio = new VentaNegocio();
+
+                DataTable dtClientes1 = negocio.ObtenerClientes();
+                DataTable dtClientes2 = negocio.ObtenerClientes();
+
+                if (dtClientes1 != null && dtClientes1.Rows.Count > 0)
+                {
+                    bsNombre.DataSource = dtClientes1;
+                    if (comboBox2 != null)
+                    {
+                        comboBox2.DataSource = bsNombre;
+                        comboBox2.DisplayMember = "nombre";
+                        comboBox2.ValueMember = "id_cliente";
+                        comboBox2.DropDownStyle = ComboBoxStyle.DropDown;
+                        comboBox2.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                        comboBox2.AutoCompleteSource = AutoCompleteSource.ListItems;
+                    }
+
+                    bsApellido.DataSource = dtClientes2;
+                    if (comboBox3 != null)
+                    {
+                        comboBox3.DataSource = bsApellido;
+                        comboBox3.DisplayMember = "apellido";
+                        comboBox3.ValueMember = "id_cliente";
+                        comboBox3.DropDownStyle = ComboBoxStyle.DropDown;
+                        comboBox3.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                        comboBox3.AutoCompleteSource = AutoCompleteSource.ListItems;
+                    }
+                }
+
+                DataTable dtProductos = negocio.ObtenerProductos();
+                if (dtProductos != null && dtProductos.Rows.Count > 0)
+                {
+                    bsProducto.DataSource = dtProductos;
+                    if (comboBox4 != null)
+                    {
+                        comboBox4.DataSource = bsProducto;
+                        comboBox4.DisplayMember = "nombre";
+                        comboBox4.ValueMember = "id_producto";
+                        comboBox4.DropDownStyle = ComboBoxStyle.DropDown;
+                        comboBox4.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                        comboBox4.AutoCompleteSource = AutoCompleteSource.ListItems;
+                    }
+                }
+
+                if (comboBox2 != null) comboBox2.SelectedIndex = -1;
+                if (comboBox3 != null) comboBox3.SelectedIndex = -1;
+                if (comboBox4 != null)
+                {
+                    comboBox4.SelectedIndexChanged -= ComboBox4_SelectedIndexChanged;
+                    comboBox4.SelectedIndexChanged += ComboBox4_SelectedIndexChanged;
+                    comboBox4.KeyUp -= ComboBox4_KeyUp;
+                    comboBox4.KeyUp += ComboBox4_KeyUp;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar datos en los selectores: " + ex.Message, "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            finally
+            {
+                cargandoDatos = false;
+            }
+        }
+
+        private void ComboBox4_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (cargandoDatos) return;
+            if (comboBox4 != null)
+            {
+                string textoBusqueda = comboBox4.Text;
+                int cursorPosition = comboBox4.SelectionStart;
+
+                if (string.IsNullOrWhiteSpace(textoBusqueda))
+                {
+                    bsProducto.Filter = string.Empty;
+                }
+                else
+                {
+                    bsProducto.Filter = string.Format("nombre LIKE '%{0}%'", textoBusqueda.Replace("'", "''"));
+                }
+
+                comboBox4.Text = textoBusqueda;
+                comboBox4.SelectionStart = cursorPosition;
+                comboBox4.SelectionLength = 0;
+
+                if (!comboBox4.DroppedDown && comboBox4.Focused && textoBusqueda.Length > 0)
+                {
+                    comboBox4.DroppedDown = true;
+                }
+            }
+        }
+
+        private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cargandoDatos) return;
+            if (comboBox2 != null && comboBox2.SelectedItem is DataRowView row)
+            {
+                cargandoDatos = true;
+                idClienteSeleccionado = Convert.ToInt32(row["id_cliente"]);
+
+                if (comboBox3 != null) comboBox3.SelectedValue = idClienteSeleccionado;
+                if (textBox1 != null) textBox1.Text = idClienteSeleccionado.ToString();
+                if (label35 != null) label35.Text = row["documento"]?.ToString() ?? "";
+
+                clienteValidado = true;
+                cargandoDatos = false;
+            }
+        }
+
+        private void ComboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cargandoDatos) return;
+            if (comboBox3 != null && comboBox3.SelectedItem is DataRowView row)
+            {
+                cargandoDatos = true;
+                idClienteSeleccionado = Convert.ToInt32(row["id_cliente"]);
+
+                if (comboBox2 != null) comboBox2.SelectedValue = idClienteSeleccionado;
+                if (textBox1 != null) textBox1.Text = idClienteSeleccionado.ToString();
+                if (label35 != null) label35.Text = row["documento"]?.ToString() ?? "";
+
+                clienteValidado = true;
+                cargandoDatos = false;
+            }
+        }
+
+        private void ComboBox4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cargandoDatos) return;
+            if (comboBox4 != null && comboBox4.SelectedItem is DataRowView row)
+            {
+                cargandoDatos = true;
+
+                if (textBox5 != null) textBox5.Text = row["id_producto"].ToString();
+                if (textBox2 != null) textBox2.Text = row["descripcion"].ToString();
+
+                int.TryParse(row["stock"]?.ToString(), out stockActualProducto);
+                if (textBox6 != null) textBox6.Text = stockActualProducto.ToString();
+
+                if (textBox7 != null && row["precio_venta"] != DBNull.Value)
+                {
+                    decimal precio = Convert.ToDecimal(row["precio_venta"]);
+                    textBox7.Text = precio.ToString("N2");
+                }
+
+                productoValidado = true;
+                cargandoDatos = false;
             }
         }
 
         private void ConfigurarCamposEstaticos()
         {
-            // Bloquear campos informativos para que no se pueda escribir en ellos manualmente
-            if (textBox4 != null) textBox4.ReadOnly = true; // Nombre
-            if (textBox2 != null) textBox2.ReadOnly = true; // Descripción
-            if (textBox6 != null) textBox6.ReadOnly = true; // Stock
-            if (textBox7 != null) textBox7.ReadOnly = true; // Precio Venta
+            if (textBox2 != null) textBox2.ReadOnly = true;
+            if (textBox6 != null) textBox6.ReadOnly = true;
+            if (textBox7 != null) textBox7.ReadOnly = true;
 
-            // Configurar ID Cliente (textBox1): solo números y selección al enfocar
             if (textBox1 != null)
             {
-                textBox1.Enabled = true;
-                textBox1.ReadOnly = false;
-                textBox1.GotFocus += (s, ev) => { textBox1.SelectAll(); };
-                textBox1.KeyPress += (s, ev) =>
-                {
-                    if (!char.IsControl(ev.KeyChar) && !char.IsDigit(ev.KeyChar))
-                        ev.Handled = true; // Bloquea letras
+                textBox1.KeyPress += (s, ev) => {
+                    if (!char.IsControl(ev.KeyChar) && !char.IsDigit(ev.KeyChar)) ev.Handled = true;
                 };
             }
 
-            // Configurar ID Producto (textBox5): solo números y selección al enfocar
             if (textBox5 != null)
             {
-                textBox5.Enabled = true;
-                textBox5.ReadOnly = false;
-                textBox5.GotFocus += (s, ev) => { textBox5.SelectAll(); };
-                textBox5.KeyPress += (s, ev) =>
-                {
-                    if (!char.IsControl(ev.KeyChar) && !char.IsDigit(ev.KeyChar))
-                        ev.Handled = true; // Bloquea letras
+                textBox5.KeyPress += (s, ev) => {
+                    if (!char.IsControl(ev.KeyChar) && !char.IsDigit(ev.KeyChar)) ev.Handled = true;
                 };
             }
 
-            // Configurar ComboBox de Cantidad (comboBox1): solo permitir números
-            if (comboBox1 != null)
-            {
-                comboBox1.KeyPress += (s, ev) =>
+            Action<object, KeyPressEventArgs> soloLetras = (s, ev) => {
+                if (!char.IsControl(ev.KeyChar) && !char.IsLetter(ev.KeyChar) && !char.IsWhiteSpace(ev.KeyChar))
                 {
-                    if (!char.IsControl(ev.KeyChar) && !char.IsDigit(ev.KeyChar))
-                        ev.Handled = true;
-                };
-            }
+                    ev.Handled = true;
+                }
+            };
+
+            if (comboBox2 != null) comboBox2.KeyPress += new KeyPressEventHandler(soloLetras);
+            if (comboBox3 != null) comboBox3.KeyPress += new KeyPressEventHandler(soloLetras);
+            if (comboBox4 != null) comboBox4.KeyPress += new KeyPressEventHandler(soloLetras);
         }
 
         private void ConfigurarFiltrosFechas()
         {
             if (dateTimePicker1 != null) dateTimePicker1.Value = DateTime.Now.AddMonths(-1);
             if (dateTimePicker2 != null) dateTimePicker2.Value = DateTime.Now;
-
-            if (dateTimePicker4 != null) dateTimePicker4.Value = DateTime.Now.AddMonths(-1);
-            if (dateTimePicker3 != null) dateTimePicker3.Value = DateTime.Now;
         }
 
         private void ConfigurarComboBoxCantidad()
@@ -119,8 +262,8 @@ namespace Proyecto_Taller_2
             {
                 comboBox1.Items.Clear();
                 comboBox1.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "10", "15", "20" });
-                comboBox1.DropDownStyle = ComboBoxStyle.DropDown;
-                comboBox1.Text = "1";
+                comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+                comboBox1.SelectedItem = "1";
             }
         }
 
@@ -183,6 +326,7 @@ namespace Proyecto_Taller_2
                 dataGridView1.Columns[2].DataPropertyName = "Descripcion";
                 dataGridView1.Columns[3].DataPropertyName = "Cantidad";
                 dataGridView1.Columns[4].DataPropertyName = "SubTotal";
+                dataGridView1.Columns[4].DefaultCellStyle.Format = "N2";
             }
             dataGridView1.CellClick -= DataGridView1_CellClick;
             dataGridView1.CellClick += DataGridView1_CellClick;
@@ -194,33 +338,21 @@ namespace Proyecto_Taller_2
             if (dataGridView2 != null && dataGridView2.Columns.Count >= 6)
             {
                 dataGridView2.Columns[0].DataPropertyName = "IdVenta";
+                dataGridView2.Columns[0].HeaderText = "ID Venta";
                 dataGridView2.Columns[1].DataPropertyName = "Descripcion";
+                dataGridView2.Columns[1].HeaderText = "Nombre";
                 dataGridView2.Columns[2].DataPropertyName = "Fecha";
+                dataGridView2.Columns[2].HeaderText = "Fecha";
                 dataGridView2.Columns[3].DataPropertyName = "Cliente";
+                dataGridView2.Columns[3].HeaderText = "Cliente";
                 dataGridView2.Columns[4].DataPropertyName = "Total";
+                dataGridView2.Columns[4].HeaderText = "Total";
+                dataGridView2.Columns[4].DefaultCellStyle.Format = "N2";
                 dataGridView2.Columns[5].DataPropertyName = "MetodoPago";
+                dataGridView2.Columns[5].HeaderText = "Metodo de Pago";
             }
-
-            
-
             dataGridView2.CellClick -= DataGridView2_CellClick;
             dataGridView2.CellClick += DataGridView2_CellClick;
-        }
-
-        private void ConfigurarGridFacturacion()
-        {
-            ConfigurarGridEstilo(dataGridView3);
-            if (dataGridView3 != null && dataGridView3.Columns.Count >= 6)
-            {
-                dataGridView3.Columns[0].DataPropertyName = "Numero";
-                dataGridView3.Columns[1].DataPropertyName = "TipoFactura";
-                dataGridView3.Columns[2].DataPropertyName = "Fecha";
-                dataGridView3.Columns[3].DataPropertyName = "DNI";
-                dataGridView3.Columns[4].DataPropertyName = "Cliente";
-                dataGridView3.Columns[5].DataPropertyName = "MontoTotal";
-            }
-            dataGridView3.CellClick -= DataGridView3_CellClick;
-            dataGridView3.CellClick += DataGridView3_CellClick;
         }
 
         private void VincularEventosYValidaciones()
@@ -230,10 +362,11 @@ namespace Proyecto_Taller_2
             if (button4 != null) { button4.Click -= ExecAgregarProducto; button4.Click += ExecAgregarProducto; }
             if (button5 != null) { button5.Click -= ExecRegistrarVenta; button5.Click += ExecRegistrarVenta; }
             if (button6 != null) { button6.Click -= BtnFiltrarFechasHistorial_Click; button6.Click += BtnFiltrarFechasHistorial_Click; }
-            if (button8 != null) { button8.Click -= BtnFiltrarFechasFacturacion_Click; button8.Click += BtnFiltrarFechasFacturacion_Click; }
-        }
 
-        #region --- RESTRICCIÓN DE FECHAS ESTRICTA ---
+            if (comboBox2 != null) { comboBox2.SelectedIndexChanged -= ComboBox2_SelectedIndexChanged; comboBox2.SelectedIndexChanged += ComboBox2_SelectedIndexChanged; }
+            if (comboBox3 != null) { comboBox3.SelectedIndexChanged -= ComboBox3_SelectedIndexChanged; comboBox3.SelectedIndexChanged += ComboBox3_SelectedIndexChanged; }
+            if (comboBox4 != null) { comboBox4.SelectedIndexChanged -= ComboBox4_SelectedIndexChanged; comboBox4.SelectedIndexChanged += ComboBox4_SelectedIndexChanged; }
+        }
 
         private void BtnFiltrarFechasHistorial_Click(object sender, EventArgs e)
         {
@@ -242,30 +375,12 @@ namespace Proyecto_Taller_2
 
             if (desde > hasta)
             {
-                MessageBox.Show("La fecha 'Desde' no puede ser posterior a la fecha 'Hasta'. Verifique el rango seleccionado.", "Filtro Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("La fecha 'Desde' no puede ser posterior a la fecha 'Hasta'.", "Filtro Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             CargarRegistroVentas(desde, hasta);
         }
-
-        private void BtnFiltrarFechasFacturacion_Click(object sender, EventArgs e)
-        {
-            DateTime desde = dateTimePicker4 != null ? dateTimePicker4.Value.Date : DateTime.Now.AddMonths(-1);
-            DateTime hasta = dateTimePicker3 != null ? dateTimePicker3.Value.Date : DateTime.Now;
-
-            if (desde > hasta)
-            {
-                MessageBox.Show("La fecha 'Desde' no puede ser posterior a la fecha 'Hasta'. Verifique el rango seleccionado.", "Filtro Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            CargarRegistroFacturas(desde, hasta);
-        }
-
-        #endregion
-
-        #region --- EXPORTACIÓN Y VISTAS ORIGINALES ---
 
         private void GuardarControlComoImagen(Control controlAImprimir, string tituloDocumento, string nombreArchivoBase)
         {
@@ -283,23 +398,24 @@ namespace Proyecto_Taller_2
                             controlAImprimir.DrawToBitmap(bmp, new Rectangle(0, 0, controlAImprimir.Width, controlAImprimir.Height));
                             bmp.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
 
-                            MessageBox.Show($"¡{tituloDocumento} guardado con éxito en:\n{sfd.FileName}", "Exportación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show($"¡{tituloDocumento} guardado con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Error al exportar la imagen: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Error al exportar imagen: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
         }
 
-        private void MostrarComprobanteVenta(string idVenta, string fecha, string cliente, string descripcion, string cantidad, string total)
+        // TICKET DINÁMICO QUE CONSULTA LOS PRODUCTOS REALES Y LOS LISTA EN LÍNEAS SEPARADAS
+        private void MostrarComprobanteVenta(int idVenta, string fecha, string cliente, string totalGeneral)
         {
             Form frmTicket = new Form
             {
                 Text = $"Comprobante de Venta #{idVenta}",
-                Size = new Size(500, 660),
+                Size = new Size(500, 680),
                 StartPosition = FormStartPosition.CenterParent,
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 MaximizeBox = false,
@@ -333,6 +449,25 @@ namespace Proyecto_Taller_2
             headerPanel.Controls.Add(lblBrand);
             headerPanel.Controls.Add(lblSubBrand);
 
+            VentaNegocio negocio = new VentaNegocio();
+            DataTable dtDetalle = negocio.ObtenerDetalleVentaPorId(idVenta);
+
+            string lineasProductos = "";
+            if (dtDetalle != null)
+            {
+                foreach (DataRow r in dtDetalle.Rows)
+                {
+                    string nombreProd = r["Nombre"]?.ToString() ?? "Artículo";
+                    string cant = r["Cantidad"]?.ToString() ?? "1";
+
+                    if (decimal.TryParse(r["SubTotal"]?.ToString(), out decimal subTotalDec))
+                    {
+                        string subTotal = subTotalDec.ToString("N2");
+                        lineasProductos += $" {nombreProd,-26} {cant,3}   $ {subTotal,8}\r\n";
+                    }
+                }
+            }
+
             TextBox txtBody = new TextBox
             {
                 Multiline = true,
@@ -340,25 +475,23 @@ namespace Proyecto_Taller_2
                 Dock = DockStyle.Fill,
                 BackColor = Color.White,
                 ForeColor = Color.Black,
-                Font = new Font("Consolas", 10.5f),
+                Font = new Font("Consolas", 10f),
                 BorderStyle = BorderStyle.None,
                 Text = $"\r\n" +
                        $"==================================================\r\n" +
                        $"                 TICKET DE VENTA                  \r\n" +
                        $"==================================================\r\n" +
                        $" ID Venta    : #{idVenta}\r\n" +
-                       $" Fecha/Hora  : {DateTime.Now:dd/MM/yyyy HH:mm:ss}\r\n" +
+                       $" Fecha/Hora  : {fecha}\r\n" +
                        $" Cliente     : {cliente}\r\n" +
                        $"--------------------------------------------------\r\n" +
-                       $" DESCRIPCIÓN                    CANT.    SUBTOTAL \r\n" +
+                       $" DESCRIPCIÓN                 CANT.     SUBTOTAL \r\n" +
                        $"--------------------------------------------------\r\n" +
-                       $" {descripcion,-28} {cantidad,3}    $ {total,8}\r\n" +
-                       $"                                                  \r\n" +
+                       lineasProductos +
                        $"==================================================\r\n" +
-                       $" TOTAL A PAGAR:                  $ {total,8}\r\n" +
+                       $" TOTAL A PAGAR:                   $ {totalGeneral,8}\r\n" +
                        $"==================================================\r\n\r\n" +
-                       $"       ¡Gracias por elegir Esencia Retro!         \r\n" +
-                       $"       Conservá este ticket como comprobante.     "
+                       $"       ¡Gracias por elegir Esencia Retro!         "
             };
 
             pnlContenidoImprimible.Controls.Add(txtBody);
@@ -378,8 +511,7 @@ namespace Proyecto_Taller_2
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9.5f, FontStyle.Bold)
             };
-            btnImprimir.FlatAppearance.BorderSize = 0;
-            btnImprimir.Click += (s, ev) => GuardarControlComoImagen(pnlContenidoImprimible, "Comprobante de Venta", $"Ticket_Venta_{idVenta}");
+            btnImprimir.Click += (s, ev) => GuardarControlComoImagen(pnlContenidoImprimible, "Comprobante", $"Ticket_Venta_{idVenta}");
 
             System.Windows.Forms.Button btnCerrar = new System.Windows.Forms.Button
             {
@@ -393,7 +525,6 @@ namespace Proyecto_Taller_2
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9.5f, FontStyle.Bold)
             };
-            btnCerrar.FlatAppearance.BorderSize = 0;
             btnCerrar.Click += (s, ev) => frmTicket.Close();
 
             panelBotones.Controls.Add(btnImprimir);
@@ -403,137 +534,6 @@ namespace Proyecto_Taller_2
             frmTicket.ShowDialog();
         }
 
-        private void MostrarFacturaOficial(string nroFactura, string fecha, string dni, string cliente, string total, string tipoFactura)
-        {
-            Form frmFactura = new Form
-            {
-                Text = $"Factura Oficial {tipoFactura} - #{nroFactura}",
-                Size = new Size(540, 700),
-                StartPosition = FormStartPosition.CenterParent,
-                FormBorderStyle = FormBorderStyle.FixedDialog,
-                MaximizeBox = false,
-                MinimizeBox = false,
-                BackColor = Color.FromArgb(240, 243, 246)
-            };
-
-            Panel pnlContenidoImprimible = new Panel { Dock = DockStyle.Fill, BackColor = Color.White };
-            Panel headerPanel = new Panel { Dock = DockStyle.Top, Height = 100, BackColor = Color.FromArgb(20, 40, 60) };
-
-            Label lblTipoBox = new Label
-            {
-                Text = $"[{tipoFactura}]",
-                Font = new Font("Segoe UI", 22, FontStyle.Bold),
-                ForeColor = Color.Gold,
-                Width = 70,
-                Height = 70,
-                Left = 20,
-                Top = 15,
-                TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.FromArgb(30, 50, 75)
-            };
-
-            Label lblBrand = new Label
-            {
-                Text = "ESENCIA RETRO S.R.L.",
-                Font = new Font("Segoe UI", 14, FontStyle.Bold),
-                ForeColor = Color.White,
-                Left = 105,
-                Top = 20,
-                AutoSize = true
-            };
-
-            Label lblSubBrand = new Label
-            {
-                Text = $"FACTURA OFICIAL TIPO {tipoFactura}\nIVA Responsable Inscripto - CUIT: 30-71452983-4",
-                Font = new Font("Segoe UI", 9, FontStyle.Regular),
-                ForeColor = Color.LightGray,
-                Left = 105,
-                Top = 48,
-                AutoSize = true
-            };
-
-            headerPanel.Controls.Add(lblTipoBox);
-            headerPanel.Controls.Add(lblBrand);
-            headerPanel.Controls.Add(lblSubBrand);
-
-            TextBox txtBody = new TextBox
-            {
-                Multiline = true,
-                ReadOnly = true,
-                Dock = DockStyle.Fill,
-                BackColor = Color.White,
-                ForeColor = Color.Black,
-                Font = new Font("Consolas", 10.5f),
-                BorderStyle = BorderStyle.None,
-                Text = $"\r\n" +
-                       $"==================================================\r\n" +
-                       $" DATOS FISCALES Y COMERCIALES                     \r\n" +
-                       $"==================================================\r\n" +
-                       $" Nro Factura : {nroFactura}\r\n" +
-                       $" Fecha/Hora  : {DateTime.Now:dd/MM/yyyy HH:mm:ss}\r\n" +
-                       $" CUIT / DNI  : {dni}\r\n" +
-                       $" Razón Social: {cliente}\r\n" +
-                       $" Cond. Venta : Contado\r\n" +
-                       $"--------------------------------------------------\r\n" +
-                       $" CANT.  DETALLE                              SUBTOTAL  \r\n" +
-                       $"--------------------------------------------------\r\n" +
-                       $"    1   Indumentaria y Artículos Retro   $ {total,8}\r\n" +
-                       $"                                                  \r\n" +
-                       $"==================================================\r\n" +
-                       $" SUBTOTAL NETO GRAVADO:              $ {total,8}\r\n" +
-                       $" TRIBUTOS / IVA (21%):               $ 0.00    \r\n" +
-                       $" IMPORTE TOTAL:                      $ {total,8}\r\n" +
-                       $"==================================================\r\n\r\n" +
-                       $" CAEM / C.A.I. Nro : 44892019382104               \r\n" +
-                       $" Vencimiento C.A.I.: 31/12/2028                   "
-            };
-
-            pnlContenidoImprimible.Controls.Add(txtBody);
-            pnlContenidoImprimible.Controls.Add(headerPanel);
-
-            Panel panelBotones = new Panel { Dock = DockStyle.Bottom, Height = 60, BackColor = Color.FromArgb(230, 235, 240) };
-
-            System.Windows.Forms.Button btnReimprimir = new System.Windows.Forms.Button
-            {
-                Text = "🖨️ Reimprimir Factura",
-                Width = 210,
-                Height = 42,
-                Left = 20,
-                Top = 9,
-                BackColor = Color.FromArgb(0, 123, 255),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold)
-            };
-            btnReimprimir.FlatAppearance.BorderSize = 0;
-            btnReimprimir.Click += (s, ev) => GuardarControlComoImagen(pnlContenidoImprimible, $"Factura Oficial {tipoFactura}", $"Factura_{tipoFactura}_{nroFactura}");
-
-            System.Windows.Forms.Button btnCerrar = new System.Windows.Forms.Button
-            {
-                Text = "❌ Cerrar",
-                Width = 210,
-                Height = 42,
-                Left = 275,
-                Top = 9,
-                BackColor = Color.FromArgb(220, 53, 69),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold)
-            };
-            btnCerrar.FlatAppearance.BorderSize = 0;
-            btnCerrar.Click += (s, ev) => frmFactura.Close();
-
-            panelBotones.Controls.Add(btnReimprimir);
-            panelBotones.Controls.Add(btnCerrar);
-            frmFactura.Controls.Add(pnlContenidoImprimible);
-            frmFactura.Controls.Add(panelBotones);
-            frmFactura.ShowDialog();
-        }
-
-        #endregion
-
-        #region --- EVENTOS GRILLAS ---
-
         private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -542,15 +542,9 @@ namespace Proyecto_Taller_2
 
                 if (nombreColumna.Contains("eliminar") || dataGridView1.Columns[e.ColumnIndex] is DataGridViewButtonColumn)
                 {
-                    if (dataGridView1.Rows[e.RowIndex].DataBoundItem is DetalleVentaItem item)
+                    if (dataGridView1.Rows[e.RowIndex].DataBoundItem is DetalleVenta item)
                     {
-                        DialogResult resultado = MessageBox.Show(
-                            $"¿Desea eliminar '{item.Nombre}' de la lista?",
-                            "Confirmar eliminación",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Question
-                        );
-
+                        DialogResult resultado = MessageBox.Show($"¿Desea eliminar '{item.Nombre}' de la lista?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (resultado == DialogResult.Yes)
                         {
                             listaCarrito.Remove(item);
@@ -568,107 +562,25 @@ namespace Proyecto_Taller_2
                 DataGridViewRow row = dataGridView2.Rows[e.RowIndex];
                 string nombreColumna = dataGridView2.Columns[e.ColumnIndex].Name.ToLower();
 
-                bool esColumnaFacturacion = nombreColumna.Contains("factur") || nombreColumna.Contains("btnfacturacion");
-                bool esColumnaVer = nombreColumna.Contains("ver") || nombreColumna.Contains("verbutton");
+                bool esColumnaVer = nombreColumna.Contains("ver") || dataGridView2.Columns[e.ColumnIndex] is DataGridViewButtonColumn;
 
-                if (esColumnaFacturacion)
+                if (esColumnaVer)
                 {
-                    object valorIdVenta = row.Cells.Count > 0 ? row.Cells[0].Value : "1";
-                    int.TryParse(valorIdVenta?.ToString(), out int idVentaNum);
-
-                    try
-                    {
-                        VentaNegocio negocio = new VentaNegocio();
-
-                        if (negocio.VentaYaFacturada(idVentaNum))
-                        {
-                            MessageBox.Show("Esta venta ya fue facturada anteriormente.\nPara obtener el comprobante, diríjase a la pestaña de Facturación y utilice la opción de Reimprimir Factura.", "Venta Ya Facturada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
-
-                        string tipoFactura = "";
-                        using (Form frmPrompt = new Form())
-                        {
-                            frmPrompt.Width = 380;
-                            frmPrompt.Height = 180;
-                            frmPrompt.FormBorderStyle = FormBorderStyle.FixedDialog;
-                            frmPrompt.Text = "Emitir Factura";
-                            frmPrompt.StartPosition = FormStartPosition.CenterParent;
-                            frmPrompt.MaximizeBox = false;
-                            frmPrompt.MinimizeBox = false;
-
-                            Label lblText = new Label() { Left = 20, Top = 20, Text = "Seleccione el tipo de factura a emitir:", AutoSize = true, Font = new Font("Segoe UI", 10) };
-                            System.Windows.Forms.Button btnA = new System.Windows.Forms.Button() { Text = "Factura A", Left = 20, Width = 95, Top = 75, Height = 40 };
-                            System.Windows.Forms.Button btnB = new System.Windows.Forms.Button() { Text = "Factura B", Left = 125, Width = 95, Top = 75, Height = 40 };
-                            System.Windows.Forms.Button btnCancel = new System.Windows.Forms.Button() { Text = "Cancelar", Left = 230, Width = 95, Top = 75, Height = 40 };
-
-                            btnA.Click += (s, ev) => { tipoFactura = "A"; frmPrompt.Close(); };
-                            btnB.Click += (s, ev) => { tipoFactura = "B"; frmPrompt.Close(); };
-                            btnCancel.Click += (s, ev) => { tipoFactura = ""; frmPrompt.Close(); };
-
-                            frmPrompt.Controls.Add(lblText);
-                            frmPrompt.Controls.Add(btnA);
-                            frmPrompt.Controls.Add(btnB);
-                            frmPrompt.Controls.Add(btnCancel);
-                            frmPrompt.ShowDialog();
-                        }
-
-                        if (string.IsNullOrEmpty(tipoFactura)) return;
-
-                        object valorTotal = row.Cells.Count > 4 ? row.Cells[4].Value : "0";
-                        decimal.TryParse(valorTotal?.ToString(), out decimal montoVenta);
-                        string numFacturaRandom = "F-" + DateTime.Now.ToString("fff");
-
-                        negocio.RegistrarFacturaBD(idVentaNum, numFacturaRandom, tipoFactura, montoVenta);
-                        CargarRegistroFacturas();
-                        MessageBox.Show($"¡Factura {tipoFactura} registrada con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error al procesar la factura: " + ex.Message, "Error BD", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                else if (esColumnaVer)
-                {
-                    string idVenta = row.Cells.Count > 0 ? row.Cells[0].Value?.ToString() ?? "S/N" : "S/N";
-                    string descripcion = row.Cells.Count > 1 ? row.Cells[1].Value?.ToString() ?? "Artículo Retro" : "Artículo Retro";
+                    string idVentaStr = row.Cells.Count > 0 ? row.Cells[0].Value?.ToString() ?? "0" : "0";
                     string fecha = row.Cells.Count > 2 ? row.Cells[2].Value?.ToString() ?? DateTime.Now.ToShortDateString() : DateTime.Now.ToShortDateString();
                     string cliente = row.Cells.Count > 3 ? row.Cells[3].Value?.ToString() ?? "Cliente General" : "Cliente General";
                     string total = row.Cells.Count > 4 ? row.Cells[4].Value?.ToString() ?? "0.00" : "0.00";
 
-                    MostrarComprobanteVenta(idVenta, fecha, cliente, descripcion, "1", total);
+                    int.TryParse(idVentaStr, out int idVentaNum);
+
+                    MostrarComprobanteVenta(idVentaNum, fecha, cliente, total);
                 }
             }
         }
 
-        private void DataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                DataGridViewRow row = dataGridView3.Rows[e.RowIndex];
-
-                string numero = row.Cells[0].Value?.ToString() ?? "S/N";
-                string tipoFactura = row.Cells[1].Value?.ToString() ?? "A";
-                string fecha = row.Cells[2].Value?.ToString() ?? DateTime.Now.ToShortDateString();
-
-                // Extracción 100% dinámica del DNI y del Cliente desde la Base de Datos (grilla)
-                string dni = row.Cells[3].Value?.ToString() ?? "";
-                string cliente = row.Cells[4].Value?.ToString() ?? "";
-
-                string total = row.Cells[5].Value?.ToString() ?? "0.00";
-
-                // Muestra la factura oficial con los datos reales del cliente de esa compra
-                MostrarFacturaOficial(numero, fecha, dni, cliente, total, tipoFactura);
-            }
-        }
-
-        #endregion
-
-        #region --- BÚSQUEDA Y VALIDACIONES REALES EN BASE DE DATOS ---
-
         private void ExecBuscarCliente(object sender, EventArgs e)
         {
-            if (textBox1 == null || string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "ID Cliente")
+            if (textBox1 == null || string.IsNullOrWhiteSpace(textBox1.Text))
             {
                 MessageBox.Show("Por favor, ingrese un ID de cliente válido.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 clienteValidado = false;
@@ -685,39 +597,33 @@ namespace Proyecto_Taller_2
                     if (dtCliente != null && dtCliente.Rows.Count > 0)
                     {
                         DataRow row = dtCliente.Rows[0];
+                        idClienteSeleccionado = idCliente;
 
-                        // ASIGNACIÓN EXACTA SEGÚN TUS LABELS:
-                        if (label36 != null) label36.Text = row["nombre"].ToString();   // Nombre -> label36
-                        if (label38 != null) label38.Text = row["apellido"].ToString(); // Apellido -> label38
-                        if (label35 != null) label35.Text = row["dni"].ToString();       // DNI -> label35
+                        cargandoDatos = true;
+                        if (comboBox2 != null) comboBox2.SelectedValue = idClienteSeleccionado;
+                        if (comboBox3 != null) comboBox3.SelectedValue = idClienteSeleccionado;
+                        if (label35 != null) label35.Text = row["documento"].ToString();
+                        cargandoDatos = false;
 
                         clienteValidado = true;
                     }
                     else
                     {
-                        MessageBox.Show("No se encontró ningún cliente con ese ID en la base de datos.", "Cliente No Encontrado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        if (label36 != null) label36.Text = "Nombre";
-                        if (label38 != null) label38.Text = "Apellido";
-                        if (label35 != null) label35.Text = "DNI";
+                        MessageBox.Show("No se encontró ningún cliente con ese ID.", "No Encontrado", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         clienteValidado = false;
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error al buscar el cliente: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error al buscar cliente: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     clienteValidado = false;
                 }
-            }
-            else
-            {
-                MessageBox.Show("El ID del cliente debe ser un número entero.", "Formato Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                clienteValidado = false;
             }
         }
 
         private void ExecBuscarProducto(object sender, EventArgs e)
         {
-            if (textBox5 == null || string.IsNullOrWhiteSpace(textBox5.Text) || textBox5.Text == "ID Producto")
+            if (textBox5 == null || string.IsNullOrWhiteSpace(textBox5.Text))
             {
                 MessageBox.Show("Por favor, ingrese un ID de producto válido.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 productoValidado = false;
@@ -735,37 +641,34 @@ namespace Proyecto_Taller_2
                     {
                         DataRow row = dtProducto.Rows[0];
 
-                        // Asignación correcta según tus controles:
-                        if (textBox4 != null) textBox4.Text = row["nombre"].ToString();      // Nombre -> textBox4
-                        if (textBox2 != null) textBox2.Text = row["descripcion"].ToString(); // Descripción -> textBox2
+                        cargandoDatos = true;
+                        if (comboBox4 != null) comboBox4.SelectedValue = idProducto;
+                        cargandoDatos = false;
+
+                        if (textBox2 != null) textBox2.Text = row["descripcion"].ToString();
 
                         int.TryParse(row["stock"]?.ToString(), out stockActualProducto);
+                        if (textBox6 != null) textBox6.Text = stockActualProducto.ToString();
 
-                        if (textBox6 != null) textBox6.Text = stockActualProducto.ToString(); // Stock -> textBox6
-                        if (textBox7 != null) textBox7.Text = Convert.ToDecimal(row["precio"]).ToString("N2"); // Precio -> textBox7
+                        if (textBox7 != null && row["precio_venta"] != DBNull.Value)
+                        {
+                            decimal precio = Convert.ToDecimal(row["precio_venta"]);
+                            textBox7.Text = precio.ToString("N2");
+                        }
 
                         productoValidado = true;
                     }
                     else
                     {
-                        MessageBox.Show("No se encontró ningún producto con ese ID en la base de datos.", "Producto No Encontrado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        if (textBox4 != null) textBox4.Text = "";
-                        if (textBox2 != null) textBox2.Text = "";
-                        if (textBox6 != null) textBox6.Text = "0";
-                        if (textBox7 != null) textBox7.Text = "0.00";
+                        MessageBox.Show("No se encontró ningún producto con ese ID.", "No Encontrado", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         productoValidado = false;
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error al buscar el producto: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error al buscar producto: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     productoValidado = false;
                 }
-            }
-            else
-            {
-                MessageBox.Show("El ID del producto debe ser un número entero.", "Formato Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                productoValidado = false;
             }
         }
 
@@ -773,13 +676,13 @@ namespace Proyecto_Taller_2
         {
             if (!clienteValidado)
             {
-                MessageBox.Show("Debe buscar y seleccionar un cliente válido antes de agregar productos al carrito.", "Cliente Requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Debe buscar y seleccionar un cliente válido antes de agregar productos.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (!productoValidado || textBox5 == null || string.IsNullOrWhiteSpace(textBox5.Text))
+            if (!productoValidado || textBox5 == null)
             {
-                MessageBox.Show("Por favor, busque y seleccione un producto válido primero.", "Producto Requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Debe buscar y seleccionar un producto válido primero.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -791,20 +694,24 @@ namespace Proyecto_Taller_2
 
             if (cantidadSeleccionada > stockActualProducto)
             {
-                MessageBox.Show($"La cantidad solicitada ({cantidadSeleccionada}) supera el stock disponible ({stockActualProducto}) del producto.", "Stock Insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"La cantidad solicitada supera el stock disponible ({stockActualProducto}).", "Stock Insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             decimal precioUnitario = 0;
-            if (textBox7 != null)
+            if (textBox7 != null && !string.IsNullOrEmpty(textBox7.Text))
             {
-                decimal.TryParse(textBox7.Text.Replace("$", "").Trim(), out precioUnitario);
+                string precioLimpio = textBox7.Text.Replace("$", "").Replace(".", "").Replace(",", ".").Trim();
+                decimal.TryParse(precioLimpio, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out precioUnitario);
             }
 
-            listaCarrito.Add(new DetalleVentaItem
+            int.TryParse(textBox5.Text.Trim(), out int idProdNum);
+            string nombreProdStr = comboBox4 != null ? comboBox4.Text.Trim() : "";
+
+            listaCarrito.Add(new DetalleVenta
             {
-                IdProducto = textBox5.Text.Trim(),
-                Nombre = textBox4 != null ? textBox4.Text.Trim() : "",     // Guardamos el Nombre del producto
+                IdProducto = idProdNum,
+                Nombre = nombreProdStr,
                 Descripcion = textBox2 != null ? textBox2.Text.Trim() : "",
                 Cantidad = cantidadSeleccionada,
                 PrecioUnitario = precioUnitario
@@ -817,13 +724,13 @@ namespace Proyecto_Taller_2
         {
             if (!clienteValidado)
             {
-                MessageBox.Show("No se puede registrar la venta. Debe buscar y cargar un cliente válido.", "Cliente Requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Debe buscar y cargar un cliente válido.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (listaCarrito.Count == 0)
             {
-                MessageBox.Show("No hay productos en la lista para registrar la venta.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("El carrito de compras está vacío.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -835,42 +742,31 @@ namespace Proyecto_Taller_2
                     int.TryParse(cboMetodoPago.SelectedValue.ToString(), out idMetodo);
                 }
 
-                // Obtenemos el ID del cliente desde el textBox1
-                int.TryParse(textBox1.Text.Trim(), out int idCliente);
                 decimal totalVenta = listaCarrito.Sum(x => x.SubTotal);
+                List<DetalleVenta> listaParaNegocio = listaCarrito.ToList();
 
                 VentaNegocio negocio = new VentaNegocio();
+                bool exito = negocio.RegistrarVenta(idUsuarioActual, idClienteSeleccionado, idMetodo, "B", totalVenta, listaParaNegocio, out string mensaje);
 
-                // Llamada al método transaccional pasando el carrito completo
-                negocio.RegistrarVentaConDetalles(totalVenta, idMetodo, idCliente, 1, listaCarrito);
+                if (exito)
+                {
+                    MessageBox.Show(mensaje, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                MessageBox.Show("¡Venta y detalles registrados con éxito en la base de datos!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // --- LIMPIEZA COMPLETA DE LA PANTALLA ---
-                listaCarrito.Clear();
-                ActualizarTotalVenta();
-
-                // Limpiar Cliente
-                if (textBox1 != null) textBox1.Text = "";
-                if (label36 != null) label36.Text = "Nombre";
-                if (label38 != null) label38.Text = "Apellido";
-                if (label35 != null) label35.Text = "DNI";
-                clienteValidado = false;
-
-                // Limpiar Producto
-                if (textBox5 != null) textBox5.Text = "";
-                if (textBox4 != null) textBox4.Text = "";
-                if (textBox2 != null) textBox2.Text = "";
-                if (textBox6 != null) textBox6.Text = "0";
-                if (textBox7 != null) textBox7.Text = "0.00";
-                if (comboBox1 != null) comboBox1.Text = "1";
-                productoValidado = false;
-
-                CargarRegistroVentas();
+                    listaCarrito.Clear();
+                    LimpiarCamposInicio();
+                    clienteValidado = false;
+                    productoValidado = false;
+                    ActualizarTotalVenta();
+                    CargarRegistroVentas();
+                }
+                else
+                {
+                    MessageBox.Show(mensaje, "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar venta: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al registrar venta: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -911,50 +807,18 @@ namespace Proyecto_Taller_2
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar el registro de ventas: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void CargarRegistroFacturas(DateTime? fechaDesde = null, DateTime? fechaHasta = null)
-        {
-            try
-            {
-                VentaNegocio negocio = new VentaNegocio();
-                DataTable dtFacturas = negocio.ObtenerHistorialFacturas();
-
-                if (fechaDesde.HasValue && fechaHasta.HasValue && dtFacturas.Columns.Contains("Fecha"))
-                {
-                    var rowsFiltradas = dtFacturas.AsEnumerable().Where(r =>
-                    {
-                        DateTime.TryParse(r["Fecha"].ToString(), out DateTime fFactura);
-                        return fFactura.Date >= fechaDesde.Value.Date && fFactura.Date <= fechaHasta.Value.Date;
-                    });
-                    if (rowsFiltradas.Any())
-                        dtFacturas = rowsFiltradas.CopyToDataTable();
-                    else
-                        dtFacturas.Rows.Clear();
-                }
-
-                dataGridView3.DataSource = dtFacturas;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al cargar facturas: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al cargar historial: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void ActualizarTotalVenta()
         {
             decimal total = listaCarrito.Sum(x => x.SubTotal);
-
-            // Actualizamos el label del Total a Pagar en pantalla (reemplaza lblTotalPagar si tu label tiene otro nombre como label16)
             if (label17 != null)
             {
                 label17.Text = $"$ {total:N2}";
             }
         }
-
-        #endregion
 
         #region --- MÉTODOS REQUERIDOS POR EL DESIGNER ---
         private void button1_Click_1(object sender, EventArgs e) { }
@@ -977,17 +841,12 @@ namespace Proyecto_Taller_2
         private void panel12_Paint(object sender, PaintEventArgs e) { }
         private void label14_Click(object sender, EventArgs e) { }
         private void label11_Click(object sender, EventArgs e) { }
-        private void label3_Click(object sender, EventArgs e) { }
         private void label5_Click(object sender, EventArgs e) { }
         private void label16_Click(object sender, EventArgs e) { }
         private void label17_Click(object sender, EventArgs e) { }
         private void label6_Click(object sender, EventArgs e) { }
         private void panel5_Paint(object sender, PaintEventArgs e) { }
+        private void panel11_Paint(object sender, PaintEventArgs e) { }
         #endregion
-
-        private void panel11_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
     }
 }

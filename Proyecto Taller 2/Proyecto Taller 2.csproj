@@ -122,6 +122,7 @@
     <Compile Include="Datos\ProvinciaDatos.cs" />
     <Compile Include="Datos\RolDatos.cs" />
     <Compile Include="Datos\UsuarioDatos.cs" />
+    <Compile Include="Datos\VentaDatos.cs" />
     <Compile Include="Entidades\Categoria.cs" />
     <Compile Include="Entidades\Ciudad.cs" />
     <Compile Include="Entidades\Class1.cs" />
