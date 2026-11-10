@@ -15,8 +15,8 @@
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.lblTituloPrincipal = new System.Windows.Forms.Label();
             this.panelResumen = new System.Windows.Forms.Panel();
             this.lblEstado = new System.Windows.Forms.Label();
@@ -34,8 +34,8 @@
             this.colTamanio = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAccion = new System.Windows.Forms.DataGridViewButtonColumn();
             this.lblTituloHistorial = new System.Windows.Forms.Label();
-            this.btnExportarNube = new System.Windows.Forms.Button();
             this.CLBTablas = new System.Windows.Forms.CheckedListBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.panelResumen.SuspendLayout();
             this.panelDestino.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGVHistorial)).BeginInit();
@@ -135,7 +135,7 @@
             this.btnGenerarBackup.BackColor = System.Drawing.Color.ForestGreen;
             this.btnGenerarBackup.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnGenerarBackup.ForeColor = System.Drawing.Color.White;
-            this.btnGenerarBackup.Location = new System.Drawing.Point(932, 107);
+            this.btnGenerarBackup.Location = new System.Drawing.Point(932, 60);
             this.btnGenerarBackup.Name = "btnGenerarBackup";
             this.btnGenerarBackup.Size = new System.Drawing.Size(260, 95);
             this.btnGenerarBackup.TabIndex = 3;
@@ -146,14 +146,14 @@
             // DGVHistorial
             // 
             this.DGVHistorial.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DGVHistorial.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DGVHistorial.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.DGVHistorial.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DGVHistorial.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colFecha,
@@ -162,14 +162,14 @@
             this.colDestino,
             this.colTamanio,
             this.colAccion});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(153)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGVHistorial.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9F);
+            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(153)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGVHistorial.DefaultCellStyle = dataGridViewCellStyle6;
             this.DGVHistorial.EnableHeadersVisualStyles = false;
             this.DGVHistorial.Location = new System.Drawing.Point(63, 218);
             this.DGVHistorial.Name = "DGVHistorial";
@@ -237,34 +237,31 @@
             this.lblTituloHistorial.TabIndex = 5;
             this.lblTituloHistorial.Text = "Historial de Copias Realizadas y Restauración";
             // 
-            // btnExportarNube
-            // 
-            this.btnExportarNube.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
-            this.btnExportarNube.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
-            this.btnExportarNube.ForeColor = System.Drawing.Color.White;
-            this.btnExportarNube.Location = new System.Drawing.Point(932, 426);
-            this.btnExportarNube.Name = "btnExportarNube";
-            this.btnExportarNube.Size = new System.Drawing.Size(260, 86);
-            this.btnExportarNube.TabIndex = 7;
-            this.btnExportarNube.Text = "☁️ Exportar Copias a Nube";
-            this.btnExportarNube.UseVisualStyleBackColor = false;
-            this.btnExportarNube.Click += new System.EventHandler(this.btnExportarNube_Click);
-            // 
             // CLBTablas
             // 
             this.CLBTablas.FormattingEnabled = true;
-            this.CLBTablas.Location = new System.Drawing.Point(932, 236);
+            this.CLBTablas.Location = new System.Drawing.Point(932, 218);
             this.CLBTablas.Name = "CLBTablas";
             this.CLBTablas.Size = new System.Drawing.Size(316, 157);
             this.CLBTablas.TabIndex = 8;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.label1.Location = new System.Drawing.Point(927, 174);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(154, 28);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Tablas a Incluír";
             // 
             // UC_BackUp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(158)))), ((int)(((byte)(182)))), ((int)(((byte)(211)))));
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.CLBTablas);
-            this.Controls.Add(this.btnExportarNube);
             this.Controls.Add(this.lblTituloHistorial);
             this.Controls.Add(this.DGVHistorial);
             this.Controls.Add(this.btnGenerarBackup);
@@ -295,7 +292,6 @@
         private System.Windows.Forms.Button btnGenerarBackup;
         private System.Windows.Forms.DataGridView DGVHistorial;
         private System.Windows.Forms.Label lblTituloHistorial;
-        private System.Windows.Forms.Button btnExportarNube;
         private System.Windows.Forms.CheckedListBox CLBTablas;
         private System.Windows.Forms.DataGridViewTextBoxColumn colFecha;
         private System.Windows.Forms.DataGridViewTextBoxColumn colHora;
@@ -303,5 +299,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colDestino;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTamanio;
         private System.Windows.Forms.DataGridViewButtonColumn colAccion;
+        private System.Windows.Forms.Label label1;
     }
 }

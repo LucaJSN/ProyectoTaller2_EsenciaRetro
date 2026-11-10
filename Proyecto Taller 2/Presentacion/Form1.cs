@@ -37,7 +37,7 @@ namespace Proyecto_Taller_2
             string tipoRol = usuarioActivo?.rol?.tipo ?? "Sin Rol";
 
             this.Text = $"Sistema de Gestión - Usuario: {usuarioActivo?.nombre} {usuarioActivo?.apellido} ({tipoRol})";
-            AplicarPermisos();
+            AplicarPermisos(this.usuarioActivo);
         }
 
         public Form1()
@@ -59,28 +59,34 @@ namespace Proyecto_Taller_2
             //    btnProductos.Enabled = true;
             //    btnProductos.ForeColor = Color.White;
             //}
-            AplicarPermisos();
+            AplicarPermisos(this.usuarioActivo);
         }
 
         //Probando deshbabilitar boton segun el rol del usuario
-        private void AplicarPermisos()
+        private void AplicarPermisos(Usuario usuarioActivo)
         {
             if (usuarioActivo == null || usuarioActivo.rol == null) return;
 
+            // 1. REINICIO OBLIGATORIO: Habilitamos todo por defecto al entrar
+            button1.Enabled = true;
+            btnProductos.Enabled = true;
+            btnBackUp.Enabled = true;
+
             string tipoRol = usuarioActivo.rol.tipo;
 
-            // Opción A: Evaluando con condicionales directos
+            // 2. Aplicamos las restricciones según el rol
             if (tipoRol == "Vendedor")
             {
                 button1.Enabled = false;
                 btnProductos.Enabled = false;
                 btnBackUp.Enabled = false;
             }
-            if(tipoRol == "Supervisor")
+            else if (tipoRol == "Supervisor")
             {
                 button1.Enabled = false;
                 btnBackUp.Enabled = false;
             }
+            // Si es "Administrador", los botones ya quedaron habilitados en el paso 1
         }
 
         // Método encargado de cambiar la vista dentro del contenedor principal
@@ -96,63 +102,6 @@ namespace Proyecto_Taller_2
             }
         }
 
-        /// <summary>
-        /// Evalúa si el usuario activo tiene permiso para acceder al módulo solicitado.
-        /// Retorna true si tiene acceso, o false si no posee el rol adecuado.
-        /// </summary>
-        private bool ValidarAccesoModulo(string moduloSolicitado)
-        {
-            if (usuarioActivo == null || usuarioActivo.rol == null)
-            {
-                // Si no hay información de usuario, se asume acceso total para pruebas locales
-                return true;
-            }
-
-            string rol = usuarioActivo.rol.tipo.Trim().ToLower();
-
-            // Administrador tiene acceso irrestricto
-            if (rol.Contains("admin"))
-            {
-                return true;
-            }
-
-            // Vendedor
-            if (rol.Contains("vendedor"))
-            {
-                if (moduloSolicitado == "Inicio" || moduloSolicitado == "Productos" || moduloSolicitado == "Ventas")
-                {
-                    return true;
-                }
-
-                MostrarAlertaAccesoDenegado(moduloSolicitado, "Administrador o Supervisor");
-                return false;
-            }
-
-            // Supervisor
-            if (rol.Contains("supervisor") || rol.Contains("gerente"))
-            {
-                if (moduloSolicitado == "Inicio" || moduloSolicitado == "Productos" || moduloSolicitado == "Ventas" || moduloSolicitado == "Balance")
-                {
-                    return true;
-                }
-
-                MostrarAlertaAccesoDenegado(moduloSolicitado, "Administrador");
-                return false;
-            }
-
-            // Para cualquier otro rol no contemplado
-            MostrarAlertaAccesoDenegado(moduloSolicitado, "Administrador");
-            return false;
-        }
-
-        private void MostrarAlertaAccesoDenegado(string modulo, string rolRequerido)
-        {
-            MessageBox.Show($"Acceso Denegado.\n\nNo posee los permisos necesarios para acceder al módulo de '{modulo}'.\nSe requiere nivel de acceso: {rolRequerido}.",
-                            "Restricción de Seguridad",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Stop);
-        }
-
 
         private void BtnCerrarSesion_Click(object sender, EventArgs e)
         {
@@ -164,50 +113,32 @@ namespace Proyecto_Taller_2
 
         private void btnInicio_Click(object sender, EventArgs e)
         {
-            if (ValidarAccesoModulo("Inicio"))
-            {
-                AbrirModulo(new UC_Dashboard());
-            }
+            AbrirModulo(new UC_Dashboard());
         }
 
         private void btnProductos_Click(object sender, EventArgs e)
         {
-            if (ValidarAccesoModulo("Productos"))
-            {
-                AbrirModulo(new UC_Productos());
-            }
+            AbrirModulo(new UC_Productos());
         }
 
         private void btnVentas_Click(object sender, EventArgs e)
         {
-            if (ValidarAccesoModulo("Ventas"))
-            {
-                AbrirModulo(new UC_Ventas());
-            }
+            AbrirModulo(new UC_Ventas());
         }
 
         private void btnBalance_Click(object sender, EventArgs e)
         {
-            if (ValidarAccesoModulo("Balance"))
-            {
-                AbrirModulo(new UC_Balance());
-            }
+            AbrirModulo(new UC_Balance());
         }
 
         private void BtnAdmin_Click(object sender, EventArgs e)
         {
-            if (ValidarAccesoModulo("Administrador"))
-            {
-                AbrirModulo(new UC_Admin());
-            }
+            AbrirModulo(new UC_Admin());
         }
 
         private void btnBackUp_Click(object sender, EventArgs e)
         {
-            if (ValidarAccesoModulo("BackUp"))
-            {
-                AbrirModulo(new UC_BackUp()); // <-- Corregido con el guion bajo
-            }
+            AbrirModulo(new UC_BackUp()); // <-- Corregido con el guion bajo
         }
 
         #endregion

@@ -30,7 +30,6 @@ namespace Proyecto_Taller_2
 
         private List<BackupModel> _historialBackups;
         private BackNegocio negocio = new BackNegocio();
-        private DataGridViewButtonColumn colEliminarExtra;
 
         public UC_BackUp()
         {
@@ -71,19 +70,6 @@ namespace Proyecto_Taller_2
                 colAccion.UseColumnTextForButtonValue = true;
             }
 
-            if (DGVHistorial.Columns["colEliminar"] == null)
-            {
-                colEliminarExtra = new DataGridViewButtonColumn
-                {
-                    Name = "colEliminar",
-                    HeaderText = "Eliminar",
-                    Text = "🗑️ Eliminar",
-                    UseColumnTextForButtonValue = true,
-                    Width = 100
-                };
-                DGVHistorial.Columns.Add(colEliminarExtra);
-            }
-
             if (txtDestino != null && string.IsNullOrWhiteSpace(txtDestino.Text))
             {
                 txtDestino.Text = @"I:\Users\lucaj\Desktop\Historial Base de Datos EsenciaRetro";
@@ -99,12 +85,6 @@ namespace Proyecto_Taller_2
             {
                 btnSeleccionarCarpeta.Click -= btnSeleccionarCarpeta_Click;
                 btnSeleccionarCarpeta.Click += btnSeleccionarCarpeta_Click;
-            }
-
-            if (btnExportarNube != null)
-            {
-                btnExportarNube.Click -= btnExportarNube_Click;
-                btnExportarNube.Click += btnExportarNube_Click;
             }
 
             if (DGVHistorial != null)
@@ -126,8 +106,7 @@ namespace Proyecto_Taller_2
                     item.Tipo,
                     item.Destino,
                     item.Tamanio,
-                    "🔄 Restaurar",
-                    "🗑️ Eliminar"
+                    "🔄 Restaurar"
                 );
             }
 
@@ -321,20 +300,20 @@ namespace Proyecto_Taller_2
                                     "Restauración Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
-            else if (nombreColumna == "colEliminar")
-            {
-                var copiaSeleccionada = _historialBackups[e.RowIndex];
-                DialogResult dr = MessageBox.Show($"¿Está seguro de que desea eliminar el registro de copia del {copiaSeleccionada.FechaHora:dd/MM/yyyy HH:mm}?",
-                                                  "Confirmar Eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            //else if (nombreColumna == "colEliminar")
+            //{
+            //    var copiaSeleccionada = _historialBackups[e.RowIndex];
+            //    DialogResult dr = MessageBox.Show($"¿Está seguro de que desea eliminar el registro de copia del {copiaSeleccionada.FechaHora:dd/MM/yyyy HH:mm}?",
+            //                                      "Confirmar Eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                if (dr == DialogResult.Yes)
-                {
-                    _historialBackups.RemoveAt(e.RowIndex);
-                    ActualizarGrillaHistorial();
-                    MessageBox.Show("¡El registro de la copia ha sido eliminado correctamente!",
-                                    "Eliminación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
+            //    if (dr == DialogResult.Yes)
+            //    {
+            //        _historialBackups.RemoveAt(e.RowIndex);
+            //        ActualizarGrillaHistorial();
+            //        MessageBox.Show("¡El registro de la copia ha sido eliminado correctamente!",
+            //                        "Eliminación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //    }
+            //}
         }
 
         private void txtDestino_TextChanged(object sender, EventArgs e)
