@@ -59,7 +59,26 @@ namespace Proyecto_Taller_2.Presentacion
             if (dgvProductos.Columns.Contains("fecha_modificacion")) dgvProductos.Columns["fecha_modificacion"].Visible = false;
             if (dgvProductos.Columns.Contains("precio_costo")) dgvProductos.Columns["precio_costo"].Visible = false;
             if (dgvProductos.Columns.Contains("url_imagen")) dgvProductos.Columns["url_imagen"].Visible = false;
+
+            // --- DISEÑO Y COLORES DEL DATAGRIDVIEW ---
+            dgvProductos.EnableHeadersVisualStyles = false;
+
+            dgvProductos.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(15, 23, 42);
+            dgvProductos.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvProductos.ColumnHeadersDefaultCellStyle.Font = new Font("Arial", 9.5F, FontStyle.Bold);
+            dgvProductos.ColumnHeadersHeight = 35;
+
+            dgvProductos.DefaultCellStyle.BackColor = Color.White;
+            dgvProductos.DefaultCellStyle.ForeColor = Color.FromArgb(30, 41, 59);
+            dgvProductos.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
+            dgvProductos.DefaultCellStyle.SelectionBackColor = Color.FromArgb(37, 99, 235);
+            dgvProductos.DefaultCellStyle.SelectionForeColor = Color.White;
+            dgvProductos.DefaultCellStyle.Font = new Font("Arial", 9F, FontStyle.Regular);
+
+            dgvProductos.GridColor = Color.FromArgb(226, 232, 240);
+            dgvProductos.BorderStyle = BorderStyle.None;
         }
+        
 
         // Evento que filtra en tiempo real mientras el usuario escribe
         private void txtBuscar_TextChanged_1(object sender, EventArgs e)

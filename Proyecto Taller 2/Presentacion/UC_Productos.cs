@@ -201,6 +201,7 @@ namespace Proyecto_Taller_2
             }
             if (DGVProductos.Columns[e.ColumnIndex].Name == "CEditar")
             {
+                rutaImagenSeleccionada = "";
                 //LCuestionario.Text = "Editar Producto";
                 Producto productoSelec = DGVProductos.Rows[e.RowIndex].DataBoundItem as Producto;
                 if (productoSelec != null)
@@ -229,7 +230,10 @@ namespace Proyecto_Taller_2
                             // 2. Transformamos la ruta de texto en una imagen gráfica de forma segura
                             using (var stream = new System.IO.FileStream(productoSelec.url_imagen, System.IO.FileMode.Open, System.IO.FileAccess.Read))
                             {
+                                rutaImagenSeleccionada = productoSelec.url_imagen;
                                 pictureBox1.Image = System.Drawing.Image.FromStream(stream);
+                                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                                rutaImagen = rutaImagenSeleccionada;
                             }
                         }
                         catch (Exception)
@@ -286,6 +290,7 @@ namespace Proyecto_Taller_2
             pictureBox1.Image = null;
             pictureBox1.ImageLocation = null;
             TBNombre.Focus();
+            rutaImagen = "";
         }
 
         private void UC_Productos_Load(object sender, EventArgs e)

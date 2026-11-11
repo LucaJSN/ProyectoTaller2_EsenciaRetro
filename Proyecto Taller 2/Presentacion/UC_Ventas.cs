@@ -400,7 +400,7 @@ namespace Proyecto_Taller_2
             {
                 comboBox1.Items.Clear();
                 comboBox1.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "10", "15", "20" });
-                comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+                comboBox1.DropDownStyle = ComboBoxStyle.DropDown;
                 comboBox1.SelectedItem = "1";
             }
         }

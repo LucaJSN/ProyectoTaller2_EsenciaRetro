@@ -493,9 +493,9 @@
             this.label3.ForeColor = System.Drawing.Color.Black;
             this.label3.Location = new System.Drawing.Point(52, 583);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(119, 20);
+            this.label3.Size = new System.Drawing.Size(128, 20);
             this.label3.TabIndex = 41;
-            this.label3.Text = "Filtro Usuarios";
+            this.label3.Text = "Filtro Productos";
             // 
             // CBFiltro
             // 
