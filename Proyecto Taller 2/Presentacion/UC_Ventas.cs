@@ -95,13 +95,6 @@ namespace Proyecto_Taller_2
                     textBox6.Text = stockDisponible.ToString(); //
                     textBox7.Text = precioVenta.ToString("N2"); //
                     comboBox1.Text = stockDisponible.ToString();
-
-                    //// Si usas un NumericUpDown para la cantidad, ajustamos el límite máximo según el stock real
-                    //if (numericUpDownCantidad != null)
-                    //{
-                    //    numericUpDownCantidad.Maximum = stockDisponible > 0 ? stockDisponible : 1;
-                    //    numericUpDownCantidad.Value = stockDisponible > 0 ? 1 : 0;
-                    //}
                 }
             }
         }
@@ -770,7 +763,7 @@ namespace Proyecto_Taller_2
         {
             if (textBox5 == null || string.IsNullOrWhiteSpace(textBox5.Text))
             {
-                MessageBox.Show("Por favor, ingrese un ID de producto válido.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor, ingrese un producto válido para poder realizar la venta.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 productoValidado = false;
                 return;
             }

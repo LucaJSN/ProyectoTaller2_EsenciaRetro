@@ -26,6 +26,7 @@ namespace Proyecto_Taller_2
             public string Tipo { get; set; }
             public string Destino { get; set; }
             public string Tamanio { get; set; }
+            public string RutaCompleta { get; set; }
         }
 
         private List<BackupModel> _historialBackups;
@@ -37,6 +38,7 @@ namespace Proyecto_Taller_2
             InicializarHistorialPorDefecto();
             ConfigurarUIBackUp();
             ActualizarGrillaHistorial();
+            //CargarHistorialDesdeCarpeta();
         }
 
         private void InicializarHistorialPorDefecto()
@@ -228,7 +230,6 @@ namespace Proyecto_Taller_2
         private void UC_BackUp_Load(object sender, EventArgs e)
         {
             CargarHistorialDesdeCarpeta();
-
             try
             {
                 List<string> tablas = negocio.ObtenerTablas();
@@ -270,7 +271,9 @@ namespace Proyecto_Taller_2
                     FechaHora = archivo.CreationTime, // Fecha en que se creó el archivo
                     Tipo = "Manual",
                     Destino = archivo.FullName,       // La ruta completa del archivo
-                    Tamanio = tamanioMB.ToString("0.00") + " MB"
+                    Tamanio = tamanioMB.ToString("0.00") + " MB",
+
+                    RutaCompleta = archivo.FullName
                 });
             }
 
@@ -291,29 +294,37 @@ namespace Proyecto_Taller_2
 
             if (nombreColumna == "colAccion")
             {
-                var copiaSeleccionada = _historialBackups[e.RowIndex];
+                // 1. Obtenemos el objeto directamente de la grilla (DataBoundItem)
+                var copiaSeleccionada = (BackupModel)DGVHistorial.Rows[e.RowIndex].DataBoundItem;
+
                 DialogResult dr = MessageBox.Show($"¿Confirma la restauración del sistema utilizando la copia del {copiaSeleccionada.FechaHora:dd/MM/yyyy HH:mm}?",
                                                   "Alerta de Seguridad", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dr == DialogResult.Yes)
                 {
-                    MessageBox.Show("¡Copia restaurada correctamente! El sistema se encuentra actualizado a este punto.",
-                                    "Restauración Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    try
+                    {
+
+                        // 2. Le pasamos la ruta completa que tu método ya calculó perfectamente
+                        bool exito = negocio.RestaurarBackup(copiaSeleccionada.RutaCompleta);
+
+                        if (exito)
+                        {
+                            MessageBox.Show("¡Copia restaurada correctamente! El sistema se encuentra actualizado a este punto.",
+                                            "Restauración Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se pudo completar la restauración de la base de datos.",
+                                            "Error de Restauración", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Ocurrió un error al procesar la solicitud: {ex.Message}",
+                                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
-            //else if (nombreColumna == "colEliminar")
-            //{
-            //    var copiaSeleccionada = _historialBackups[e.RowIndex];
-            //    DialogResult dr = MessageBox.Show($"¿Está seguro de que desea eliminar el registro de copia del {copiaSeleccionada.FechaHora:dd/MM/yyyy HH:mm}?",
-            //                                      "Confirmar Eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            //    if (dr == DialogResult.Yes)
-            //    {
-            //        _historialBackups.RemoveAt(e.RowIndex);
-            //        ActualizarGrillaHistorial();
-            //        MessageBox.Show("¡El registro de la copia ha sido eliminado correctamente!",
-            //                        "Eliminación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //    }
-            //}
         }
 
         private void txtDestino_TextChanged(object sender, EventArgs e)
