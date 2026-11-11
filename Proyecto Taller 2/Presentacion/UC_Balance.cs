@@ -38,7 +38,7 @@ namespace Proyecto_Taller_2
             DateTime desde = dateTimePicker1 != null ? dateTimePicker1.Value.Date : DateTime.Now.AddMonths(-1);
             DateTime hasta = dateTimePicker2 != null ? dateTimePicker2.Value.Date : DateTime.Now;
 
-            // VALIDACIÓN ESTRICTA SOLICITADA POR EL PROFESOR
+            // VALIDACIÓN ESTRICTA SOLICITADA 
             if (desde > hasta)
             {
                 MessageBox.Show("La fecha 'Desde' no puede ser posterior a la fecha 'Hasta'.",
@@ -156,6 +156,11 @@ namespace Proyecto_Taller_2
             {
                 MessageBox.Show("Error al cargar las estadísticas del balance: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

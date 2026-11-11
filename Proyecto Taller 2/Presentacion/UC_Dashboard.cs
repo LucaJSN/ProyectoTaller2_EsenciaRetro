@@ -105,7 +105,7 @@ namespace Proyecto_Taller_2
         private void ActualizarEtiquetasRecursivo(Control contenedor, decimal recaudacion, int cantidad)
         {
             foreach (Control ctrl in contenedor.Controls)
-            {
+            {   
                 if (ctrl is Label lbl)
                 {
                     if (lbl.Text.Contains("$") || lbl.Text == "$ 0.00" || lbl.Text == "$0.00")

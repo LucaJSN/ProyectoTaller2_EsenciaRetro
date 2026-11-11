@@ -241,6 +241,8 @@
     <EmbeddedResource Include="Presentacion\UC_Ventas.resx">
       <DependentUpon>UC_Ventas.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Documentacion\ERS Esencia Retro.pdf" />
+    <None Include="Documentacion\Manual de usuario Esencia Retro.pdf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
