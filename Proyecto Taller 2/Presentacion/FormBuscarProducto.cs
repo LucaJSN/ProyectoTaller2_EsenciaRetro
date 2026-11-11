@@ -1,5 +1,4 @@
-﻿using Proyecto_Taller_2.Negocio;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Proyecto_Taller_2.Negocio;
 
 namespace Proyecto_Taller_2.Presentacion
 {
@@ -33,7 +33,7 @@ namespace Proyecto_Taller_2.Presentacion
             try
             {
                 VentaNegocio negocio = new VentaNegocio();
-                dtProductos = negocio.ObtenerProductos(); // Asegúrate de que traiga: id_producto, nombre, descripcion, edicion, talle, stock, precio_venta
+                dtProductos = negocio.ObtenerProductos();
 
                 if (dtProductos != null)
                 {
@@ -49,51 +49,72 @@ namespace Proyecto_Taller_2.Presentacion
 
         private void FormatearGrilla()
         {
+            if (dgvProductos == null || dgvProductos.Columns.Count == 0) return;
+
             dgvProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvProductos.MultiSelect = false;
             dgvProductos.ReadOnly = true;
+            dgvProductos.RowHeadersVisible = false;
+            dgvProductos.AllowUserToAddRows = false;
+            dgvProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-            // Ocultar columnas secundarias si no las quieres mostrar todas
-            if (dgvProductos.Columns.Contains("fecha_alta")) dgvProductos.Columns["fecha_alta"].Visible = false;
-            if (dgvProductos.Columns.Contains("fecha_baja")) dgvProductos.Columns["fecha_baja"].Visible = false;
-            if (dgvProductos.Columns.Contains("fecha_modificacion")) dgvProductos.Columns["fecha_modificacion"].Visible = false;
-            if (dgvProductos.Columns.Contains("precio_costo")) dgvProductos.Columns["precio_costo"].Visible = false;
-            if (dgvProductos.Columns.Contains("url_imagen")) dgvProductos.Columns["url_imagen"].Visible = false;
+            // Estética visual corporativa idéntico al resto del sistema
+            dgvProductos.EnableHeadersVisualStyles = false;
+            dgvProductos.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(30, 40, 50);
+            dgvProductos.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvProductos.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+
+            dgvProductos.RowsDefaultCellStyle.ForeColor = Color.Black;
+            dgvProductos.RowsDefaultCellStyle.BackColor = Color.White;
+            dgvProductos.RowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(51, 153, 255);
+            dgvProductos.RowsDefaultCellStyle.SelectionForeColor = Color.White;
+            dgvProductos.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 247, 250);
+
+            // Ocultar columnas técnicas
+            string[] columnasOcultas = { "fecha_alta", "fecha_baja", "fecha_modificacion", "precio_costo", "url_imagen" };
+            foreach (string col in columnasOcultas)
+            {
+                if (dgvProductos.Columns.Contains(col))
+                    dgvProductos.Columns[col].Visible = false;
+            }
+
+            // Renombrar encabezados para que se lean de forma profesional
+            if (dgvProductos.Columns.Contains("id_producto"))
+            {
+                dgvProductos.Columns["id_producto"].HeaderText = "ID";
+                dgvProductos.Columns["id_producto"].FillWeight = 40;
+            }
+            if (dgvProductos.Columns.Contains("nombre"))
+            {
+                dgvProductos.Columns["nombre"].HeaderText = "Producto";
+                dgvProductos.Columns["nombre"].FillWeight = 120;
+            }
+            if (dgvProductos.Columns.Contains("descripcion"))
+            {
+                dgvProductos.Columns["descripcion"].HeaderText = "Descripción";
+                dgvProductos.Columns["descripcion"].FillWeight = 150;
+            }
+            if (dgvProductos.Columns.Contains("talle"))
+            {
+                dgvProductos.Columns["talle"].HeaderText = "Talle";
+                dgvProductos.Columns["talle"].FillWeight = 50;
+            }
+            if (dgvProductos.Columns.Contains("stock"))
+            {
+                dgvProductos.Columns["stock"].HeaderText = "Stock";
+                dgvProductos.Columns["stock"].FillWeight = 50;
+            }
+            if (dgvProductos.Columns.Contains("precio_venta"))
+            {
+                dgvProductos.Columns["precio_venta"].HeaderText = "Precio Unit.";
+                dgvProductos.Columns["precio_venta"].FillWeight = 70;
+                dgvProductos.Columns["precio_venta"].DefaultCellStyle.Format = "C2"; // Formato de moneda
+            }
         }
 
-        // Evento que filtra en tiempo real mientras el usuario escribe
         private void txtBuscar_TextChanged_1(object sender, EventArgs e)
         {
-            if (dtProductos != null)
-            {
-                string filtro = txtBuscar.Text.Trim().Replace("'", "''");
-
-                if (string.IsNullOrEmpty(filtro))
-                {
-                    dtProductos.DefaultView.RowFilter = string.Empty;
-                }
-                else
-                {
-                    List<string> condiciones = new List<string>();
-
-                    // Validar que las columnas existan en dtProductos antes de filtrar por ellas
-                    if (dtProductos.Columns.Contains("nombre"))
-                        condiciones.Add($"nombre LIKE '%{filtro}%'");
-
-                    if (dtProductos.Columns.Contains("edicion"))
-                        condiciones.Add($"edicion LIKE '%{filtro}%'");
-
-                    if (dtProductos.Columns.Contains("talle"))
-                        condiciones.Add($"talle LIKE '%{filtro}%'");
-
-                    if (dtProductos.Columns.Contains("descripcion"))
-                        condiciones.Add($"descripcion LIKE '%{filtro}%'");
-
-                    DataView dv = dtProductos.DefaultView;
-                    dv.RowFilter = string.Join(" OR ", condiciones);
-                    dgvProductos.DataSource = dv;
-                }
-            }
+            AplicarFiltroProductos();
         }
 
         private void ConfirmarSeleccion()
@@ -107,9 +128,6 @@ namespace Proyecto_Taller_2.Presentacion
             }
         }
 
-
-
-        // Doble clic en la tabla para seleccionar rápido
         private void dgvProductos_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -123,8 +141,6 @@ namespace Proyecto_Taller_2.Presentacion
             ConfirmarSeleccion();
         }
 
-
-
         private void cmbTalle_SelectedIndexChanged(object sender, EventArgs e)
         {
             AplicarFiltroProductos();
@@ -135,10 +151,9 @@ namespace Proyecto_Taller_2.Presentacion
             if (dtProductos == null) return;
 
             string texto = txtBuscar.Text.Trim().Replace("'", "''");
-
             List<string> condiciones = new List<string>();
 
-            // 1. Filtro por texto (Nombre, Edición o Descripción)
+            // Filtro por texto (Nombre, Edición o Descripción)
             if (!string.IsNullOrEmpty(texto))
             {
                 List<string> condTexto = new List<string>();
@@ -158,7 +173,7 @@ namespace Proyecto_Taller_2.Presentacion
                 }
             }
 
-            // 3. Aplicar el RowFilter combinado
+            // Aplicar el RowFilter combinado
             DataView dv = dtProductos.DefaultView;
             dv.RowFilter = condiciones.Count > 0 ? string.Join(" AND ", condiciones) : string.Empty;
             dgvProductos.DataSource = dv;
